@@ -2,12 +2,12 @@
 #define __TOOLS__
 #include <iostream>
 #include <cmath>
+#include <string>
 
-/// @brief calculate the length of an integer in print
-/// @param n the number we want the length
-/// @param current_max the current max, avoiding repeating old values
-/// @return return the length as string of n
 int size_of_int(int n);
 int get_max_size_of_int_list(int **t, int size);
+bool add_to_string(std::string *&s, char c);
+int generate_random_number(int mi, int ma);
+
 
 #endif

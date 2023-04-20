@@ -8,9 +8,14 @@ int size_of_int(int n)
 {
     int len = 0;
 
-    if (n < 0) {
+    if (n < 0)
+    {
         len++;
         n *= -1;
+    }
+    else if (n == 0)
+    {
+        return 1;
     }
 
     while (n != 0)
@@ -30,10 +35,27 @@ int get_max_size_of_int_list(int **t, int size)
         for (int k = 0; k < size; k++)
         {
             tmp = size_of_int(t[i][k]);
-            if (tmp > max_size) {
+            if (tmp > max_size)
+            {
                 max_size = tmp;
             }
         }
     }
     return max_size;
+}
+
+/// @brief 
+/// @param s 
+/// @param c 
+/// @return if add in string true returned
+bool add_to_string(std::string *&s, char c) {
+    if (c != 0) {
+        s[0] += c;
+        return true;
+    }
+    return false;
+}
+
+int generate_random_number(int mi, int ma) {
+    return (rand() % abs(ma - mi + 1)) + mi;
 }

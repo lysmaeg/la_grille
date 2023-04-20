@@ -1,12 +1,17 @@
-#include "grid.hpp"
+#include "grid_utils/grid.hpp"
 
 int main(void)
 {
 
-    Grid g = Grid("../test1", ".txt", true);
+    Grid g1 = Grid("../testFiles/test1", ".txt", true); // test le fichier ../testFiles/test1N.txt et ../testFiles/test1C.txt
 
-    /* Grid *g = read_file_to_colors("../testC1.txt");
-    read_file_to_numbers(g, "../testG1.txt");
-    std::cout << g->calcul_score() << '\n'; */
+    // aleatoire
+    Grid g = Grid("../testFiles/test1N.txt", "", false);
+    //g.print_colors();
+    g.print_numbers();
+    g.generate_random_grid();
+    g.print_colors();
+    g.save_in_file("coucou");
+    std::cout << "Les points de la grille sont " << g.calcul_score() << ".\n";
     return 0;
 }

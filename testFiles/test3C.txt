@@ -1,0 +1,6 @@
+4 4
+BNOB
+NBRJ
+VNBO
+BVNB
+64
