@@ -25,6 +25,7 @@ public:
 
     void init_tables();
 
+    // grid_utils
     int get_size() const;
     int get_penality() const;
     int get_supposed_score() const;
@@ -32,25 +33,25 @@ public:
     char get_color(int line, int column) const;
     int get_number(int line, int column) const;
 
-    int calcul_score() const;
-
+    char *colors_to_string() const;
     void print_numbers() const;
     void print_colors() const;
     void print_safe_colors() const;
-    char *colors_to_string() const;
+
+    bool is_valid_score();
+
+    /* --- */
 
     // grid_files_manager.hpp
     int read_file_for_numbers(std::string filename);
     int read_file_for_colors(std::string filename);
     int save_in_file(std::string filename);
 
-    bool is_valid_score();
+    /* --- */
 
     std::string get_around_colors(int line, int col) const;
-    std::string *get_lines_cols(int line, int col, bool all) const;
+    std::string *get_lines_cols(int line, int col, bool all) const; // grid_utils
     int nb_colors_in_lines_cols(int line, int col, int all, char color) const;
-
-    int calcul_score_place(int line, int col, char color, bool all);
 
     int get_cross_score(int line, int col) const;
     int nb_color_around_cell(int line, int col, char color) const;
@@ -59,6 +60,10 @@ public:
     int calculate_yellow_piece(int line, int col) const;
     int calculate_green_piece(int line, int col) const;
     int calculate_orange_piece(int line, int col, int all) const;
+
+    int calcul_score_place(int line, int col, char color, bool all);
+
+    int calcul_score() const;
 
     void generate_random_grid();
     void build_grid_points();
