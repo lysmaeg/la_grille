@@ -68,7 +68,9 @@ void Grid::init_tables()
     for (int i = 0; i < size; i++)
     {
         numbers[i] = new int[size];
+        memset(numbers[i], 0, size);
         colors[i] = new char[size];
+        memset(colors[i], 'X', size);
     }
 }
 
