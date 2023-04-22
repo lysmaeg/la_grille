@@ -1,4 +1,5 @@
 #include "grid_utils.hpp"
+#include "grid.hpp"
 
 int Grid::get_size() const
 {
@@ -15,9 +16,19 @@ int Grid::get_supposed_score() const
     return supposed_score;
 }
 
+int Grid::get_score() const
+{
+    return score;
+}
+
+void Grid::set_score_from_calculation()
+{
+    score = calcul_score();
+}
+
 /// @brief No need to verify if the coordonates are in the table
-/// @param line 
-/// @param column 
+/// @param line
+/// @param column
 /// @return the color if line and column are valid else 0
 char Grid::get_color(int line, int column) const
 {
@@ -25,15 +36,15 @@ char Grid::get_color(int line, int column) const
 }
 
 /// @brief No need to verify if the coordonates are in the table
-/// @param line 
-/// @param column 
+/// @param line
+/// @param column
 /// @return the number if line and column are valid else 0
 int Grid::get_number(int line, int column) const
 {
     return line < 0 or line >= size or column < 0 or column >= size ? 0 : numbers[line][column];
 }
 
-/// @brief 
+/// @brief
 /// @return An dynamic allocation for the colors
 char *Grid::colors_to_string() const
 {
@@ -72,6 +83,44 @@ void Grid::print_safe_colors() const
     }
 }
 
+int Grid::nb_empty_cells() const
+{
+    int nb = 0;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (colors[i][j] == 'X')
+            {
+                nb++;
+            }
+        }
+    }
+
+    return nb;
+}
+int Grid::get_coordinates_empty_cell(int *x, int *y) const
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (colors[i][j] == 'X') {
+                *x = i;
+                *y = j;
+                return 0;
+            }
+        }
+        
+    }
+    return -1;
+    
+}
+void Grid::print_colors_with_score() const
+{
+    this->print_colors();
+    std::cout << "With a score of " << this->get_score() << ".\n=====-=====-=====\n";
+}
 /// @brief check if score calculated is equal to the supposed score
 /// @return true if equal, false otherwise
 bool Grid::is_valid_score()
@@ -83,7 +132,6 @@ bool Grid::is_valid_score()
 void Grid::print_numbers() const
 {
     int max_size = get_max_size_of_int_list(numbers, size);
-    std::cout << "max_size = " << max_size << '\n';
     for (int i = 0; i < get_size(); i++)
     {
         std::cout << '|';

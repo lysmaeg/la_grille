@@ -24,6 +24,7 @@ int Grid::read_file_for_numbers(std::string filename)
         std::cerr << "The file is not formatted correctly\n";
         return -1;
     }
+    is_main_grid = true;
 
     // init tables from size if not inited
     if (!has_inited)

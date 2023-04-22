@@ -7,6 +7,34 @@ Grid::Grid(int s, int p)
     init_tables();
 }
 
+Grid::Grid(int s, int p, int **num, const char **colors)
+{
+    size = s;
+    penality = p;
+    numbers = num;
+    this->colors = copy_ttab_char(colors, size, size, &size, &size);
+}
+
+Grid::Grid(const Grid *g, bool copy_colors)
+{
+    size = g->size;
+    penality = g->penality;
+    numbers = g->numbers;
+    if (!copy_colors)
+    {
+        colors = new char *[size];
+        for (int i = 0; i < size; i++)
+        {
+            colors[i] = new char[size];
+            memset(colors[i], 'X', size);
+        }
+    }
+    else
+    {
+        colors = copy_ttab_char((const char **)g->colors, size, size, &size, &size);
+    }
+}
+
 /// @brief Initialization of Grid
 /// @param filename the file's name
 /// @param extension only used when test is true
@@ -52,12 +80,30 @@ Grid::~Grid()
 {
     for (int i = 0; i < size; i++)
     {
-        delete[] numbers[i];
         delete[] colors[i];
     }
-
-    delete[] numbers;
     delete[] colors;
+
+    if (is_main_grid)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            delete[] numbers[i];
+        }
+        delete[] numbers;
+    }
+}
+
+Grid Grid::copy_grid(bool copy_colors)
+{
+    Grid g = Grid(this, copy_colors);
+    return g;
+}
+
+Grid *Grid::copy_grid_as_ptr(bool copy_colors)
+{
+    Grid *g = new Grid(this, copy_colors);
+    return g;
 }
 
 /// @brief init the tables of numbers and colors (dynamic allocation)
@@ -145,7 +191,7 @@ int Grid::nb_color_around_cell(int line, int col, char color) const
 /// @return Return the score of the orthogonals cell + the cell itself
 int Grid::get_cross_score(int line, int col) const
 {
-    return get_number(line, col) + get_number(line - 1, col - 1) + get_number(line + 1, col + 1) + get_number(line - 1, col + 1) + get_number(line + 1, col - 1);
+    return get_number(line, col) + get_number(line, col - 1) + get_number(line, col + 1) + get_number(line - 1, col) + get_number(line + 1, col);
 }
 
 int Grid::calculate_red_piece(int line, int col) const
@@ -177,10 +223,10 @@ int Grid::calculate_orange_piece(int line, int col, int all) const
 }
 
 /// @brief calculate the score given coordinates
-/// @param line 
-/// @param col 
+/// @param line
+/// @param col
 /// @param color the color supposed to be there at these coordinates
-/// @param all if all set to false, only S, SO, SW and W will be analysed 
+/// @param all if all set to false, only S, SO, SW and W will be analysed
 /// @return Return the score at this cell following the given color
 int Grid::calcul_score_place(int line, int col, char color, bool all)
 {
@@ -302,9 +348,9 @@ int Grid::calcul_score() const
                 }
             }
 
-            else
+            else if (p[i][j] == 'R')
             {
-                score_red += c[i][j] * (-1);
+                score_red += -c[i][j];
             }
         }
     }
@@ -315,17 +361,43 @@ int Grid::calcul_score() const
     if (d_negatif > d_positif)
         score_blue -= (d_negatif - d_positif) * pena;
 
-    std::cout << "Yellow : " << score_yellow << ", Green : " << score_green << ", Black : " << score_black << ", Blue : " << score_blue << ", Orange : " << score_orange << ", Red : " << score_red << std::endl;
+    // std::cout << "Yellow : " << score_yellow << ", Green : " << score_green << ", Black : " << score_black << ", Blue : " << score_blue << ", Orange : " << score_orange << ", Red : " << score_red << std::endl;
 
     score += score_yellow + score_green + score_black + score_blue + score_orange + score_red;
 
     return score;
 }
 
+void Grid::fill_blank(GridLinkGuard *glg, int pieces_left)
+{
+    if (pieces_left == 0)
+    {
+        glg->addGrid(this->copy_grid_as_ptr(true));
+        return;
+    }
+
+    int x, y;
+    if (get_coordinates_empty_cell(&x, &y) == -1)
+    {
+        std::cerr << "An error occured...\n";
+        exit(EXIT_FAILURE);
+    }
+
+    colors[x][y] = 'B';
+    fill_blank(glg, pieces_left - 1);
+    colors[x][y] = 'O';
+    fill_blank(glg, pieces_left - 1);
+    colors[x][y] = 'X';
+}
+
+// this function does not generate the best grid, the around of green is not really taken in mind
 void Grid::build_grid_points()
 {
-    int black = 0, green = 1, yellow = 2, red = 3;
+    std::string s = "RVNJ";
+    const int black = 2, green = 1, yellow = 3, red = 0;
     int ***infoTab = new int **[size];
+    int max_cur, color_cur;
+    couple coordinates_max;
     for (int i = 0; i < size; i++)
     {
         infoTab[i] = new int *[size];
@@ -335,16 +407,117 @@ void Grid::build_grid_points()
         }
     }
 
+    // setup table with all values for each color
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
         {
-            infoTab[i][j][black] = calcul_score_place(i, j, 'N', true);
+            infoTab[i][j][black] = 2 * calcul_score_place(i, j, 'N', true);
             infoTab[i][j][green] = calcul_score_place(i, j, 'V', true);
-            infoTab[i][j][yellow] = calcul_score_place(i, j, 'J', true);
+            infoTab[i][j][yellow] = calcul_score_place(i, j, 'J', true) - penality;
             infoTab[i][j][red] = calcul_score_place(i, j, 'R', true);
         }
     }
+
+    int nb_black = 0, nb_red = 0;
+    int placed_pieces = 0;
+    print_tttab((const int ***)infoTab, size, size, 4);
+
+    do
+    {
+        max_cur = 0;
+        color_cur = 0;
+        coordinates_max = couple{0, 0};
+        // iterate through all table to find the max value, green should be more considered
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                // cell already taken
+                if (colors[i][j] != 'X')
+                {
+                    continue;
+                }
+
+                // iterate through each color to find the best color at this place
+                for (int k = 0; k < 4; k++)
+                {
+                    // handle priorities between colors
+                    if (infoTab[i][j][k] < max_cur or (k == black and nb_black == size) or (k == red and nb_red == 1))
+                    {
+                        // there is this condition to optimize the code (instead of checking two there is only on checked which coule be more true)
+                        continue;
+                    }
+                    else if (infoTab[i][j][k] > max_cur)
+                    {
+                        max_cur = infoTab[i][j][k];
+                        color_cur = k;
+                        coordinates_max = couple{i, j};
+                    }
+                    else
+                    {
+                        // are equal
+                        // do something
+                    }
+                }
+            }
+        }
+        if (max_cur != 0)
+        {
+            // std::cout << "Added one\n";
+            colors[coordinates_max.line][coordinates_max.column] = s[color_cur];
+            // print_colors();
+            placed_pieces++;
+            // manage colors that impact the same color
+            switch (color_cur)
+            {
+            case black:
+                nb_black++;
+                break;
+
+            case yellow:
+                printf("inside\n");
+                // add penality for each cell around it
+                if (nb_color_around_cell(coordinates_max.line, coordinates_max.column, 'J') == 0)
+                {
+                    for (int i = -1; i < 2; i++)
+                    {
+                        for (int j = -1; j < 2; j++)
+                        {
+                            if (coordinates_max.line + i >= 0 and coordinates_max.line + i < size and coordinates_max.column + j >= 0 and coordinates_max.column + j < size)
+                            {
+                                infoTab[coordinates_max.line + i][coordinates_max.column + j][yellow] += penality;
+                            }
+                        }
+                    }
+                    // print_tttab((const int ***)infoTab, size, size, 4);
+
+                    // printf("at the end\n");
+                }
+
+                break;
+            case red:
+                nb_red++;
+            case green:
+                // substract penality for each cell around it
+                for (int i = -1; i < 2; i++)
+                {
+                    for (int j = -1; j < 2; j++)
+                    {
+                        if (coordinates_max.line + i >= 0 and coordinates_max.line + i < size and coordinates_max.column + j >= 0 and coordinates_max.column + j < size)
+                        {
+                            infoTab[coordinates_max.line + i][coordinates_max.column + j][green] -= 2 * penality;
+                        }
+                    }
+                }
+
+            default:
+                break;
+            }
+        }
+
+    } while (placed_pieces <= size * size and max_cur != 0);
+    printf("placed_pieces = %d, max_cur %d\n", placed_pieces, max_cur);
 
     for (int i = 0; i < size; i++)
     {
@@ -355,6 +528,16 @@ void Grid::build_grid_points()
         delete[] infoTab[i];
     }
     delete[] infoTab;
+
+    GridLinkGuard *glg = new GridLinkGuard;
+    fill_blank(glg, nb_empty_cells());
+    printf("printing best scores\n");
+    GridLinkGuard *bestScores = glg->get_best_scores();
+
+    bestScores->pretty_print();
+
+    bestScores->clear(false);
+    glg->clear(true);
 }
 
 /// @brief generate a random grid of colors for this Grid

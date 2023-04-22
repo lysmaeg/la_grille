@@ -44,18 +44,95 @@ int get_max_size_of_int_list(int **t, int size)
     return max_size;
 }
 
-/// @brief 
-/// @param s 
-/// @param c 
+/// @brief
+/// @param s
+/// @param c
 /// @return if add in string true returned
-bool add_to_string(std::string *&s, char c) {
-    if (c != 0) {
+bool add_to_string(std::string *&s, char c)
+{
+    if (c != 0)
+    {
         s[0] += c;
         return true;
     }
     return false;
 }
 
-int generate_random_number(int mi, int ma) {
+int generate_random_number(int mi, int ma)
+{
     return (rand() % abs(ma - mi + 1)) + mi;
+}
+
+int *copy_tab(const int *t1, int s1, int *s2)
+{
+    *s2 = s1;
+    int *t = new int[s1];
+    for (int i = 0; i < s1; i++)
+    {
+        t[i] = t1[i];
+    }
+    return t;
+}
+
+int **copy_ttab(const int **t1, int s1_0, int s1_1, int *s2_0, int *s2_1)
+{
+    int **t = new int *[s1_0];
+    *s2_0 = s1_0;
+    for (int i = 0; i < s1_0; i++)
+    {
+        t[i] = copy_tab(t1[i], s1_1, s2_1);
+    }
+    return t;
+}
+
+char *copy_tab_char(const char *t1, int s1, int *s2)
+{
+    *s2 = s1;
+    char *t = new char[s1];
+    for (int i = 0; i < s1; i++)
+    {
+        t[i] = t1[i];
+    }
+    return t;
+}
+
+char **copy_ttab_char(const char **t1, int s1_0, int s1_1, int *s2_0, int *s2_1)
+{
+    char **t = new char *[s1_0];
+    *s2_0 = s1_0;
+    for (int i = 0; i < s1_0; i++)
+    {
+        t[i] = copy_tab_char(t1[i], s1_1, s2_1);
+    }
+    return t;
+}
+
+void print_tab(const int *t, int s)
+{
+    std::cout << "[";
+    for (int i = 0; i < s; i++)
+    {
+        std::cout << t[i] << " ";
+    }
+    std::cout << "]";
+}
+void print_ttab(const int **t, int s1, int s2)
+{
+    std::cout << "[";
+    for (int i = 0; i < s1 - 1; i++)
+    {
+        print_tab(t[i], s2);
+        std::cout << ",\n";
+    }
+    print_tab(t[s2 - 1], s2);
+    std::cout << "]\n";
+}
+void print_tttab(const int ***t, int s1, int s2, int s3)
+{
+    std::cout << "[";
+    for (int i = 0; i < s1; i++)
+    {
+        print_ttab(t[i], s2, s3);
+        std::cout << "\n";
+    }
 }
