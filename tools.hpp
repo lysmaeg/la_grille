@@ -4,6 +4,8 @@
 #include <cmath>
 #include <string>
 
+#define NB_MAX_THREAD -1
+
 struct couple {
     int line;
     int column;

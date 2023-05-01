@@ -228,7 +228,7 @@ int Grid::calculate_orange_piece(int line, int col, int all) const
 /// @param color the color supposed to be there at these coordinates
 /// @param all if all set to false, only S, SO, SW and W will be analysed
 /// @return Return the score at this cell following the given color
-int Grid::calcul_score_place(int line, int col, char color, bool all)
+int Grid::calcul_score_place(int line, int col, char color, bool all) const
 {
     int point = 0;
     switch (color)
@@ -533,11 +533,112 @@ void Grid::build_grid_points()
     fill_blank(glg, nb_empty_cells());
     printf("printing best scores\n");
     GridLinkGuard *bestScores = glg->get_best_scores();
+    bestScores->print_all_scores();
 
     bestScores->pretty_print();
 
     bestScores->clear(false);
     glg->clear(true);
+}
+
+void Grid::brute_force_recur(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_posed)
+{
+    if (pieces_left == 0)
+    {
+        glg->addGrid(this->copy_grid_as_ptr(true));
+        return;
+    }
+
+    int x, y;
+    if (this->get_coordinates_empty_cell(&x, &y) == -1)
+    {
+        std::cerr << "An error occured...\n";
+        exit(EXIT_FAILURE);
+    }
+
+    printf("here x = %d, y = %d, nbth = %d\n", x, y, *nb_thread);
+    this->print_colors();
+
+    if (!red_posed)
+    {
+        this->colors[x][y] = 'R';
+        brute_force_recur(glg, pieces_left - 1, nb_thread, true);
+        this->colors[x][y] = 'X';
+    }
+    else
+    {
+        if (pieces_left >= 4)
+        {
+            std::string s = "BVNJO";
+            std::thread *threadIdTab = new std::thread[s.length()];
+
+            for (int i = 0; i < (int)s.length(); i++)
+            {
+                if (*nb_thread < NB_MAX_THREAD)
+                {
+                    (*nb_thread)++;
+                    threadIdTab[i] = std::thread(&Grid::brute_force_launcher, this->copy_grid_as_ptr(true), glg, pieces_left, nb_thread, red_posed, x, y, s[i]);
+                }
+                else
+                {
+                    this->colors[x][y] = s[i];
+                    brute_force_recur(glg, pieces_left - 1, nb_thread, red_posed);
+                    this->colors[x][y] = 'X';
+                }
+            }
+
+            // wait all thread to be finished
+            for (int i = 0; i < (int)s.length(); i++)
+            {
+                threadIdTab[i].join();
+                (*nb_thread)--;
+            }
+
+            delete[] threadIdTab;
+        }
+        else
+        {
+            std::string s = "BVNJO";
+            for (int i = 0; i < (int)s.length(); i++)
+            {
+                this->colors[x][y] = s[i];
+                brute_force_recur(glg, pieces_left - 1, nb_thread, red_posed);
+                this->colors[x][y] = 'X';
+            }
+        }
+    }
+}
+
+void Grid::brute_force_launcher(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_posed, int x, int y, char c)
+{
+    // printf("thread started x = %d, y = %d, c = %c\n", x, y, c);
+    GridLinkGuard *glgThread = new GridLinkGuard;
+
+    this->colors[x][y] = c;
+    brute_force_recur(glgThread, pieces_left - 1, nb_thread, red_posed);
+    this->colors[x][y] = 'X';
+    printf("thread finished\n");
+
+    GridLinkGuard *bestScoresThread = glgThread->get_best_scores();
+    printf("before extending\n");
+    glg->extend(bestScoresThread);
+    printf("after extend\n");
+
+    delete glgThread;
+}
+
+void Grid::brute_force()
+{
+    GridLinkGuard *glg = new GridLinkGuard;
+    int nb_thread = 0;
+    this->brute_force_recur(glg, nb_empty_cells(), &nb_thread, false);
+    while (nb_thread >= 1)
+    {
+    }
+    printf("finished\n");
+    GridLinkGuard *bestGlg = glg->get_best_scores();
+    bestGlg->pretty_print();
+    delete bestGlg;
 }
 
 /// @brief generate a random grid of colors for this Grid

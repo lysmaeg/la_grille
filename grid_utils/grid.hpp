@@ -1,40 +1,15 @@
 #ifndef __GRID__
 #define __GRID__
-#pragma once
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <string.h>
 #include "../tools.hpp"
+#include <thread>
+#include "grid_struct.hpp"
 
-class Grid;
-
-struct GridLink
-{
-    Grid *grid = nullptr;
-    GridLink *next = nullptr;
-};
-
-class GridLinkGuard
-{
-private:
-    int size = 0;
-    GridLink *firstGridLink = nullptr;
-
-public:
-    GridLinkGuard();
-    GridLinkGuard(Grid *g);
-    ~GridLinkGuard();
-
-    void addGrid(Grid *g);
-    void pop_first(bool clear_grid);
-    void clear(bool clear_grid);
-
-    GridLinkGuard *get_best_scores();
-    void print_all_scores();
-    std::string *get_pretty_print();
-    void pretty_print() const;
-};
+class GridLinkGuard;
+class GridLink;
 
 class Grid
 {
@@ -44,6 +19,9 @@ private:
     int supposed_score = 0;
     int score = 0;
     bool is_main_grid = false;
+
+    void brute_force_recur(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_placed);
+    void brute_force_launcher(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_posed, int x, int y, char c);
 
 public:
     int **numbers;
@@ -101,13 +79,15 @@ public:
     int calculate_green_piece(int line, int col) const;
     int calculate_orange_piece(int line, int col, int all) const;
 
-    int calcul_score_place(int line, int col, char color, bool all);
+    int calcul_score_place(int line, int col, char color, bool all) const;
 
     int calcul_score() const;
 
     void generate_random_grid();
     void build_grid_points();
     void fill_blank(GridLinkGuard *glg, int pieces_left);
+
+    void brute_force();
 };
 
 #endif

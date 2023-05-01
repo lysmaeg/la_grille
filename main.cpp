@@ -19,9 +19,10 @@ int main(void)
     g.build_grid_points(); */
 
 
-    Grid g = Grid("../testFiles/test4N.txt", "", false);
+    Grid g = Grid("../testFiles/test5N.txt", "", false);
     g.print_numbers();
-    g.build_grid_points();
-    // g.print_colors();
+    //g.build_grid_points();
+    g.brute_force();
+    g.print_colors();
     return 0;
 }

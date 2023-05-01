@@ -124,15 +124,17 @@ void print_ttab(const int **t, int s1, int s2)
         print_tab(t[i], s2);
         std::cout << ",\n";
     }
-    print_tab(t[s2 - 1], s2);
-    std::cout << "]\n";
+    print_tab(t[s1 - 1], s2);
+    std::cout << "]";
 }
 void print_tttab(const int ***t, int s1, int s2, int s3)
 {
     std::cout << "[";
-    for (int i = 0; i < s1; i++)
+    for (int i = 0; i < s1-1; i++)
     {
         print_ttab(t[i], s2, s3);
-        std::cout << "\n";
+        std::cout << ",\n";
     }
+    print_ttab(t[s1-1], s2, s3);
+    std::cout << "]\n";
 }
