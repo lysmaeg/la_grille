@@ -185,6 +185,22 @@ int Grid::nb_color_around_cell(int line, int col, char color) const
     return nb;
 }
 
+int Grid::nb_color_in_grid(char c) const
+{
+    int nb = 0;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (numbers[i][j] == c)
+            {
+                nb++;
+            }
+        }
+    }
+    return nb;
+}
+
 /// @brief
 /// @param line
 /// @param col
@@ -283,53 +299,54 @@ int Grid::calcul_score() const
     int score_red = 0;
     int score_blue = 0;
 
-    for (int i = 0; i < t; ++i)
+    for (int l = 0; l < t; ++l)
     {
-        for (int j = 0; j < t; ++j)
+        for (int col = 0; col < t; ++col)
         {
-            if (p[i][j] == 'J')
+            if (p[l][col] == 'J')
             {
-                score_yellow += c[i][j];
-                if ((get_color(i - 1, j - 1) != 'J') and (get_color(i - 1, j) != 'J') and (get_color(i - 1, j + 1) != 'J') and (get_color(i, j - 1) != 'J') and (get_color(i + 1, j - 1) != 'J') and (get_color(i + 1, j) != 'J') and (get_color(i + 1, j + 1) != 'J') and (get_color(i + 1, j) != 'J'))
+                score_yellow += c[l][col];
+                if ((get_color(l - 1, col - 1) != 'J') and (get_color(l - 1, col) != 'J') and (get_color(l - 1, col + 1) != 'J') and (get_color(l, col - 1) != 'J') and (get_color(l + 1, col - 1) != 'J') and (get_color(l + 1, col) != 'J') and (get_color(l + 1, col + 1) != 'J') and (get_color(l + 1, col) != 'J'))
                 {
                     score_yellow -= pena;
                 }
             }
 
-            else if (p[i][j] == 'V')
+            else if (p[l][col] == 'V')
             {
-                score_green += c[i][j] + get_number(i - 1, j) + get_number(i + 1, j) + get_number(i, j - 1) + get_number(i, j + 1);
-                if (get_color(i + 1, j) == 'V')
+                score_green += c[l][col] + get_number(l - 1, col) + get_number(l + 1, col) + get_number(l, col - 1) + get_number(l, col + 1);
+                score_green -= pena * ((get_color(l + 1, col) == 'V') + (get_color(l + 1, col + 1) == 'V') + (get_color(l, col + 1) == 'V') + (get_color(l + 1, col - 1) == 'V'));
+                /* if (get_color(i + 1, j) == 'V')
                     score_green -= pena;
                 if (get_color(i + 1, j + 1) == 'V')
                     score_green -= pena;
-                if (get_color(i, j + 1) == 'V')
+                if (get_color(i + 1, j + 1) == 'V')
                     score_green -= pena;
                 if (get_color(i + 1, j - 1) == 'V')
-                    score_green -= pena;
+                    score_green -= pena; */
             }
 
-            else if (p[i][j] == 'N')
+            else if (p[l][col] == 'N')
             {
                 nb_black += 1;
-                score_black += c[i][j] - 1;
+                score_black += c[l][col] - 1;
             }
 
-            else if (p[i][j] == 'B')
+            else if (p[l][col] == 'B')
             {
-                if (c[i][j] < 0)
+                if (c[l][col] < 0)
                     d_negatif += 1;
-                else if (c[i][j] > 0)
+                else if (c[l][col] > 0)
                     d_positif += 1;
             }
 
-            else if (p[i][j] == 'O')
+            else if (p[l][col] == 'O')
             {
-                int a = i, b = j, c = i, d = j;
+                int a = l, b = col, c = l, d = col;
 
-                for (int k = i + 1; k < t; ++k)
+                for (int k = l + 1; k < t; ++k)
                 {
-                    if (p[k][j] == 'O')
+                    if (p[k][col] == 'O')
                         score_orange -= pena;
                     c--;
                     d++;
@@ -337,9 +354,9 @@ int Grid::calcul_score() const
                         score_orange -= pena;
                 }
 
-                for (int k = j + 1; k < t; ++k)
+                for (int k = col + 1; k < t; ++k)
                 {
-                    if (p[i][k] == 'O')
+                    if (p[l][k] == 'O')
                         score_orange -= pena;
                     a++;
                     b++;
@@ -348,9 +365,9 @@ int Grid::calcul_score() const
                 }
             }
 
-            else if (p[i][j] == 'R')
+            else if (p[l][col] == 'R')
             {
-                score_red += -c[i][j];
+                score_red += -c[l][col];
             }
         }
     }
@@ -366,6 +383,33 @@ int Grid::calcul_score() const
     score += score_yellow + score_green + score_black + score_blue + score_orange + score_red;
 
     return score;
+}
+
+int ***Grid::build_info_tab(int black, int green, int yellow, int red, bool all) const
+{
+    int ***infoTab = new int **[size];
+
+    for (int i = 0; i < size; i++)
+    {
+        infoTab[i] = new int *[size];
+        for (int j = 0; j < size; j++)
+        {
+            infoTab[i][j] = new int[4];
+        }
+    }
+
+    // setup table with all values for each color
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            infoTab[i][j][black] = 2 * calcul_score_place(i, j, 'N', true);
+            infoTab[i][j][green] = calcul_score_place(i, j, 'V', true);
+            infoTab[i][j][yellow] = calcul_score_place(i, j, 'J', true) - penality;
+            infoTab[i][j][red] = calcul_score_place(i, j, 'R', true);
+        }
+    }
+    return infoTab;
 }
 
 void Grid::fill_blank(GridLinkGuard *glg, int pieces_left)
@@ -395,33 +439,31 @@ void Grid::build_grid_points()
 {
     std::string s = "RVNJ";
     const int black = 2, green = 1, yellow = 3, red = 0;
-    int ***infoTab = new int **[size];
     int max_cur, color_cur;
+    int ***scores_tab = build_info_tab(black, green, yellow, red, true);
     couple coordinates_max;
+
+    /* int nb_neg_left = 0, nb_pos_left = 0, current_neg_blue_point = 0;
     for (int i = 0; i < size; i++)
     {
-        infoTab[i] = new int *[size];
         for (int j = 0; j < size; j++)
         {
-            infoTab[i][j] = new int[4];
+            if (numbers[i][j] > 0)
+            {
+                nb_pos_left++;
+            }
+            else if (numbers[i][j] < 0)
+            {
+                nb_neg_left++;
+            }
         }
     }
 
-    // setup table with all values for each color
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size; j++)
-        {
-            infoTab[i][j][black] = 2 * calcul_score_place(i, j, 'N', true);
-            infoTab[i][j][green] = calcul_score_place(i, j, 'V', true);
-            infoTab[i][j][yellow] = calcul_score_place(i, j, 'J', true) - penality;
-            infoTab[i][j][red] = calcul_score_place(i, j, 'R', true);
-        }
-    }
+    current_neg_blue_point = abs(std::min(0, nb_pos_left - nb_neg_left)); */
 
     int nb_black = 0, nb_red = 0;
     int placed_pieces = 0;
-    print_tttab((const int ***)infoTab, size, size, 4);
+    print_tttab((const int ***)scores_tab, size, size, 4);
 
     do
     {
@@ -443,14 +485,14 @@ void Grid::build_grid_points()
                 for (int k = 0; k < 4; k++)
                 {
                     // handle priorities between colors
-                    if (infoTab[i][j][k] < max_cur or (k == black and nb_black == size) or (k == red and nb_red == 1))
+                    if (scores_tab[i][j][k] < max_cur or (k == black and nb_black == size) or (k == red and nb_red == 1))
                     {
                         // there is this condition to optimize the code (instead of checking two there is only on checked which coule be more true)
                         continue;
                     }
-                    else if (infoTab[i][j][k] > max_cur)
+                    else if (scores_tab[i][j][k] > max_cur)
                     {
-                        max_cur = infoTab[i][j][k];
+                        max_cur = scores_tab[i][j][k];
                         color_cur = k;
                         coordinates_max = couple{i, j};
                     }
@@ -464,9 +506,28 @@ void Grid::build_grid_points()
         }
         if (max_cur != 0)
         {
-            // std::cout << "Added one\n";
+            /* print_colors();
+            printf("current = %d\n", current_neg_blue_point);
+            if (numbers[coordinates_max.line][coordinates_max.column] > 0)
+            {
+                nb_pos_left--;
+            }
+            else if (numbers[coordinates_max.line][coordinates_max.column] < 0)
+            {
+                nb_neg_left--;
+            }
+            printf("after current = %d\n", current_neg_blue_point); */
+
+            /* current_neg_blue_point = abs(std::min(0, nb_pos_left - nb_neg_left));
+            if (current_neg_blue_point > 0 and scores_tab[coordinates_max.line][coordinates_max.column][color_cur] - penality <= 0)
+            {
+                colors[coordinates_max.line][coordinates_max.column] = 'B';
+                nb_pos_left++;
+                current_neg_blue_point = abs(std::min(0, nb_pos_left - nb_neg_left));
+                continue;
+            } */
+
             colors[coordinates_max.line][coordinates_max.column] = s[color_cur];
-            // print_colors();
             placed_pieces++;
             // manage colors that impact the same color
             switch (color_cur)
@@ -476,9 +537,9 @@ void Grid::build_grid_points()
                 break;
 
             case yellow:
-                printf("inside\n");
                 // add penality for each cell around it
                 if (nb_color_around_cell(coordinates_max.line, coordinates_max.column, 'J') == 0)
+                // cloch
                 {
                     for (int i = -1; i < 2; i++)
                     {
@@ -486,7 +547,7 @@ void Grid::build_grid_points()
                         {
                             if (coordinates_max.line + i >= 0 and coordinates_max.line + i < size and coordinates_max.column + j >= 0 and coordinates_max.column + j < size)
                             {
-                                infoTab[coordinates_max.line + i][coordinates_max.column + j][yellow] += penality;
+                                scores_tab[coordinates_max.line + i][coordinates_max.column + j][yellow] += penality;
                             }
                         }
                     }
@@ -500,16 +561,7 @@ void Grid::build_grid_points()
                 nb_red++;
             case green:
                 // substract penality for each cell around it
-                for (int i = -1; i < 2; i++)
-                {
-                    for (int j = -1; j < 2; j++)
-                    {
-                        if (coordinates_max.line + i >= 0 and coordinates_max.line + i < size and coordinates_max.column + j >= 0 and coordinates_max.column + j < size)
-                        {
-                            infoTab[coordinates_max.line + i][coordinates_max.column + j][green] -= 2 * penality;
-                        }
-                    }
-                }
+                this->update_green_scores_tab(scores_tab, coordinates_max.line, coordinates_max.column, green);
 
             default:
                 break;
@@ -523,19 +575,24 @@ void Grid::build_grid_points()
     {
         for (int j = 0; j < size; j++)
         {
-            delete[] infoTab[i][j];
+            delete[] scores_tab[i][j];
         }
-        delete[] infoTab[i];
+        delete[] scores_tab[i];
     }
-    delete[] infoTab;
+    delete[] scores_tab;
 
     GridLinkGuard *glg = new GridLinkGuard;
     fill_blank(glg, nb_empty_cells());
     printf("printing best scores\n");
     GridLinkGuard *bestScores = glg->get_best_scores();
     bestScores->print_all_scores();
-
     bestScores->pretty_print();
+    Grid *gfdf = bestScores->firstGridLink->grid;
+
+    std::cout << "\n\n\n";
+    gfdf->optimize_grid();
+    gfdf->print_colors();
+    std::cout << "score = " << gfdf->calcul_score() << "\n";
 
     bestScores->clear(false);
     glg->clear(true);
@@ -578,6 +635,13 @@ void Grid::brute_force_recur(GridLinkGuard *glg, int pieces_left, int *nb_thread
                 {
                     (*nb_thread)++;
                     threadIdTab[i] = std::thread(&Grid::brute_force_launcher, this->copy_grid_as_ptr(true), glg, pieces_left, nb_thread, red_posed, x, y, s[i]);
+
+                    // wait all thread to be finished
+                    for (int i = 0; i < (int)s.length(); i++)
+                    {
+                        threadIdTab[i].join();
+                        (*nb_thread)--;
+                    }
                 }
                 else
                 {
@@ -585,13 +649,6 @@ void Grid::brute_force_recur(GridLinkGuard *glg, int pieces_left, int *nb_thread
                     brute_force_recur(glg, pieces_left - 1, nb_thread, red_posed);
                     this->colors[x][y] = 'X';
                 }
-            }
-
-            // wait all thread to be finished
-            for (int i = 0; i < (int)s.length(); i++)
-            {
-                threadIdTab[i].join();
-                (*nb_thread)--;
             }
 
             delete[] threadIdTab;
@@ -696,6 +753,128 @@ void Grid::generate_random_grid()
                 }
             }
             compt -= 1;
+        }
+    }
+}
+
+void Grid::optimize_grid(int line, int column, int limit_recur)
+{
+    printf("called\n");
+
+    if (limit_recur == 0)
+    {
+        return;
+    }
+
+    char **p = colors;
+    // int **c = numbers;
+
+    int co = -1, col;
+    int score = calcul_score(), initial_score = score;
+    int score_yellow = INT32_MIN, score_black = INT32_MIN, score_blue = INT32_MIN, score_green = INT32_MIN, score_orange = INT32_MIN;
+
+    int nb_black = nb_color_in_grid('N');
+
+    std::string s = "RVNJ";
+    const int black = 2, green = 1, yellow = 3, red = 0;
+    int ***infoTab = build_info_tab(black, green, yellow, red, true);
+
+    for (int i = 0; i < size; ++i)
+    {
+        for (int j = 0; j < size; ++j)
+        {
+
+            if (line == i and column == j)
+            {
+                continue;
+            }
+            col = p[i][j];
+
+            for (int k = 0; k < 4; ++k)
+            {
+                if (col == s[k])
+                {
+                    co = k;
+                    break;
+                }
+            }
+
+            if (col == 'B' or col == 'O' or infoTab[i][j][co] < 0)
+            {
+                if (p[i][j] != 'J')
+                {
+                    p[i][j] = 'J';
+                    score_yellow = this->calcul_score();
+                    if (score_yellow <= score)
+                        p[i][j] = col;
+                    else
+                    {
+                        score = score_yellow;
+                        col = 'J';
+                    }
+                }
+
+                if (p[i][j] != 'V')
+                {
+                    p[i][j] = 'V';
+                    score_green = this->calcul_score();
+                    if (score_green <= score)
+                        p[i][j] = col;
+                    else
+                    {
+                        score = score_green;
+                        col = 'V';
+                    }
+                }
+
+                if (p[i][j] != 'N' and nb_black < size)
+                {
+                    p[i][j] = 'N';
+                    score_black = this->calcul_score();
+                    if (score_black <= score)
+                        p[i][j] = col;
+                    else
+                    {
+                        score = score_black;
+                        col = 'N';
+                        ++nb_black;
+                    }
+                }
+
+                if (p[i][j] != 'B')
+                {
+                    p[i][j] = 'B';
+                    score_blue = this->calcul_score();
+                    if (score_blue <= score)
+                        p[i][j] = col;
+                    else
+                    {
+                        score = score_blue;
+                        col = 'B';
+                    }
+                }
+
+                if (p[i][j] != 'O')
+                {
+                    p[i][j] = 'O';
+                    score_orange = this->calcul_score();
+                    if (score_orange <= score)
+                        p[i][j] = col;
+                    else
+                    {
+                        score = score_orange;
+                        col = 'O';
+                    }
+                }
+
+                if (p[i][j] == 'N' and col != 'N')
+                    nb_black--;
+
+                if (score_blue > initial_score or score_black > initial_score or score_green > initial_score or score_orange > initial_score or score_yellow > initial_score)
+                {
+                    optimize_grid(i, j, limit_recur - 1);
+                }
+            }
         }
     }
 }

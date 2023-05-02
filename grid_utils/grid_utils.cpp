@@ -105,16 +105,28 @@ int Grid::get_coordinates_empty_cell(int *x, int *y) const
     {
         for (int j = 0; j < size; j++)
         {
-            if (colors[i][j] == 'X') {
+            if (colors[i][j] == 'X')
+            {
                 *x = i;
                 *y = j;
                 return 0;
             }
         }
-        
     }
     return -1;
-    
+}
+void Grid::update_green_scores_tab(int*** scores_tab, int line, int column, int index)
+{
+    for (int i = -1; i < 2; i++)
+    {
+        for (int j = -1; j < 2; j++)
+        {
+            if (line + i >= 0 and line + i < size and column + j >= 0 and column + j < size)
+            {
+                scores_tab[line + i][column + j][index] -= 2 * penality;
+            }
+        }
+    }
 }
 void Grid::print_colors_with_score() const
 {

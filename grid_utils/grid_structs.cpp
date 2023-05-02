@@ -33,14 +33,23 @@ void GridLinkGuard::addGrid(Grid *g)
     gl->grid = g;
     gl->next = this->firstGridLink;
 
-    if (this->firstGridLink == nullptr) {
+    if (this->firstGridLink == nullptr)
+    {
         this->lastGridLink = gl;
     }
 
     this->firstGridLink = gl;
     this->size++;
+
+    // clear Guard and get only the best of them
+    if (size == 2048)
+    {
+        this->convert_to_best_scores();
+    }
 }
 
+/// @brief remove the first item of the GridLinkGuard
+/// @param clear_grid if true, the first grid will be deleted 
 void GridLinkGuard::pop_first(bool clear_grid)
 {
     if (size != 0 and this->firstGridLink != nullptr)
@@ -53,7 +62,8 @@ void GridLinkGuard::pop_first(bool clear_grid)
         }
         delete save;
 
-        if (this->firstGridLink == nullptr) {
+        if (this->firstGridLink == nullptr)
+        {
             this->lastGridLink = nullptr;
         }
 
@@ -61,6 +71,8 @@ void GridLinkGuard::pop_first(bool clear_grid)
     }
 }
 
+/// @brief clear the grid
+/// @param clear_grid if true, the grids that the GridLinkGuard contains are freed
 void GridLinkGuard::clear(bool clear_grid)
 {
     while (this->size != 0)
@@ -79,7 +91,6 @@ void GridLinkGuard::extend(GridLinkGuard *glg)
     this->lastGridLink = glg->lastGridLink;
     glg->init();
     delete glg;
-
 }
 
 GridLinkGuard *GridLinkGuard::copy_as_ptr()
@@ -91,13 +102,13 @@ GridLinkGuard *GridLinkGuard::copy_as_ptr()
         glg->addGrid(glTmp->grid->copy_grid_as_ptr(true));
         glTmp = glTmp->next;
     }
-    
+
     return glg;
 }
 
 /// @brief create a new GridLisGuard storing the best scores copying the grid(s) selected
 /// @return a pointer the GridLinkGuard dynamically allocated
-GridLinkGuard *GridLinkGuard::get_best_scores()
+GridLinkGuard *GridLinkGuard::get_best_scores() const
 {
     if (this->firstGridLink == nullptr)
     {
@@ -125,7 +136,7 @@ GridLinkGuard *GridLinkGuard::get_best_scores()
         gl = gl->next;
     }
 
-    //glgBestTemp->print_all_scores();
+    // glgBestTemp->print_all_scores();
 
     GridLinkGuard *glgBest = glgBestTemp->copy_as_ptr();
     printf("here\n");
@@ -136,14 +147,23 @@ GridLinkGuard *GridLinkGuard::get_best_scores()
     return glgBest;
 }
 
+void GridLinkGuard::convert_to_best_scores()
+{
+    GridLinkGuard *glg = this->get_best_scores();
+    this->clear(true);
+    this->extend(glg);
+}
+
 std::string *GridLinkGuard::get_pretty_print()
 {
     std::string *s = new std::string;
     GridLink *gl = this->firstGridLink;
-    
-    if (this->firstGridLink != nullptr) {
+
+    if (this->firstGridLink != nullptr)
+    {
         *s = this->firstGridLink->grid->get_score();
-        while (gl != nullptr) {
+        while (gl != nullptr)
+        {
             *s += ", " + std::to_string(gl->grid->get_score());
             gl = gl->next;
         }
@@ -151,11 +171,14 @@ std::string *GridLinkGuard::get_pretty_print()
     return s;
 }
 
-void GridLinkGuard::pretty_print() const {
+void GridLinkGuard::pretty_print() const
+{
     std::cout << "\n=====-=====-=====\n";
     GridLink *gl = this->firstGridLink;
-    if (gl != nullptr) {
-        while (gl != nullptr) {
+    if (gl != nullptr)
+    {
+        while (gl != nullptr)
+        {
             gl->grid->print_colors_with_score();
 
             gl = gl->next;
