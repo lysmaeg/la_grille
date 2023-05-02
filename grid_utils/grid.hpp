@@ -23,6 +23,9 @@ private:
     void brute_force_recur(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_placed);
     void brute_force_launcher(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_posed, int x, int y, char c);
 
+    int ***build_scores_tab(int black, int green, int yellow, int red, bool all) const;
+    void delete_scores_tab(int ***scores_tab) const;
+
 public:
     int **numbers;
     char **colors;
@@ -85,8 +88,6 @@ public:
     int calcul_score_place(int line, int col, char color, bool all) const;
 
     int calcul_score() const;
-
-    int ***build_info_tab(int black, int green, int yellow, int red, bool all) const;
 
     void generate_random_grid();
     void build_grid_points();

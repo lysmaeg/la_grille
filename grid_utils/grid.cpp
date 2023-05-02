@@ -385,7 +385,7 @@ int Grid::calcul_score() const
     return score;
 }
 
-int ***Grid::build_info_tab(int black, int green, int yellow, int red, bool all) const
+int ***Grid::build_scores_tab(int black, int green, int yellow, int red, bool all) const
 {
     int ***infoTab = new int **[size];
 
@@ -410,6 +410,20 @@ int ***Grid::build_info_tab(int black, int green, int yellow, int red, bool all)
         }
     }
     return infoTab;
+}
+
+void Grid::delete_scores_tab(int ***scores_tab) const
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            delete[] scores_tab[i][j];
+        }
+        delete[] scores_tab[i];
+    }
+    delete[] scores_tab;
+    
 }
 
 void Grid::fill_blank(GridLinkGuard *glg, int pieces_left)
@@ -440,7 +454,7 @@ void Grid::build_grid_points()
     std::string s = "RVNJ";
     const int black = 2, green = 1, yellow = 3, red = 0;
     int max_cur, color_cur;
-    int ***scores_tab = build_info_tab(black, green, yellow, red, true);
+    int ***scores_tab = build_scores_tab(black, green, yellow, red, true);
     couple coordinates_max;
 
     /* int nb_neg_left = 0, nb_pos_left = 0, current_neg_blue_point = 0;
@@ -571,15 +585,7 @@ void Grid::build_grid_points()
     } while (placed_pieces <= size * size and max_cur != 0);
     printf("placed_pieces = %d, max_cur %d\n", placed_pieces, max_cur);
 
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size; j++)
-        {
-            delete[] scores_tab[i][j];
-        }
-        delete[] scores_tab[i];
-    }
-    delete[] scores_tab;
+    delete_scores_tab(scores_tab);
 
     GridLinkGuard *glg = new GridLinkGuard;
     fill_blank(glg, nb_empty_cells());
@@ -777,7 +783,7 @@ void Grid::optimize_grid(int line, int column, int limit_recur)
 
     std::string s = "RVNJ";
     const int black = 2, green = 1, yellow = 3, red = 0;
-    int ***infoTab = build_info_tab(black, green, yellow, red, true);
+    int ***scores_tab = build_scores_tab(black, green, yellow, red, true);
 
     for (int i = 0; i < size; ++i)
     {
@@ -799,7 +805,7 @@ void Grid::optimize_grid(int line, int column, int limit_recur)
                 }
             }
 
-            if (col == 'B' or col == 'O' or infoTab[i][j][co] < 0)
+            if (col == 'B' or col == 'O' or scores_tab[i][j][co] < 0)
             {
                 if (p[i][j] != 'J')
                 {
@@ -877,4 +883,6 @@ void Grid::optimize_grid(int line, int column, int limit_recur)
             }
         }
     }
+
+    this->delete_scores_tab(scores_tab);
 }
