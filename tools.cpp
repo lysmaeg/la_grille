@@ -1,5 +1,29 @@
 #include "tools.hpp"
 
+coupleLink* add_first_CL(coupleLink *cl, int line, int column)
+{
+    coupleLink *ne = new coupleLink;
+    ne->c = {line, column};
+    ne->next = cl;
+    if (cl == nullptr) {
+
+    }
+    return cl;
+}
+
+bool contains_CL(const coupleLink *cl, int line, int column)
+{
+    const coupleLink *tmp = cl;
+    while (tmp != nullptr) {
+        if (tmp->c.column == column and tmp->c.line == line) {
+            return true;
+        }
+        tmp = tmp->next;
+
+    }
+    return false;
+}
+
 /// @brief calculate the length of an integer in print
 /// @param n the number we want the length
 /// @param current_max the current max, avoiding repeating old values
@@ -130,11 +154,34 @@ void print_ttab(const int **t, int s1, int s2)
 void print_tttab(const int ***t, int s1, int s2, int s3)
 {
     std::cout << "[";
-    for (int i = 0; i < s1-1; i++)
+    for (int i = 0; i < s1 - 1; i++)
     {
         print_ttab(t[i], s2, s3);
         std::cout << ",\n";
     }
-    print_ttab(t[s1-1], s2, s3);
+    print_ttab(t[s1 - 1], s2, s3);
     std::cout << "]\n";
+}
+
+bool are_equal_ttab(const int **t, const int **u, int s1, int s2)
+{
+    for (int i = 0; i < s1; i++)
+    {
+        if (!are_equal_tab(t[i], u[i], s2)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool are_equal_tab(const int *t, const int *u, int s)
+{
+    for (int i = 0; i < s; i++)
+    {
+        if (t[i] != u[i])
+        {
+            return false;
+        }
+    }
+    return true;
 }

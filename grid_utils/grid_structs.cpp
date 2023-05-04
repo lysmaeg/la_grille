@@ -26,6 +26,11 @@ void GridLinkGuard::init()
     this->lastGridLink = nullptr;
 }
 
+const int GridLinkGuard::get_size() const
+{
+    return this->size;
+}
+
 void GridLinkGuard::addGrid(Grid *g)
 {
     GridLink *gl = new GridLink;
@@ -42,14 +47,14 @@ void GridLinkGuard::addGrid(Grid *g)
     this->size++;
 
     // clear Guard and get only the best of them
-    if (size == 2048)
+    if (size >= this->clear_at)
     {
         this->convert_to_best_scores();
     }
 }
 
 /// @brief remove the first item of the GridLinkGuard
-/// @param clear_grid if true, the first grid will be deleted 
+/// @param clear_grid if true, the first grid will be deleted
 void GridLinkGuard::pop_first(bool clear_grid)
 {
     if (size != 0 and this->firstGridLink != nullptr)
@@ -86,9 +91,14 @@ void GridLinkGuard::clear(bool clear_grid)
 /// @param glg GridLinkGuard consumed that is added to this
 void GridLinkGuard::extend(GridLinkGuard *glg)
 {
-    // add given GridLinkGuard to the end of the this GridLinkGuard
-    this->lastGridLink->next = glg->firstGridLink;
-    this->lastGridLink = glg->lastGridLink;
+    // add given GridLinkGuard to the start of the this GridLinkGuard
+    if (glg->lastGridLink != nullptr)
+    {
+        glg->lastGridLink->next = this->firstGridLink;
+        this->firstGridLink = glg->firstGridLink;
+    }
+    this->size += glg->size;
+    
     glg->init();
     delete glg;
 }
@@ -113,6 +123,7 @@ GridLinkGuard *GridLinkGuard::get_best_scores() const
     if (this->firstGridLink == nullptr)
     {
         std::cout << "The set of grids is empty !\n";
+        return new GridLinkGuard;
     }
 
     // setup temp GridLink
@@ -123,24 +134,23 @@ GridLinkGuard *GridLinkGuard::get_best_scores() const
 
     while (gl != nullptr)
     {
-        // current focus better than our current best
-        if (gl->grid->get_score() >= glgBestTemp->firstGridLink->grid->get_score())
-        {
-            // strictly superior, clear best
-            if (gl->grid->get_score() > glgBestTemp->firstGridLink->grid->get_score())
+        if (glgBestTemp->firstGridLink)
+            // current focus better than our current best
+            if (gl->grid->get_score() >= glgBestTemp->firstGridLink->grid->get_score())
             {
-                glgBestTemp->clear(false);
+                // strictly superior, clear best
+                if (gl->grid->get_score() > glgBestTemp->firstGridLink->grid->get_score())
+                {
+                    glgBestTemp->clear(false);
+                }
+                glgBestTemp->addGrid(gl->grid);
             }
-            glgBestTemp->addGrid(gl->grid);
-        }
         gl = gl->next;
     }
 
     // glgBestTemp->print_all_scores();
 
     GridLinkGuard *glgBest = glgBestTemp->copy_as_ptr();
-    printf("here\n");
-    glgBest->print_all_scores();
     glgBestTemp->clear(false);
     delete glgBestTemp;
 
@@ -152,6 +162,11 @@ void GridLinkGuard::convert_to_best_scores()
     GridLinkGuard *glg = this->get_best_scores();
     this->clear(true);
     this->extend(glg);
+}
+
+const Grid *GridLinkGuard::get_first_grid() const
+{
+    return this->firstGridLink != nullptr ? this->firstGridLink->grid : nullptr;
 }
 
 std::string *GridLinkGuard::get_pretty_print()

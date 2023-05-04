@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(laGrille)
+project(theGrid)
 
 add_compile_options(-Wall -O3)
 
@@ -10,4 +10,5 @@ tools.cpp
 grid_utils/grid_files_manager.cpp
 grid_utils/grid_utils.cpp
 grid_utils/grid_structs.cpp
+grid_utils/grid_files_manager.cpp
 )

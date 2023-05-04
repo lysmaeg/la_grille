@@ -20,17 +20,32 @@ int main(void)
     // Grid g = Grid("../testFiles/test4N.txt", "", false);
     Grid g = Grid("../instances/hors_competition/probleme_4_b.txt", "", false);
     g.print_numbers();
+    g.build_grid_points();
+    g.print_colors_with_score();
+    // g.optimize_grid_full();
+    //g.print_colors_with_score();
+    
+    /* Grid g = Grid("../instances/hors_competition/probleme_4_b.txt", "", false);
+    g.print_numbers();
+
+    
+    g.build_grid_points();
+    // g.brute_force();
+    g.print_colors(); */
 
     /* g.generate_random_grid();
     g.set_score_from_calculation();
     g.print_colors_with_score();
 
-    g.optimize_grid();
+    g.optimize_grid_full();
     g.set_score_from_calculation();
     g.print_colors_with_score(); */
-    g.build_grid_points();
-    // g.brute_force();
-    g.print_colors();
+
+    //Grid g = Grid("../testFiles/test4N.txt", "", false);
+    //g.brute_force();
+
+    // g.~Grid();
+
     return 0;
 
     // 23

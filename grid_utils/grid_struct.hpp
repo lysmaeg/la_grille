@@ -14,16 +14,17 @@ class GridLinkGuard
 {
 private:
     int size = 0;
-    int clear_at = 2048;
+    int clear_at = 10000;
     GridLink *lastGridLink = nullptr;
+    GridLink *firstGridLink = nullptr;
 
 public:
     GridLinkGuard();
-    GridLink *firstGridLink = nullptr;
     GridLinkGuard(Grid *g);
     ~GridLinkGuard();
 
     void init();
+    const int get_size() const;
 
     void addGrid(Grid *g);
     void pop_first(bool clear_grid);
@@ -34,6 +35,7 @@ public:
 
     GridLinkGuard *get_best_scores() const;
     void convert_to_best_scores();
+    const Grid *get_first_grid() const;
 
     void print_all_scores();
     std::string *get_pretty_print();

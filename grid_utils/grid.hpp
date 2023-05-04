@@ -20,8 +20,8 @@ private:
     int score = 0;
     bool is_main_grid = false;
 
-    void brute_force_recur(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_placed);
-    void brute_force_launcher(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_posed, int x, int y, char c);
+    void brute_force_recur(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_placed, int *nb_tested);
+    void brute_force_launcher(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_posed, int x, int y, char c, int *nb_tested);
 
     int ***build_scores_tab(int black, int green, int yellow, int red, bool all) const;
     void delete_scores_tab(int ***scores_tab) const;
@@ -35,8 +35,8 @@ public:
     Grid(int size, int penalite, int **num, const char **colors);
     Grid(const Grid *g, bool copy_colors);
     ~Grid();
-    Grid copy_grid(bool copy_colors);
-    Grid *copy_grid_as_ptr(bool copy_colors);
+    Grid copy_grid(bool copy_colors) const;
+    Grid *copy_grid_as_ptr(bool copy_colors) const;
 
     void init_tables();
 
@@ -59,7 +59,7 @@ public:
     int nb_empty_cells() const;
     int get_coordinates_empty_cell(int *x, int *y) const;
 
-    void update_green_scores_tab(int*** scores_tab, int line, int column, int index);
+    void update_green_scores_tab(int ***scores_tab, int line, int column, int index);
 
     bool is_valid_score();
 
@@ -68,7 +68,7 @@ public:
     // grid_files_manager.hpp
     int read_file_for_numbers(std::string filename);
     int read_file_for_colors(std::string filename);
-    int save_in_file(std::string filename);
+    int save_in_file(std::string filename) const;
 
     /* --- */
 
@@ -79,6 +79,9 @@ public:
     int get_cross_score(int line, int col) const;
     int nb_color_around_cell(int line, int col, char color) const;
     int nb_color_in_grid(char c) const;
+    void nb_pos_neg_left(int *neg, int *pos) const;
+
+    /* score calculation */
 
     int calculate_red_piece(int line, int col) const;
     int calculate_yellow_piece(int line, int col) const;
@@ -89,11 +92,16 @@ public:
 
     int calcul_score() const;
 
+    /* --- */
+
     void generate_random_grid();
     void build_grid_points();
     void fill_blank(GridLinkGuard *glg, int pieces_left);
 
-    void optimize_grid(int line = -1, int column = -1, int limit_recur = 5);
+    void optimize_grid_full();
+    void optimize_grid_recur(bool main, GridLinkGuard *glg, coupleLink *cl, int limit_recur);
+
+    void orange_blue();
 
     void brute_force();
 };

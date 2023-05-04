@@ -6,10 +6,20 @@
 
 #define NB_MAX_THREAD -1
 
-struct couple {
+struct couple
+{
     int line;
     int column;
 };
+
+struct coupleLink
+{
+    couple c = couple{-1, -1};
+    coupleLink *next = nullptr;
+};
+
+coupleLink *add_first_CL(coupleLink *cl, int line, int column);
+bool contains_CL(const coupleLink *cl, int line, int column);
 
 int size_of_int(int n);
 int get_max_size_of_int_list(int **t, int size);
@@ -24,5 +34,8 @@ char **copy_ttab_char(const char **t1, int s1_0, int s1_1, int *s2_0, int *s2_1)
 void print_tab(const int *t, int s);
 void print_ttab(const int **t, int s1, int s2);
 void print_tttab(const int ***t, int s1, int s2, int s3);
+
+bool are_equal_ttab(const int **t, const int **u, int s1, int s2);
+bool are_equal_tab(const int *t, const int *u, int s);
 
 #endif

@@ -90,7 +90,7 @@ int Grid::read_file_for_colors(std::string filename)
 /// @brief write in the given file the colors and the score associated to the numbers
 /// @param filename the file's name
 /// @return -1 on failure, 0 on success
-int Grid::save_in_file(std::string filename)
+int Grid::save_in_file(std::string filename) const
 {
     std::ofstream file(filename);
     if (!file)
@@ -108,6 +108,7 @@ int Grid::save_in_file(std::string filename)
         return -1;
     }
 
+    std::cout << "error\n";
     file << calcul_score();
     if (!file.good())
     {
@@ -121,5 +122,6 @@ int Grid::save_in_file(std::string filename)
         std::cerr << "An error occured while writing the score into the file\n";
         return -1;
     }
+    std::cout <<  "kldfkdf\n";
     return 0;
 }
