@@ -5,10 +5,7 @@ coupleLink* add_first_CL(coupleLink *cl, int line, int column)
     coupleLink *ne = new coupleLink;
     ne->c = {line, column};
     ne->next = cl;
-    if (cl == nullptr) {
-
-    }
-    return cl;
+    return ne;
 }
 
 bool contains_CL(const coupleLink *cl, int line, int column)
@@ -175,6 +172,29 @@ bool are_equal_ttab(const int **t, const int **u, int s1, int s2)
 }
 
 bool are_equal_tab(const int *t, const int *u, int s)
+{
+    for (int i = 0; i < s; i++)
+    {
+        if (t[i] != u[i])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool are_equal_ttab_char(const char **t, const char **u, int s1, int s2)
+{
+    for (int i = 0; i < s1; i++)
+    {
+        if (!are_equal_tab_char(t[i], u[i], s2)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool are_equal_tab_char(const char *t, const char *u, int s)
 {
     for (int i = 0; i < s; i++)
     {

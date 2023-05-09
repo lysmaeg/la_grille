@@ -98,9 +98,55 @@ void GridLinkGuard::extend(GridLinkGuard *glg)
         this->firstGridLink = glg->firstGridLink;
     }
     this->size += glg->size;
-    
+
     glg->init();
     delete glg;
+}
+
+bool GridLinkGuard::contains_same_colors(const Grid *g) const
+{
+    if (g == nullptr)
+    {
+        return true;
+    }
+    if (this->firstGridLink == nullptr)
+    {
+        return false;
+    }
+    GridLink *gl = this->firstGridLink;
+    while (gl != nullptr)
+    {
+        if (are_equal_ttab_char((const char **)g->colors, (const char **)gl->grid->colors, g->get_size(), g->get_size()))
+        {
+            return true;
+        }
+        gl = gl->next;
+    }
+    return false;
+}
+
+void GridLinkGuard::switch_colors_with_first(Grid *g)
+{
+    if (this->firstGridLink == nullptr ) {
+        return;
+    }
+    g->switch_colors(this->firstGridLink->grid);
+}
+
+GridLinkGuard *GridLinkGuard::solve_all_grids()
+{
+    // this->pretty_print();
+    GridLinkGuard *storageGrids = new GridLinkGuard;
+    GridLink *glTemp = this->firstGridLink;
+    while (glTemp != nullptr) {
+        glTemp->grid->fill_blank();
+        glTemp->grid->copy_grid_as_ptr(true)->optimize_grid_recur(storageGrids, nullptr, 2);
+        glTemp = glTemp->next;
+    }
+    printf("finished\n");
+    GridLinkGuard *bestGlg = storageGrids->get_best_scores();
+    delete storageGrids;
+    return bestGlg;
 }
 
 GridLinkGuard *GridLinkGuard::copy_as_ptr()
@@ -134,7 +180,8 @@ GridLinkGuard *GridLinkGuard::get_best_scores() const
 
     while (gl != nullptr)
     {
-        if (glgBestTemp->firstGridLink)
+        if (glgBestTemp->firstGridLink != nullptr)
+        {
             // current focus better than our current best
             if (gl->grid->get_score() >= glgBestTemp->firstGridLink->grid->get_score())
             {
@@ -143,8 +190,14 @@ GridLinkGuard *GridLinkGuard::get_best_scores() const
                 {
                     glgBestTemp->clear(false);
                 }
-                glgBestTemp->addGrid(gl->grid);
+
+                // check if the grid is no already in the list
+                if (not glgBestTemp->contains_same_colors(gl->grid))
+                {
+                    glgBestTemp->addGrid(gl->grid);
+                }
             }
+        }
         gl = gl->next;
     }
 
@@ -157,6 +210,7 @@ GridLinkGuard *GridLinkGuard::get_best_scores() const
     return glgBest;
 }
 
+/// @brief convert the current GridLinkGuard into a GridLinkGuard storing the Grid with the best scores
 void GridLinkGuard::convert_to_best_scores()
 {
     GridLinkGuard *glg = this->get_best_scores();

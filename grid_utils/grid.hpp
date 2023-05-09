@@ -60,8 +60,11 @@ public:
     int get_coordinates_empty_cell(int *x, int *y) const;
 
     void update_green_scores_tab(int ***scores_tab, int line, int column, int index);
+    void update_yellow_scores_tab(int ***scores_tab, int line, int column, int index);
 
     bool is_valid_score();
+
+    void switch_colors(Grid *g);
 
     /* --- */
 
@@ -96,10 +99,13 @@ public:
 
     void generate_random_grid();
     void build_grid_points();
-    void fill_blank(GridLinkGuard *glg, int pieces_left);
+    void fill_blank_recur(GridLinkGuard *glg, int pieces_left);
+    void fill_blank();
+
+    void glouton(GridLinkGuard *glg, int nb_red, int nb_black, int places_pieces, int limit_recur);
 
     void optimize_grid_full();
-    void optimize_grid_recur(bool main, GridLinkGuard *glg, coupleLink *cl, int limit_recur);
+    void optimize_grid_recur(GridLinkGuard *glg, coupleLink *cl, int limit_recur);
 
     void orange_blue();
 

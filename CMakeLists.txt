@@ -10,5 +10,5 @@ tools.cpp
 grid_utils/grid_files_manager.cpp
 grid_utils/grid_utils.cpp
 grid_utils/grid_structs.cpp
-grid_utils/grid_files_manager.cpp
+grid_utils/grid_score_calc.cpp
 )

@@ -108,7 +108,6 @@ int Grid::save_in_file(std::string filename) const
         return -1;
     }
 
-    std::cout << "error\n";
     file << calcul_score();
     if (!file.good())
     {
@@ -122,6 +121,6 @@ int Grid::save_in_file(std::string filename) const
         std::cerr << "An error occured while writing the score into the file\n";
         return -1;
     }
-    std::cout <<  "kldfkdf\n";
+    //std::cout <<  "kldfkdf\n";
     return 0;
 }

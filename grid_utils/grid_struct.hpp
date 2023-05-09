@@ -17,8 +17,8 @@ private:
     int clear_at = 10000;
     GridLink *lastGridLink = nullptr;
     GridLink *firstGridLink = nullptr;
-
 public:
+
     GridLinkGuard();
     GridLinkGuard(Grid *g);
     ~GridLinkGuard();
@@ -30,6 +30,11 @@ public:
     void pop_first(bool clear_grid);
     void clear(bool clear_grid);
     void extend(GridLinkGuard *glg);
+    // void remove_same();
+    bool contains_same_colors(const Grid *g) const;
+    void switch_colors_with_first(Grid *g);
+
+    GridLinkGuard *solve_all_grids();
 
     GridLinkGuard *copy_as_ptr();
 
@@ -41,6 +46,5 @@ public:
     std::string *get_pretty_print();
     void pretty_print() const;
 };
-
 
 #endif

@@ -38,4 +38,7 @@ void print_tttab(const int ***t, int s1, int s2, int s3);
 bool are_equal_ttab(const int **t, const int **u, int s1, int s2);
 bool are_equal_tab(const int *t, const int *u, int s);
 
+bool are_equal_ttab_char(const char **t, const char **u, int s1, int s2);
+bool are_equal_tab_char(const char *t, const char *u, int s);
+
 #endif

@@ -115,7 +115,8 @@ int Grid::get_coordinates_empty_cell(int *x, int *y) const
     }
     return -1;
 }
-void Grid::update_green_scores_tab(int*** scores_tab, int line, int column, int index)
+
+void Grid::update_green_scores_tab(int ***scores_tab, int line, int column, int index)
 {
     for (int i = -1; i < 2; i++)
     {
@@ -123,21 +124,45 @@ void Grid::update_green_scores_tab(int*** scores_tab, int line, int column, int 
         {
             if (line + i >= 0 and line + i < size and column + j >= 0 and column + j < size)
             {
-                scores_tab[line + i][column + j][index] -= 2 * penality;
+                scores_tab[line][column][index] = this->calculate_green_piece(line, column);
             }
         }
     }
 }
+
+void Grid::update_yellow_scores_tab(int ***scores_tab, int line, int column, int index)
+{
+    for (int i = -1; i < 2; i++)
+    {
+        for (int j = -1; j < 2; j++)
+        {
+            if (line + i >= 0 and line + i < size and column + j >= 0 and column + j < size)
+            {
+                scores_tab[line][column][index] = this->calculate_yellow_piece(line, column);
+            }
+        }
+    }
+}
+
 void Grid::print_colors_with_score() const
 {
     this->print_colors();
     std::cout << "With a score of " << this->get_score() << ".\n=====-=====-=====\n";
 }
+
 /// @brief check if score calculated is equal to the supposed score
 /// @return true if equal, false otherwise
 bool Grid::is_valid_score()
 {
     return score == supposed_score;
+}
+
+void Grid::switch_colors(Grid *g)
+{
+    printf("calledffdfd\n");
+    char **aux = g->colors;
+    g->colors = this->colors;
+    this->colors = aux;
 }
 
 /// @brief print the numbers using iteration

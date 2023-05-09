@@ -18,10 +18,10 @@ int main(void)
     g.build_grid_points(); */
 
     // Grid g = Grid("../testFiles/test4N.txt", "", false);
-    Grid g = Grid("../instances/hors_competition/probleme_4_b.txt", "", false);
+    Grid g = Grid("../instances/hors_competition/probleme_4_a.txt", "", false);
     g.print_numbers();
     g.build_grid_points();
-    g.print_colors_with_score();
+    // g.print_colors_with_score();
     // g.optimize_grid_full();
     //g.print_colors_with_score();
     
