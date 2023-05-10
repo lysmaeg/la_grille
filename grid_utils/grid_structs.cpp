@@ -300,7 +300,8 @@ void GridLinkGuard::pretty_print() const
     if (gl != nullptr)
     {
         while (gl != nullptr)
-        {
+        {   
+            std::cout << gl->grid->get_nb_penality_blue() << "\n";
             gl->grid->print_colors_with_score();
 
             gl = gl->next;
@@ -314,10 +315,26 @@ void GridLinkGuard::fill_blank_all()
 
     while (gl != nullptr)
     {
+        gl->grid->set_score_from_calculation();
+        // gl->grid->print_colors_with_score();
+
         gl->grid->orange_blue();
+        gl->grid->print_colors();
+        gl->grid->optimize_grid_full();
+        gl->grid->optimize_grid_full();
+        gl->grid->set_score_from_calculation();
+        // gl->grid->print_colors_with_score();
+
+        // std::cout << gl->grid->get_nb_penality_blue() << '\n';
+
+        gl->grid->yellow_replace_blue();
+        gl->grid->set_score_from_calculation();
+        // gl->grid->print_colors_with_score();
+        gl->grid->fill_blank();
+
         gl = gl->next;
     }
-    this->pretty_print();
+    // this->pretty_print();
     
 }
 

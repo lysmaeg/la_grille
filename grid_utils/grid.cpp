@@ -209,13 +209,16 @@ void Grid::nb_pos_neg_left_blue(int *neg, int *pos) const
     {
         for (int j = 0; j < size; j++)
         {
-            if (numbers[i][j] > 0)
+            if (this->colors[i][j] == 'B')
             {
-                *pos += 1;
-            }
-            else if (numbers[i][j] < 0)
-            {
-                *neg += 1;
+                if (numbers[i][j] > 0)
+                {
+                    *pos += 1;
+                }
+                else if (numbers[i][j] < 0)
+                {
+                    *neg += 1;
+                }
             }
         }
     }
@@ -295,13 +298,15 @@ void Grid::fill_blank_recur(GridLinkGuard *glg, int pieces_left)
 void Grid::fill_blank()
 {
     // conditions depending of the amount of cells left
-    if (nb_empty_cells() <= 23)
+    if (nb_empty_cells() <= 20)
     {
         std::cout << "1\n";
         GridLinkGuard *glg = new GridLinkGuard;
         fill_blank_recur(glg, this->nb_empty_cells());
-        glg->convert_to_best_scores();
-        glg->switch_colors_with_first(this);
+        // glg->convert_to_best_scores();
+        glg->get_best_scores()->switch_colors_with_first(this);
+        this->yellow_replace_blue();
+        this->optimize_grid_full();
         delete glg;
     }
     else
@@ -325,7 +330,7 @@ void Grid::glouton(int value)
     do
     {
         max_cur = value;
-        color_cur = 0;
+        color_cur = -1;
         coordinates_max = couple{0, 0};
         // iterate through all table to find the max value, green should be more considered
         for (int i = 0; i < size; i++)
@@ -342,7 +347,7 @@ void Grid::glouton(int value)
                 for (int k = 0; k < 4; k++)
                 {
                     // handle priorities between colors
-                    if (scores_tab[i][j][k] < max_cur or (k == black and nb_black == size) or (k == red and nb_red == 1))
+                    if (scores_tab[i][j][k] < max_cur or (k == black and nb_black >= size) or (k == red and nb_red >= 1))
                     {
                         // there is this condition to optimize the code (instead of checking two there is only on checked which coule be more true)
                         continue;
@@ -361,7 +366,7 @@ void Grid::glouton(int value)
                 }
             }
         }
-        if (max_cur != 0)
+        if (max_cur != value)
         {
 
             colors[coordinates_max.line][coordinates_max.column] = s[color_cur];
@@ -389,7 +394,7 @@ void Grid::glouton(int value)
             }
         }
 
-    } while (placed_pieces <= max_pieces and max_cur != 0);
+    } while (placed_pieces <= max_pieces and max_cur != value);
     // printf("placed_pieces = %d, max_cur %d\n", placed_pieces, max_cur);
     // this->print_colors();
     delete_scores_tab(scores_tab);
@@ -411,7 +416,7 @@ void Grid::glouton_recur(GridLinkGuard *glg, int nb_red, int nb_black, int place
     do
     {
         max_cur = 0;
-        color_cur = 0;
+        color_cur = -1;
         coordinates_max = couple{0, 0};
         // iterate through all table to find the max value, green should be more considered
         for (int i = 0; i < size; i++)
@@ -495,10 +500,17 @@ void Grid::build_grid_points(bool *write_all, char *output_file)
 
     GridLinkGuard *gloutonGlg = new GridLinkGuard;
     Grid *gridCopy = this->copy_grid_as_ptr(true);
-    gridCopy->glouton_recur(gloutonGlg, nb_color_in_grid('R'), nb_color_in_grid('N'), size * size - nb_empty_cells(), 4, nullptr);
+    gridCopy->glouton_recur(gloutonGlg, nb_color_in_grid('R'), nb_color_in_grid('N'), size * size - nb_empty_cells(), 6, nullptr);
+    // gloutonGlg->pretty_print();
+    std::cout << "printingalfd------------------\n";
     gloutonGlg->pretty_print();
     gloutonGlg->fill_blank_all();
+    // gloutonGlg->pretty_print();
+    std::cout << "printingall\n";
     gloutonGlg->pretty_print();
+
+    gloutonGlg->get_best_scores()->pretty_print();
+    // gloutonGlg->pretty_print();
 
     /* GridLinkGuard *bestGrids = gloutonGlg->solve_all_grids();
     std::cout << "first solved ; \n";
@@ -1110,14 +1122,30 @@ void Grid::orange_blue()
     if (p[0][0] == 'X')
         p[0][0] = 'O';
 
+
+    for (int i = 0; i < size; ++i)
+    {
+        for (int j = 0; j < size; ++j)
+        {
+            if (p[i][j] == 'Q')
+            {
+                p[i][j] = 'X';
+            }
+        }
+    }
+
+    std::cout << "avant\n";
+    this->print_colors();
     glouton(penality * (-1));
+    this->print_safe_colors();
+    std::cout << "apres\n";
 
     // placement du reste des bleu
     for (int i = 0; i < size; ++i)
     {
         for (int j = 0; j < size; ++j)
         {
-            if (p[i][j] == 'X' or p[i][j] == 'Q')
+            if (p[i][j] == 'X')
             {
                 p[i][j] = 'B';
             }
@@ -1129,12 +1157,13 @@ void Grid::yellow_replace_blue()
 {
     char **p = colors;
     int **c = numbers;
-    
+
     int b;
 
-    int *neg;
-    int *pos;
-    nb_pos_neg_left_blue(neg, pos);
+    int neg;
+    int pos;
+    nb_pos_neg_left_blue(&neg, &pos);
+    printf("neg = %d, pos = %d\n", neg, pos);
 
     if (neg > pos)
     {
@@ -1142,50 +1171,56 @@ void Grid::yellow_replace_blue()
         {
             for (int j = 0; j < size; ++j)
             {
+                nb_pos_neg_left_blue(&neg, &pos);
+
+                if (p[i][j] != 'B' or pos >= neg)
+                {
+                    continue;
+                }
+
                 b = nb_color_around_cell(i, j, 'B');
                 if (b >= 1)
                 {
                     if (get_color(i, j + 1) == 'B')
                     {
-                        if ((c[i][j] + c[i-1][j+1]) > penality)
+                        if ((c[i][j] + c[i][j + 1]) > -penality)
                         {
-                            c[i][j] == 'J';
-                            c[i-1][j+1] == 'J';
+                            p[i][j] = 'J';
+                            p[i][j + 1] = 'J';
+                            b--;
                         }
                     }
 
-                    if (get_color(i + 1, j - 1) == 'B' and c[i][j] == 'B')
+                    if (get_color(i + 1, j - 1) == 'B' and b >= 1)
                     {
-                        if ((c[i][j] + c[i+1][j-1]) > penality)
+                        if ((c[i][j] + c[i + 1][j - 1]) > -penality)
                         {
-                            c[i][j] == 'J';
-                            c[i+1][j-1] == 'J';
+                            p[i][j] = 'J';
+                            p[i + 1][j - 1] = 'J';
+                            b--;
                         }
                     }
 
-                    if (get_color(i + 1, j) == 'B' and c[i][j] == 'B')
+                    if (get_color(i + 1, j) == 'B' and b >= 1)
                     {
-                        if ((c[i][j] + c[i+1][j]) > penality)
+                        if ((c[i][j] + c[i + 1][j]) > -penality)
                         {
-                            c[i][j] == 'J';
-                            c[i+1][j] == 'J';
+                            p[i][j] = 'J';
+                            p[i + 1][j] = 'J';
+                            b--;
                         }
                     }
 
-                    if (get_color(i + 1, j + 1) == 'B' and c[i][j] == 'B')
+                    if (get_color(i + 1, j + 1) == 'B' and b >= 1)
                     {
-                        if ((c[i][j] + c[i+1][j+1]) > penality)
+                        if ((c[i][j] + c[i + 1][j + 1]) > -penality)
                         {
-                            c[i][j] == 'J';
-                            c[i+1][j+1] == 'J';
+                            p[i][j] = 'J';
+                            p[i + 1][j + 1] = 'J';
                         }
                     }
-
                 }
-                
             }
         }
-        
-        
     }
 }
