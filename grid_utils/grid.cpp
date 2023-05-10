@@ -1124,3 +1124,68 @@ void Grid::orange_blue()
         }
     }
 }
+
+void Grid::yellow_replace_blue()
+{
+    char **p = colors;
+    int **c = numbers;
+    
+    int b;
+
+    int *neg;
+    int *pos;
+    nb_pos_neg_left_blue(neg, pos);
+
+    if (neg > pos)
+    {
+        for (int i = 0; i < size; ++i)
+        {
+            for (int j = 0; j < size; ++j)
+            {
+                b = nb_color_around_cell(i, j, 'B');
+                if (b >= 1)
+                {
+                    if (get_color(i, j + 1) == 'B')
+                    {
+                        if ((c[i][j] + c[i-1][j+1]) > penality)
+                        {
+                            c[i][j] == 'J';
+                            c[i-1][j+1] == 'J';
+                        }
+                    }
+
+                    if (get_color(i + 1, j - 1) == 'B' and c[i][j] == 'B')
+                    {
+                        if ((c[i][j] + c[i+1][j-1]) > penality)
+                        {
+                            c[i][j] == 'J';
+                            c[i+1][j-1] == 'J';
+                        }
+                    }
+
+                    if (get_color(i + 1, j) == 'B' and c[i][j] == 'B')
+                    {
+                        if ((c[i][j] + c[i+1][j]) > penality)
+                        {
+                            c[i][j] == 'J';
+                            c[i+1][j] == 'J';
+                        }
+                    }
+
+                    if (get_color(i + 1, j + 1) == 'B' and c[i][j] == 'B')
+                    {
+                        if ((c[i][j] + c[i+1][j+1]) > penality)
+                        {
+                            c[i][j] == 'J';
+                            c[i+1][j+1] == 'J';
+                        }
+                    }
+
+                }
+                
+            }
+        }
+        
+        
+    }
+}

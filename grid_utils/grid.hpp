@@ -114,6 +114,8 @@ public:
 
     void orange_blue();
 
+    void yellow_replace_blue();
+
     void brute_force();
 
     void find_value(int value, bool *write_all, char *output_file);
