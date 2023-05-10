@@ -35,6 +35,7 @@ public:
     void switch_colors_with_first(Grid *g);
 
     GridLinkGuard *solve_all_grids();
+    void save_all_in_files(char *output_file);
 
     GridLinkGuard *copy_as_ptr();
 
@@ -45,6 +46,8 @@ public:
     void print_all_scores();
     std::string *get_pretty_print();
     void pretty_print() const;
+
+    void fill_blank_all();
 };
 
 #endif

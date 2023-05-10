@@ -66,6 +66,8 @@ public:
 
     void switch_colors(Grid *g);
 
+    int get_nb_penality_blue();
+
     /* --- */
 
     // grid_files_manager.hpp
@@ -82,7 +84,7 @@ public:
     int get_cross_score(int line, int col) const;
     int nb_color_around_cell(int line, int col, char color) const;
     int nb_color_in_grid(char c) const;
-    void nb_pos_neg_left(int *neg, int *pos) const;
+    void nb_pos_neg_left_blue(int *neg, int *pos) const;
 
     /* score calculation */
 
@@ -98,18 +100,23 @@ public:
     /* --- */
 
     void generate_random_grid();
-    void build_grid_points();
+    void build_grid_points(bool *write_all, char *output_file);
     void fill_blank_recur(GridLinkGuard *glg, int pieces_left);
     void fill_blank();
 
-    void glouton(GridLinkGuard *glg, int nb_red, int nb_black, int places_pieces, int limit_recur);
+    void glouton(int value);
+    void glouton_recur(GridLinkGuard *glg, int nb_red, int nb_black, int places_pieces, int limit_recur, coupleLink *cl);
 
     void optimize_grid_full();
     void optimize_grid_recur(GridLinkGuard *glg, coupleLink *cl, int limit_recur);
+    void optimize_grid_clever();
+    void optimize_yellow();
 
     void orange_blue();
 
     void brute_force();
+
+    void find_value(int value, bool *write_all, char *output_file);
 };
 
 #endif

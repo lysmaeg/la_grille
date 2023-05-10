@@ -96,7 +96,8 @@ int Grid::calcul_score() const
             if (p[l][col] == 'J')
             {
                 score_yellow += c[l][col];
-                if ((get_color(l - 1, col - 1) != 'J') and (get_color(l - 1, col) != 'J') and (get_color(l - 1, col + 1) != 'J') and (get_color(l, col - 1) != 'J') and (get_color(l + 1, col - 1) != 'J') and (get_color(l + 1, col) != 'J') and (get_color(l + 1, col + 1) != 'J') and (get_color(l + 1, col) != 'J'))
+                // if ((get_color(l - 1, col - 1) != 'J') and (get_color(l - 1, col) != 'J') and (get_color(l - 1, col + 1) != 'J') and (get_color(l, col - 1) != 'J') and (get_color(l + 1, col - 1) != 'J') and (get_color(l + 1, col) != 'J') and (get_color(l + 1, col + 1) != 'J') and (get_color(l + 1, col) != 'J'))
+                if (nb_color_around_cell(l, col, 'J') == 0)
                 {
                     score_yellow -= pena;
                 }

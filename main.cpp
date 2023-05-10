@@ -1,6 +1,74 @@
 #include "grid_utils/grid.hpp"
 
-int main(void)
+void print_help_message()
+{
+    std::cout << "Welcome in the home page : \n\nHere are the arguments available :\n\n";
+    std::cout << "./exec [-h/--help] [-o] [file to be read]\n\n";
+    std::cout << "=> -o : specify the output file, if not given the output will only be in the terminal";
+    std::cout << "=> -t : specify the time that the program requires\n";
+    std::cout << "=> -h / --help : print this help message\n";
+    std::cout << "=> -w / --write-all : \n";
+}
+
+Grid *manage_arguments(int argc, char **args, char *&output_file, bool *write_all)
+{
+    bool input_given = false;
+    bool write_all_given = false;
+    *write_all = false;
+    Grid *g;
+
+    for (int i = 1; i < argc; i++)
+    {
+        char *t = args[i];
+        if (strcmp(t, "-o") == 0)
+        {
+            i++;
+            output_file = args[i];
+            printf("%s\n", output_file);
+        }
+        else if (strcmp("-h", t) == 0 or strcmp("--help", t) == 0)
+        {
+            print_help_message();
+        }
+        else if (strcmp("-w", t) == 0 or strcmp("--write-all", t) == 0)
+        {
+            if (!write_all_given)
+            {
+                write_all_given = true;
+                *write_all = true;
+            }
+        }
+        else
+        {
+            if (!input_given)
+            {
+                g = new Grid(t, "", false);
+                if (g->read_file_for_numbers(t) <= -1)
+                {
+                    std::cerr << "An error occured, cannot read the file " << t << "\n";
+                    exit(EXIT_SUCCESS);
+                }
+                input_given = true;
+            }
+            else
+            {
+                std::cerr << "You cannot give the input file twice, exiting\n";
+                print_help_message();
+                exit(0);
+            }
+        }
+    }
+
+    if (!input_given)
+    {
+        std::cout << "You did not give the input file, exiting\n";
+        print_help_message();
+        exit(EXIT_SUCCESS);
+    }
+    return g;
+}
+
+int main(int argc, char **args)
 {
     srand(time(NULL));
 
@@ -18,17 +86,35 @@ int main(void)
     g.build_grid_points(); */
 
     // Grid g = Grid("../testFiles/test4N.txt", "", false);
-    Grid g = Grid("../instances/hors_competition/probleme_4_a.txt", "", false);
-    g.print_numbers();
-    g.build_grid_points();
+    // Grid g = Grid("../instances/hors_competition/probleme_4_b.txt", "", false);
+
+    char *output_file = nullptr;
+    bool write_all = false;
+
+    Grid *g = manage_arguments(argc, args, output_file, &write_all);
+    printf("%p\n", output_file);
+    g->print_numbers();
+    /* g.read_file_for_colors("../results/some res.txt");
+    g.set_score_from_calculation();
+    g.print_colors_with_score(); */
+    // g.generate_random_grid();
+    g->build_grid_points(&write_all, output_file);
+
+    /* for (int i = 0; i < 200; i++)
+    {
+        g.optimize_grid_full();
+    }
+    g.set_score_from_calculation();
+    g.print_colors_with_score(); */
+
     // g.print_colors_with_score();
     // g.optimize_grid_full();
-    //g.print_colors_with_score();
-    
+    // g.print_colors_with_score();
+
     /* Grid g = Grid("../instances/hors_competition/probleme_4_b.txt", "", false);
     g.print_numbers();
 
-    
+
     g.build_grid_points();
     // g.brute_force();
     g.print_colors(); */
@@ -41,8 +127,8 @@ int main(void)
     g.set_score_from_calculation();
     g.print_colors_with_score(); */
 
-    //Grid g = Grid("../testFiles/test4N.txt", "", false);
-    //g.brute_force();
+    // Grid g = Grid("../testFiles/test4N.txt", "", false);
+    // g.brute_force();
 
     // g.~Grid();
 

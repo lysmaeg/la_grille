@@ -165,6 +165,29 @@ void Grid::switch_colors(Grid *g)
     this->colors = aux;
 }
 
+int Grid::get_nb_penality_blue()
+{
+    int nb_blue_pos = 0, nb_bleu_neg = 0;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (this->colors[i][j] == 'B')
+            {
+                if (this->numbers[i][j] > 0)
+                {
+                    nb_blue_pos++;
+                }
+                else if (this->numbers[i][j] < 0)
+                {
+                    nb_bleu_neg++;
+                }
+            }
+        }
+    }
+    return  abs(std::max(nb_bleu_neg - nb_blue_pos, 0));
+}
+
 /// @brief print the numbers using iteration
 void Grid::print_numbers() const
 {

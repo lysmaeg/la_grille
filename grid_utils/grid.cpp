@@ -17,21 +17,21 @@ Grid::Grid(int s, int p, int **num, const char **colors)
 
 Grid::Grid(const Grid *g, bool copy_colors)
 {
-    size = g->size;
-    penality = g->penality;
-    numbers = g->numbers;
+    this->size = g->size;
+    this->penality = g->penality;
+    this->numbers = g->numbers;
     if (!copy_colors)
     {
-        colors = new char *[size];
+        this->colors = new char *[size];
         for (int i = 0; i < size; i++)
         {
-            colors[i] = new char[size];
-            memset(colors[i], 'X', size);
+            this->colors[i] = new char[size];
+            memset(this->colors[i], 'X', size);
         }
     }
     else
     {
-        colors = copy_ttab_char((const char **)g->colors, size, size, &size, &size);
+        this->colors = copy_ttab_char((const char **)g->colors, this->size, this->size, &this->size, &this->size);
     }
 }
 
@@ -192,7 +192,7 @@ int Grid::nb_color_in_grid(char c) const
     {
         for (int j = 0; j < size; j++)
         {
-            if (numbers[i][j] == c)
+            if (colors[i][j] == c)
             {
                 nb++;
             }
@@ -201,7 +201,7 @@ int Grid::nb_color_in_grid(char c) const
     return nb;
 }
 
-void Grid::nb_pos_neg_left(int *neg, int *pos) const
+void Grid::nb_pos_neg_left_blue(int *neg, int *pos) const
 {
     *pos = 0;
     *neg = 0;
@@ -295,14 +295,107 @@ void Grid::fill_blank_recur(GridLinkGuard *glg, int pieces_left)
 void Grid::fill_blank()
 {
     // conditions depending of the amount of cells left
-    GridLinkGuard *glg = new GridLinkGuard;
-    fill_blank_recur(glg, this->nb_empty_cells());
-    glg->convert_to_best_scores();
-    glg->switch_colors_with_first(this);
-    delete glg;
+    if (nb_empty_cells() <= 23)
+    {
+        std::cout << "1\n";
+        GridLinkGuard *glg = new GridLinkGuard;
+        fill_blank_recur(glg, this->nb_empty_cells());
+        glg->convert_to_best_scores();
+        glg->switch_colors_with_first(this);
+        delete glg;
+    }
+    else
+    {
+        std::cout << "2\n";
+        this->orange_blue();
+    }
 }
 
-void Grid::glouton(GridLinkGuard *glg, int nb_red, int nb_black, int placed_pieces, int limit_recur)
+void Grid::glouton(int value)
+{
+    std::string s = "RVNJ";
+    const int black = 2, green = 1, yellow = 3, red = 0;
+    int max_cur, color_cur;
+    int ***scores_tab = build_scores_tab(black, green, yellow, red, true);
+    couple coordinates_max;
+    const int max_pieces = size * size;
+    int nb_black = nb_color_in_grid('N'), placed_pieces = max_pieces - nb_empty_cells(), nb_red = nb_color_in_grid('R');
+    std::cout << "nb red = " << nb_red << '\n';
+
+    do
+    {
+        max_cur = value;
+        color_cur = 0;
+        coordinates_max = couple{0, 0};
+        // iterate through all table to find the max value, green should be more considered
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                // cell already taken
+                if (colors[i][j] != 'X')
+                {
+                    continue;
+                }
+
+                // iterate through each color to find the best color at this place
+                for (int k = 0; k < 4; k++)
+                {
+                    // handle priorities between colors
+                    if (scores_tab[i][j][k] < max_cur or (k == black and nb_black == size) or (k == red and nb_red == 1))
+                    {
+                        // there is this condition to optimize the code (instead of checking two there is only on checked which coule be more true)
+                        continue;
+                    }
+                    else if (scores_tab[i][j][k] > max_cur)
+                    {
+                        max_cur = scores_tab[i][j][k];
+                        color_cur = k;
+                        coordinates_max = couple{i, j};
+                    }
+                    else
+                    {
+                        // are equal
+                        // do something
+                    }
+                }
+            }
+        }
+        if (max_cur != 0)
+        {
+
+            colors[coordinates_max.line][coordinates_max.column] = s[color_cur];
+            placed_pieces++;
+            // manage colors that impact the same color
+            switch (color_cur)
+            {
+            case black:
+                nb_black++;
+                break;
+
+            case yellow:
+                // add penality for each cell around it
+                this->update_yellow_scores_tab(scores_tab, coordinates_max.line, coordinates_max.column, yellow);
+
+                break;
+            case red:
+                nb_red++;
+            case green:
+                // substract penality for each cell around it
+                this->update_green_scores_tab(scores_tab, coordinates_max.line, coordinates_max.column, green);
+
+            default:
+                break;
+            }
+        }
+
+    } while (placed_pieces <= max_pieces and max_cur != 0);
+    // printf("placed_pieces = %d, max_cur %d\n", placed_pieces, max_cur);
+    // this->print_colors();
+    delete_scores_tab(scores_tab);
+}
+
+void Grid::glouton_recur(GridLinkGuard *glg, int nb_red, int nb_black, int placed_pieces, int limit_recur, coupleLink *cl)
 {
     if (limit_recur == 0)
     {
@@ -383,36 +476,59 @@ void Grid::glouton(GridLinkGuard *glg, int nb_red, int nb_black, int placed_piec
             if (limit_recur >= 2 and color_cur == green and numbers[coordinates_max.line][coordinates_max.column] > 0)
             {
                 Grid *g = this->copy_grid_as_ptr(true);
-                g->colors[coordinates_max.line][coordinates_max.column] = 'B';
-                g->glouton(glg, nb_red, nb_black, placed_pieces, limit_recur - 1);
+                // g->colors[coordinates_max.line][coordinates_max.column] = 'B';
+                g->glouton_recur(glg, nb_red, nb_black, placed_pieces, limit_recur - 1, add_first_CL(cl, coordinates_max.line, coordinates_max.column));
             }
         }
 
     } while (placed_pieces <= max_pieces and max_cur != 0);
     // printf("placed_pieces = %d, max_cur %d\n", placed_pieces, max_cur);
     // this->print_colors();
+    delete cl;
     delete_scores_tab(scores_tab);
     glg->addGrid(this);
 }
 
 // this function does not generate the best grid, the around of green is not really taken in mind
-void Grid::build_grid_points()
+void Grid::build_grid_points(bool *write_all, char *output_file)
 {
 
     GridLinkGuard *gloutonGlg = new GridLinkGuard;
     Grid *gridCopy = this->copy_grid_as_ptr(true);
-    gridCopy->glouton(gloutonGlg, nb_color_in_grid('R'), nb_color_in_grid('N'), size * size - nb_empty_cells(), 4);
+    gridCopy->glouton_recur(gloutonGlg, nb_color_in_grid('R'), nb_color_in_grid('N'), size * size - nb_empty_cells(), 4, nullptr);
     gloutonGlg->pretty_print();
-    GridLinkGuard *bestGrids = gloutonGlg->solve_all_grids();
+    gloutonGlg->fill_blank_all();
+    gloutonGlg->pretty_print();
+
+    /* GridLinkGuard *bestGrids = gloutonGlg->solve_all_grids();
+    std::cout << "first solved ; \n";
     bestGrids->pretty_print();
 
     GridLinkGuard *bestGrids2 = bestGrids->solve_all_grids();
+    std::cout << "second solved\n";
     bestGrids2->pretty_print();
+    bestGrids2->switch_colors_with_first(this);
+
+    // printf("%p\n", output_file);
+
+    if (output_file != nullptr)
+    {
+        if (!*write_all or bestGrids2->get_size() == 1)
+        {
+            this->save_in_file(output_file);
+        }
+        else
+        {
+            bestGrids2->save_all_in_files(output_file);
+        }
+    }
+
 
     delete gloutonGlg;
-    delete bestGrids;
+    delete bestGrids; */
 
-    delete bestGrids2;
+    // delete bestGrids2;
+    // delete bestGrids3;
 
     /* GridLinkGuard *q = new GridLinkGuard;
     this->glouton(q, 0, 0, 0, 1);
@@ -561,6 +677,17 @@ void Grid::brute_force()
     GridLinkGuard *bestGlg = glg->get_best_scores();
     bestGlg->pretty_print();
     delete bestGlg;
+}
+
+void Grid::find_value(int value, bool *write_all, char *output_file)
+{
+    Grid *bestGrid = this->copy_grid_as_ptr(true);
+    bestGrid->build_grid_points(write_all, output_file);
+    if (bestGrid->get_score() < value)
+    {
+        std::cout << "The given value is higher than the best value that we can compute\n";
+        exit(0);
+    }
 }
 
 /// @brief generate a random grid of colors for this Grid
@@ -895,6 +1022,11 @@ void Grid::optimize_grid_recur(GridLinkGuard *glg, coupleLink *cl, int limit_rec
     glg->addGrid(this);
 }
 
+void Grid::optimize_grid_clever()
+{
+    int nb_pena_blue = this->get_nb_penality_blue();
+}
+
 void Grid::orange_blue()
 {
     char **p = colors;
@@ -954,8 +1086,8 @@ void Grid::orange_blue()
                     }
                 }
 
-                int jb = i + j;
                 // deuxieme diagonale
+                int jb = i + j;
                 if (jb < size - 1)
                 {
                     for (int k = 0; k < jb + 1; ++k)
@@ -966,7 +1098,7 @@ void Grid::orange_blue()
                 }
                 else
                 {
-                    for (int k = 0; k < i + j + 1; ++k)
+                    for (int k = 0; k < (size - 1) * 2 + 1 - jb; ++k)
                     {
                         if (p[size - 1 - k][jb - (size - 1) + k] == 'X')
                             p[size - 1 - k][jb - (size - 1) + k] = 'Q';
@@ -977,6 +1109,8 @@ void Grid::orange_blue()
     }
     if (p[0][0] == 'X')
         p[0][0] = 'O';
+
+    glouton(penality * (-1));
 
     // placement du reste des bleu
     for (int i = 0; i < size; ++i)
