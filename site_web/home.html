@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>La Grille</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>La Grille</h1>
+        <ul class="menu">
+              <li>
+                <a href="home.html" class="actif">Accueil</a>
+              </li>
+              <li>
+                <a href="#">Algorithmes</a>
+              </li>
+              <li>
+                <a href="#">Explication</a>
+              </li>
+              <li>
+                <a href="#">Solutions</a>
+              </li>
+              <li>
+                <a href="#">Grille</a>
+              </li>
+        </ul>
+        
+        <br>
+        <ol>
+            <li class="titre">Problème</li>
+            <p>Le problème consiste à placer des pions de diverses couleurs sur un plateau de jeu (que l’on appellera grille), de manière à maximiser son score.</p>
+            <p>On dispose au départ des données suivantes : </p>
+            <ol>
+                <li>Une grille, définie par une matrice carrée de valeurs positives et négatives.
+                    La taille de la grille (t) est égale à son nombre de lignes (et donc de colonnes).
+                    Voici un exemple de grille de taille t = 4 :</li>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td>V</td>
+                            <td>J</td>
+                            <td>O</td>
+                            <td>N</td>
+                        </tr>
+                        <tr>
+                            <td>B</td>
+                            <td>J</td>
+                            <td>V</td>
+                            <td>B</td>
+                            <td>O</td>
+                        </tr>
+                        <tr>
+                            <td>C</td>
+                            <td>R</td>
+                            <td>J</td>
+                            <td>O</td>
+                            <td>J</td>
+                        </tr>
+                        <tr>
+                            <td>D</td>
+                            <td>J</td>
+                            <td>N</td>
+                            <td>O</td>
+                            <td>B</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td>-6</td>
+                            <td>9</td>
+                            <td>-2</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td>B</td>
+                            <td>8</td>
+                            <td>2</td>
+                            <td>-7</td>
+                            <td>-6</td>
+                        </tr>
+                        <tr>
+                            <td>C</td>
+                            <td>-8</td>
+                            <td>2</td>
+                            <td>-4</td>
+                            <td>-3</td>
+                        </tr>
+                        <tr>
+                            <td>D</td>
+                            <td>-3</td>
+                            <td>3</td>
+                            <td>-4</td>
+                            <td>7</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <li>Une valeur de pénalité (p). Par exemple : p = 10.</li>
+            </ol>
+            <p>Sur chacune des t<sup>2</sup> cases de la grille, il faut placer un pion. Le score total correspond à la somme du score de tous les pions, moins les points de pénalité. Chaque pénalité retranche p points au score total</p>
+            <p>Il existe 6 couleurs de pion, les règles de placement et la manière de marquer des points ou d’engendrer des pénalités sont propres à chaque couleur :</p>
+            <ol>
+                <li> Pions <span class="jaune">jaunes</span> : Le score d’un pion jaune correspond `a la valeur de sa case. Tout pion jaune isolé,
+                    c’est-à-dire n’ayant aucun pion jaune parmi les pions adjacents (y compris en diagonale), entraîne une
+                    pénalité</li>
+                <li>Pions <span class="vert">verts</span> : Le score d’un pion résulte de la somme des valeurs de sa case et des cases adjacentes orthogonalement (donc pas en diagonale). Chaque paire de pions verts adjacents (y compris en diagonale)
+                    entraîne une pénalité.</li>
+                <li>Pions <span class="noir">noirs</span> : Le score d’un pion noir est la valeur de sa case, moins 1. Si au plus n pions noirs sont
+                    utilisés, le score de chaque pion noir est doublé.
+                    </li>
+                <li>Pions <span class="bleu">bleus</span> : Le score d’un pion bleu est 0. Soit d la différence entre le nombre de pions bleus placés
+                    sur des cases de valeur strictement négative et le nombre de pions bleus placés sur des cases de valeur
+                    strictement positive. Si d > 0, alors cela entraîne d pénalités.</li>
+                <li>Pions <span class="orange">orange</span> : Le score d’un pion orange est 0. Chaque paire de pions orange situés sur la même
+                    ligne, même colonne ou même diagonale entraîne une pénalité.</li>
+                <li>Pion <span class="rouge">rouge</span>. Il n’y a qu’un seul pion rouge à disposition, et il est requis de l’utiliser. Le nombre de
+                    points correspond à l’opposé de la valeur inscrite sur la case.</li>
+            </ol>
+            <p>A l’exception de l’unique pion rouge, le nombre de pions de chaque autre couleur n’est pas limité</p>
+            <p>Ci-dessous à gauche figure un exemple de placement de jetons (pas optimal en termes de score) sur une
+                grille de taille t = 4 :
+                </p>
+
+
+            <p>Le score obtenu par ce placement de jetons sur la grille exemple précédente (rappelée ci-dessus `a droite)
+                se calcule comme suit :</p>
+            <ul>
+                <li> Score des pions jaunes : SJ = 9 + 8 + 2 − 3 − 3 = 13.</li>
+                <li>Pénalités sur les pions jaunes : PJ = 1, car il y a un pion isolé (C4)</li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+            <li class="titre">Projet</li>
+            <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+            <li class="titre">Compétition</li>
+            <ol>
+                <li></li>
+                <li></li>
+            </ol>
+        </ol>
+
+
+    </body>
+</html>
