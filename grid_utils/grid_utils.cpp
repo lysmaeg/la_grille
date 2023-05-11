@@ -159,7 +159,6 @@ bool Grid::is_valid_score()
 
 void Grid::switch_colors(Grid *g)
 {
-    printf("calledffdfd\n");
     char **aux = g->colors;
     g->colors = this->colors;
     this->colors = aux;

@@ -253,7 +253,7 @@ int ***Grid::build_scores_tab(int black, int green, int yellow, int red, bool al
         {
             infoTab[i][j][black] = 2 * calcul_score_place(i, j, 'N', true);
             infoTab[i][j][green] = calcul_score_place(i, j, 'V', true);
-            infoTab[i][j][yellow] = calcul_score_place(i, j, 'J', true) - penality;
+            infoTab[i][j][yellow] = calcul_score_place(i, j, 'J', true) /* - penality */;
             infoTab[i][j][red] = calcul_score_place(i, j, 'R', true);
         }
     }
@@ -478,7 +478,7 @@ void Grid::glouton_recur(GridLinkGuard *glg, int nb_red, int nb_black, int place
             default:
                 break;
             }
-            if (limit_recur >= 2 and color_cur == green and numbers[coordinates_max.line][coordinates_max.column] > 0)
+            if (limit_recur >= 2 /* and color_cur == green */ and numbers[coordinates_max.line][coordinates_max.column] > 0)
             {
                 Grid *g = this->copy_grid_as_ptr(true);
                 // g->colors[coordinates_max.line][coordinates_max.column] = 'B';
@@ -500,17 +500,34 @@ void Grid::build_grid_points(bool *write_all, char *output_file)
 
     GridLinkGuard *gloutonGlg = new GridLinkGuard;
     Grid *gridCopy = this->copy_grid_as_ptr(true);
-    gridCopy->glouton_recur(gloutonGlg, nb_color_in_grid('R'), nb_color_in_grid('N'), size * size - nb_empty_cells(), 6, nullptr);
+    gridCopy->glouton_recur(gloutonGlg, nb_color_in_grid('R'), nb_color_in_grid('N'), size * size - nb_empty_cells(), 4, nullptr);
     // gloutonGlg->pretty_print();
-    std::cout << "printingalfd------------------\n";
-    gloutonGlg->pretty_print();
+    // std::cout << "printingalfd------------------\n";
+    // gloutonGlg->pretty_print();
     gloutonGlg->fill_blank_all();
     // gloutonGlg->pretty_print();
     std::cout << "printingall\n";
     gloutonGlg->pretty_print();
 
-    gloutonGlg->get_best_scores()->pretty_print();
-    // gloutonGlg->pretty_print();
+    std::cout << "here are the bests : \n";
+    gloutonGlg->convert_to_best_scores();
+    gloutonGlg->pretty_print();
+
+    gloutonGlg->opti_recur(2);
+    gloutonGlg->pretty_print();
+
+    gloutonGlg->opti_recur(2);
+    gloutonGlg->pretty_print();
+
+    std::cout << "fkdsjfkds\n";
+
+    gloutonGlg->opti_recur(2);
+    std::cout << "fkdsjfkds---\n";
+    gloutonGlg->pretty_print();
+
+    gloutonGlg->opti_recur(2);
+    std::cout << "fkdsjfkds-----\n";
+    gloutonGlg->pretty_print();
 
     /* GridLinkGuard *bestGrids = gloutonGlg->solve_all_grids();
     std::cout << "first solved ; \n";
@@ -1122,7 +1139,6 @@ void Grid::orange_blue()
     if (p[0][0] == 'X')
         p[0][0] = 'O';
 
-
     for (int i = 0; i < size; ++i)
     {
         for (int j = 0; j < size; ++j)
@@ -1134,11 +1150,11 @@ void Grid::orange_blue()
         }
     }
 
-    std::cout << "avant\n";
-    this->print_colors();
+    // std::cout << "avant\n";
+    // this->print_colors();
     glouton(penality * (-1));
-    this->print_safe_colors();
-    std::cout << "apres\n";
+    // this->print_safe_colors();
+    // std::cout << "apres\n";
 
     // placement du reste des bleu
     for (int i = 0; i < size; ++i)
@@ -1162,65 +1178,90 @@ void Grid::yellow_replace_blue()
 
     int neg;
     int pos;
+    bool changed = false;
     nb_pos_neg_left_blue(&neg, &pos);
     printf("neg = %d, pos = %d\n", neg, pos);
 
-    if (neg > pos)
-    {
+    // if (neg > pos)
+    // {
         for (int i = 0; i < size; ++i)
         {
             for (int j = 0; j < size; ++j)
             {
                 nb_pos_neg_left_blue(&neg, &pos);
+                changed = false;
 
-                if (p[i][j] != 'B' or pos >= neg)
+                if (p[i][j] == 'B' and numbers[i][j] < 0)
                 {
-                    continue;
-                }
 
-                b = nb_color_around_cell(i, j, 'B');
-                if (b >= 1)
-                {
-                    if (get_color(i, j + 1) == 'B')
-                    {
-                        if ((c[i][j] + c[i][j + 1]) > -penality)
-                        {
-                            p[i][j] = 'J';
-                            p[i][j + 1] = 'J';
-                            b--;
-                        }
-                    }
+                    // two blue next to each other
+                    // if (pos < neg)
+                    // {
 
-                    if (get_color(i + 1, j - 1) == 'B' and b >= 1)
-                    {
-                        if ((c[i][j] + c[i + 1][j - 1]) > -penality)
+                        b = nb_color_around_cell(i, j, 'B');
+                        printf("bleu  = %d\n", b);
+                        if (b >= 1)
                         {
-                            p[i][j] = 'J';
-                            p[i + 1][j - 1] = 'J';
-                            b--;
-                        }
-                    }
+                            if (get_color(i, j + 1) == 'B')
+                            {
+                                if ((c[i][j] + c[i][j + 1]) > -penality)
+                                {
+                                    p[i][j] = 'J';
+                                    p[i][j + 1] = 'J';
+                                    changed = true;
+                                    b--;
+                                }
+                            }
 
-                    if (get_color(i + 1, j) == 'B' and b >= 1)
-                    {
-                        if ((c[i][j] + c[i + 1][j]) > -penality)
-                        {
-                            p[i][j] = 'J';
-                            p[i + 1][j] = 'J';
-                            b--;
-                        }
-                    }
+                            if (get_color(i + 1, j - 1) == 'B' and b >= 1)
+                            {
+                                if ((c[i][j] + c[i + 1][j - 1]) > -penality)
+                                {
+                                    p[i][j] = 'J';
+                                    p[i + 1][j - 1] = 'J';
+                                    changed = true;
+                                    b--;
+                                }
+                            }
 
-                    if (get_color(i + 1, j + 1) == 'B' and b >= 1)
-                    {
-                        if ((c[i][j] + c[i + 1][j + 1]) > -penality)
-                        {
-                            p[i][j] = 'J';
-                            p[i + 1][j + 1] = 'J';
+                            if (get_color(i + 1, j) == 'B' and b >= 1)
+                            {
+                                if ((c[i][j] + c[i + 1][j]) > -penality)
+                                {
+                                    p[i][j] = 'J';
+                                    p[i + 1][j] = 'J';
+                                    changed = true;
+                                    b--;
+                                }
+                            }
+
+                            if (get_color(i + 1, j + 1) == 'B' and b >= 1)
+                            {
+                                if ((c[i][j] + c[i + 1][j + 1]) > -penality)
+                                {
+                                    p[i][j] = 'J';
+                                    p[i + 1][j + 1] = 'J';
+                                    changed = true;
+                                }
+                            }
                         }
-                    }
+                    // }
+
+                    /* if (not changed and b >= 1) {
+                        int w = numbers[i][j], tmp = w;
+                        if (get_color(i, j+1) == 'B' and tmp + numbers[i][j+1] > -penality)
+                        for (int r = 0; r < size; r++)
+                        {
+                            for (int s = 0; s < size; s++)
+                            {
+                                
+                            }
+                            
+                        }
+                        
+                    } */
                 }
             }
         }
-    }
+    // }
 }

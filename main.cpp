@@ -90,15 +90,31 @@ int main(int argc, char **args)
 
     char *output_file = nullptr;
     bool write_all = false;
-
     Grid *g = manage_arguments(argc, args, output_file, &write_all);
-    printf("%p\n", output_file);
+
+    
     g->print_numbers();
-    /* g.read_file_for_colors("../results/some res.txt");
-    g.set_score_from_calculation();
-    g.print_colors_with_score(); */
-    // g.generate_random_grid();
     g->build_grid_points(&write_all, output_file);
+
+    /* g->read_file_for_colors("../testFiles/6abest");
+    g->set_score_from_calculation();
+    g->print_numbers();
+    g->print_colors_with_score();
+
+    GridLinkGuard *glg = new GridLinkGuard;
+    g->copy_grid_as_ptr(true)->optimize_grid_recur(glg, nullptr, 2);
+    glg->convert_to_best_scores();
+    glg->pretty_print();
+
+    glg->opti_recur(2);
+    glg->pretty_print();
+
+    glg->opti_recur(2);
+    glg->pretty_print(); */
+
+    // glg->opti_recur(4);
+    // glg->pretty_print();
+    // g.generate_random_grid();
 
     /* for (int i = 0; i < 200; i++)
     {

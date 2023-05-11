@@ -319,7 +319,11 @@ void GridLinkGuard::fill_blank_all()
         // gl->grid->print_colors_with_score();
 
         gl->grid->orange_blue();
-        gl->grid->print_colors();
+        // gl->grid->print_colors();
+        gl->grid->optimize_grid_full();
+        gl->grid->optimize_grid_full();
+        gl->grid->optimize_grid_full();
+        gl->grid->optimize_grid_full();
         gl->grid->optimize_grid_full();
         gl->grid->optimize_grid_full();
         gl->grid->set_score_from_calculation();
@@ -336,6 +340,20 @@ void GridLinkGuard::fill_blank_all()
     }
     // this->pretty_print();
     
+}
+
+void GridLinkGuard::opti_recur(int model)
+{
+    GridLink *gl = this->firstGridLink;
+    GridLinkGuard *glg = new GridLinkGuard;
+    while (gl != nullptr) {
+        gl->grid->yellow_replace_blue();
+        gl->grid->copy_grid_as_ptr(true)->optimize_grid_recur(glg, nullptr, model);
+        gl = gl->next;
+    }
+    this->extend(glg);
+    this->convert_to_best_scores();
+    this->convert_to_best_scores();
 }
 
 void GridLinkGuard::print_all_scores()

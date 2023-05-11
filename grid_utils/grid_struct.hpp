@@ -48,6 +48,7 @@ public:
     void pretty_print() const;
 
     void fill_blank_all();
+    void opti_recur(int model);
 };
 
 #endif
