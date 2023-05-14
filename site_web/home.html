@@ -13,16 +13,16 @@
                 <a href="home.html" class="actif">Accueil</a>
               </li>
               <li>
-                <a href="#">Algorithmes</a>
+                <a href="algorithmes.html">Algorithmes</a>
               </li>
               <li>
-                <a href="#">Explication</a>
+                <a href="explication.html">Explication</a>
               </li>
               <li>
-                <a href="#">Solutions</a>
+                <a href="solutions.html">Solutions</a>
               </li>
               <li>
-                <a href="#">Grille</a>
+                <a href="grille.html">Grille</a>
               </li>
         </ul>
         
@@ -36,7 +36,7 @@
                     La taille de la grille (t) est égale à son nombre de lignes (et donc de colonnes).
                     Voici un exemple de grille de taille t = 4 :</li>
 
-                <table>
+                <table class="tableau1">
                     <tbody>
                         <tr>
                             <td></td>
@@ -76,7 +76,7 @@
                     </tbody>
                 </table>
                 <br>
-                <table>
+                <table class="tableau1">
                     <tbody>
                         <tr>
                             <td></td>
@@ -147,30 +147,244 @@
                 se calcule comme suit :</p>
             <ul>
                 <li> Score des pions jaunes : SJ = 9 + 8 + 2 − 3 − 3 = 13.</li>
-                <li>Pénalités sur les pions jaunes : PJ = 1, car il y a un pion isolé (C4)</li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>Pénalités sur les pions jaunes : PJ = 1, car il y a un pion isolé (C4).</li>
+                <li>Score des pions verts : le pion en A1 a un score de −6 + 9 + 8 = 11, le pion en B2 a un score de
+                    2 + 9 − 7 + 2 + 8 = 14, soit un score pour les pions verts de SV = 11 + 14 = 25.</li>
+                <li>Pénalités sur les pions verts : PV = 1, car les pions en A1 et B2 sont adjacents.</li>
+                <li> Score des pions noirs : SN = 2 × ((5 − 1) + (3 − 1)) = 12 ; le score de base est doublé car il n’y a pas
+                    plus de t = 4 pions noirs.
+                    </li>
+                <li> Pénalités sur les pions bleus : PB = 0, car il n’y a pas plus de pions bleus sur des cases négatives (B3)
+                    que sur des cases positives (D4).
+                    </li>
+                <li> Pénalités sur les pions orange : PO = 5, puisque sur les (2 parmis 4)
+                    = 6 paires de jetons orange, 3 sont placées
+                    sur une même colonne (A3-C3, A3-D3, C3-D3) et 2 sur une même diagonale (A3-B4, B4-C3).</li>
+                <li> Score du pion rouge : SR = 8.</li>
+                <li> Pour rappel, les pions bleus et les pions orange ont toujours un score nul, et il n’y a jamais de pénalité
+                    sur les pions noirs ni sur le pion rouge.</li>
+                <li> Le score total de la solution est : SJ + SV + SN + SR − p × (PJ + PV + PB + PO)
+                    = (13 + 25 + 12 + 8) − 10 × (1 + 1 + 0 + 5) = 62 − 70 = −12.
+                    </li>
             </ul>
+            <p>On appelle solution une configuration valide de placement des jetons sur la grille (une couleur par case, et
+                exactement une seule fois la couleur rouge), et solution optimale la meilleure solution possible en termes de
+                score. Il peut y avoir plusieurs solutions optimales, si elles sont de score identique.</p>
+            <p>Deux solutions optimales, de score 76, sont représentées ci-dessous. Outre le pion rouge requis (score 8),
+                elle n’utilise aucun pion jaune, 3 pions verts (score 18), 4 pions noirs (score 50), 6 pions bleus et 2 pions
+                orange. Elles diffèrent uniquement par la permutation d’un pion orange et d’un pion bleu. Ces configurations
+                n’entraînent aucune pénalité.</p>
+            
+            
+            <table class="tableau1">
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>A</td>
+                        <td>V</td>
+                        <td>N</td>
+                        <td>V</td>
+                        <td>N</td>
+                    </tr>
+                    <tr>
+                        <td>B</td>
+                        <td>N</td>
+                        <td>B</td>
+                        <td>B</td>
+                        <td>O</td>
+                    </tr>
+                    <tr>
+                        <td>C</td>
+                        <td>R</td>
+                        <td>B</td>
+                        <td>B</td>
+                        <td>B</td>
+                    </tr>
+                    <tr>
+                        <td>D</td>
+                        <td>O</td>
+                        <td>B</td>
+                        <td>V</td>
+                        <td>N</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <table class="tableau1">
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>A</td>
+                        <td>V</td>
+                        <td>J</td>
+                        <td>O</td>
+                        <td>N</td>
+                    </tr>
+                    <tr>
+                        <td>B</td>
+                        <td>J</td>
+                        <td>V</td>
+                        <td>B</td>
+                        <td>O</td>
+                    </tr>
+                    <tr>
+                        <td>C</td>
+                        <td>R</td>
+                        <td>J</td>
+                        <td>O</td>
+                        <td>J</td>
+                    </tr>
+                    <tr>
+                        <td>D</td>
+                        <td>J</td>
+                        <td>N</td>
+                        <td>O</td>
+                        <td>B</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Syntaxe des fichiers d'entrée (instances)</h3>
+            <p>Une instance de problème à résoudre est donnée par un fichier texte comportant, sur la première ligne,
+                la taille t de la grille (c’est-à-dire son nombre de lignes, égal à son nombre de colonnes) et la valeur p d’une
+                pénalité (nombre de points toujours positif). Les autres lignes comportent les valeurs des cases. Par exemple,
+                pour une grille de taille 4, il s’agira de 4 lignes de 4 valeurs chacune.
+                </p>
+            <p>Le fichier représenté ci-dessous correspond à la grille de taille t = 4 de l’exemple précédent, avec une valeur
+                de pénalité fixée à p = 10 points.</p>
+
+            <table class="tableau2">
+                <tr>
+                    <td>4</td>
+                    <td colspan="3" class="gauche">10</td>
+                </tr>
+                <tr>
+                    <td>-6</td>
+                    <td>9</td>
+                    <td>-2</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>2</td>
+                    <td>-7</td>
+                    <td>-6</td>
+                </tr>
+                <tr>
+                    <td>-8</td>
+                    <td>2</td>
+                    <td>-4</td>
+                    <td>-3</td>
+                </tr>
+                <tr>
+                    <td>-3</td>
+                    <td>3</td>
+                    <td>-4</td>
+                    <td>7</td>
+                </tr>
+            </table>
+
+            <h3>Syntaxe des fichiers de sortie (solutions)</h3>
+            <p>Un fichier de solution pour une grille de taille t doit comporter, sur les t premières lignes, la suite de t
+                caractères correspondant à l’initiale de chaque couleur de pion, dans l’ordre des colonnes. On fera figurer sur
+                la (t + 1)-ième et dernière ligne le score de la solution.</p>
+            <p>Le fichier suivant correspond à la première solution optimale de l’exemple.</p>
+            
+            <table class="tableau3">
+                <tr>
+                    <td>V</td>
+                    <td>N</td>
+                    <td>V</td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>N</td>
+                    <td>B</td>
+                    <td>B</td>
+                    <td>O</td>
+                </tr>
+                <tr>
+                    <td>R</td>
+                    <td>B</td>
+                    <td>B</td>
+                    <td>B</td>
+                </tr>
+                <tr>
+                    <td>O</td>
+                    <td>B</td>
+                    <td>V</td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>76</td>
+                </tr>
+            </table>
+            <br>
+
             <li class="titre">Projet</li>
+            <p>Il est demandé d’´ecrire un programme C++ permettant de résoudre le problème de La Grille, c’est-à-dire
+                lire un fichier d’entrée représentant une instance de problème, calculer une solution, et l’écrire (ainsi que son
+                score) dans un fichier de sortie. L’objectif est de concevoir un algorithme permettant de trouver une solution
+                de plus grand score total à une instance quelconque en moins d’une minute de calcul. La solution trouvée ne
+                devra pas obligatoirement être une solution optimale.
+                </p>
+            <p>Attention à la complexité de l’algorithme, car la taille des grilles pourra être de plus en plus importante. Il
+                existe, pour une grille de taille t, 5<sup>t<sup>2</sup>-1</sup> × t<sup>2</sup>
+                 placements possibles de jetons. Même pour une petite grille de
+                taille 4 comme l’exemple précédent, cela représente plus de 488 milliards de solutions ; une simple énumération
+                est donc inenvisageable.</p>
+            <p>Le site web associé au projet devra comporter en particulier les éléments suivants :</p>
             <ul>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>la description du problème ;</li>
+                <li>le ou les algorithmes développés pour sa résolution (explication de la méthode) ;</li>
+                <li>une explication précise permettant à un utilisateur de compiler et d'exécuter votre code source ;</li>
+                <li>les solutions et scores obtenus des instances de problèmes fournies (une fois la compétition arrêtée).</li>
             </ul>
+            <p>Durant le projet, des nouvelles instances de problèmes, avec des grilles de diverses tailles, seront mises à disposition sur Moodle.</p>
+            <br>
+
+
             <li class="titre">Compétition</li>
+            <p>La compétition entre les différentes équipes sera jugée sur 2 épreuves : </p>
             <ol>
-                <li></li>
-                <li></li>
+                <li>Résultats sur les instances connues. Avant la dernière semaine, chaque équipe devra rendre une
+                    archive comportant la meilleure solution trouvée pour chacune des 15 instances fournies au cours du
+                    projet et indiquées pour compétition
+                    . Pour cette compétition, il ne sera pas vérifié que l’algorithme a
+                    trouvé cette solution en moins d’une minute, tout est donc permis (sauf voler les résultats des autres
+                    équipes...).<br>
+                    → Pour chaque instance compétitive mise à disposition sur Moodle au cours du projet, l’équipe (ou
+                    les équipes) obtenant le meilleur score marque 1 point. L’équipe (ou les équipes) obtenant le plus
+                    de meilleurs scores sur cette épreuve marquent 2 points supplémentaires ; l’équipe (ou les équipes)
+                    obtenant le meilleur score moyen (moyenne des 15 scores) marque 3 points supplémentaires.
+                    </li><br>
+                <li>Résultats sur des instances mystère. La dernière semaine, chaque équipe devra rendre un code
+                    source C++. Les algorithmes seront mis en compétition pour résoudre en moins d’une minute (par
+                    instance) 10 instances de problème qui n’ont pas été communiquées précédemment. Chaque programme
+                    ne sera exécuté qu’une seule fois par instance.<br>
+                    → Pour chaque instance, l’équipe (ou les équipes) obtenant le meilleur score marque 2 points (1 point
+                    pour la deuxi`eme place s’il n’y a pas d’égalité pour la première). L’équipe (ou les équipes) obtenant le
+                    plus de meilleurs scores sur cette épreuve marque 4 points supplémentaires ; l’équipe (ou les équipes)
+                    obtenant le meilleur score moyen (moyenne des 10 scores) marque 6 points supplémentaires
+                    .</li>
             </ol>
+            <p>Le classements de équipes sera établi à partir des points (score maximum : 50). Le cas échéant, les équipes à égalité seront départagées sur une instance mystère supplémentaire.</p>
         </ol>
 
+
+    <p>cf PDF du sujet</p>
 
     </body>
 </html>

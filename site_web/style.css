@@ -76,7 +76,7 @@ p, li {
     font-weight: bolder;
 }
 
-td {
+.tableau1 td {
     border: #2B262D 1px solid;
     
 }
@@ -86,4 +86,17 @@ table {
     width: 100px;
     height: 100px;
     text-align: center;
+}
+
+.tableau2, .tableau3 {
+    border:  #2B262D 1px solid;
+}
+
+.tableau3 {
+    width: 50px;
+    height: 100px;
+}
+
+.gauche {
+    text-align: left;
 }
