@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>La Grille</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
         <h1>La Grille</h1>
@@ -189,24 +189,24 @@
             <p>Le score obtenu par ce placement de jetons sur la grille exemple précédente (rappelée ci-dessus à droite)
                 se calcule comme suit :</p>
             <ul>
-                <li> Score des pions jaunes : SJ = 9 + 8 + 2 − 3 − 3 = 13.</li>
-                <li>Pénalités sur les pions jaunes : PJ = 1, car il y a un pion isolé (C4).</li>
+                <li> Score des pions jaunes : S<sub>J</sub> = 9 + 8 + 2 − 3 − 3 = 13.</li>
+                <li>Pénalités sur les pions jaunes : P<sub>J</sub> = 1, car il y a un pion isolé (C4).</li>
                 <li>Score des pions verts : le pion en A1 a un score de −6 + 9 + 8 = 11, le pion en B2 a un score de
-                    2 + 9 − 7 + 2 + 8 = 14, soit un score pour les pions verts de SV = 11 + 14 = 25.</li>
-                <li>Pénalités sur les pions verts : PV = 1, car les pions en A1 et B2 sont adjacents.</li>
-                <li> Score des pions noirs : SN = 2 × ((5 − 1) + (3 − 1)) = 12 ; le score de base est doublé car il n’y a pas
+                    2 + 9 − 7 + 2 + 8 = 14, soit un score pour les pions verts de S<sub>V</sub> = 11 + 14 = 25.</li>
+                <li>Pénalités sur les pions verts : P<sub>V</sub> = 1, car les pions en A1 et B2 sont adjacents.</li>
+                <li> Score des pions noirs : S<sub>N</sub> = 2 × ((5 − 1) + (3 − 1)) = 12 ; le score de base est doublé car il n’y a pas
                     plus de t = 4 pions noirs.
                     </li>
-                <li> Pénalités sur les pions bleus : PB = 0, car il n’y a pas plus de pions bleus sur des cases négatives (B3)
+                <li> Pénalités sur les pions bleus : P<sub>B</sub> = 0, car il n’y a pas plus de pions bleus sur des cases négatives (B3)
                     que sur des cases positives (D4).
                     </li>
-                <li> Pénalités sur les pions orange : PO = 5, puisque sur les (2 parmis 4)
+                <li> Pénalités sur les pions orange : P<sub>O</sub> = 5, puisque sur les (2 parmis 4)
                     = 6 paires de jetons orange, 3 sont placées
                     sur une même colonne (A3-C3, A3-D3, C3-D3) et 2 sur une même diagonale (A3-B4, B4-C3).</li>
-                <li> Score du pion rouge : SR = 8.</li>
+                <li> Score du pion rouge : S<sub>R</sub> = 8.</li>
                 <li> Pour rappel, les pions bleus et les pions orange ont toujours un score nul, et il n’y a jamais de pénalité
                     sur les pions noirs ni sur le pion rouge.</li>
-                <li> Le score total de la solution est : SJ + SV + SN + SR − p × (PJ + PV + PB + PO)
+                <li> Le score total de la solution est : S<sub>J</sub> + S<sub>V</sub> + S<sub>N</sub> + S<sub>R</sub> − p × (P<sub>J</sub> + P<sub>V</sub> + P<sub>V</sub> + P<sub>O</sub>)
                     = (13 + 25 + 12 + 8) − 10 × (1 + 1 + 0 + 5) = 62 − 70 = −12.
                     </li>
             </ul>
@@ -431,8 +431,9 @@
             <p>Le classements de équipes sera établi à partir des points (score maximum : 50). Le cas échéant, les équipes à égalité seront départagées sur une instance mystère supplémentaire.</p>
         </ol>
 
-    
-    <p id="groupe">David DA SILVA et Maëlys GIROIRE</p>
+    <div class="groupe">
+        <p>David DA SILVA et Maëlys GIROIRE - 2023</p>
+    </div>
 
     </body>
 </html>

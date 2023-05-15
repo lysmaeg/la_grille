@@ -5,6 +5,8 @@ body {
     margin-right: 40px;
     text-align: justify;
 }
+
+/* BANDEAU DU MENU */
 .menu {
     display: flex;                /* Transformation en flexbox */
     padding:0;                    /* Suppression des marges internes */
@@ -35,15 +37,15 @@ body {
     color: #fff ;
     border-color:  #F2EBE5 ;
 }
-.menu a:hover,
-.menu a:hover.actif{
+.menu a:hover, .menu a:hover.actif{
     background-color: #9F496E;
     color: #fff;
     border-color: #F2EBE5;
 }
 
+
+/* TEXTE */
 h1 {
-    /*color: #2B262D;*/
     font-family: Arial, Helvetica, sans-serif;
     font-size: 300%;
     text-transform: uppercase;
@@ -55,6 +57,37 @@ p, li, h2, h3{
     color: #2B262D;
 }
 
+.titre {
+    font-size: 140%;
+    font-weight: bolder;
+    color: black;
+    text-transform: uppercase;
+}
+
+/* NOTRE GROUPE */
+.groupe {    
+    margin-top: 50px;
+    display: flex;
+    background-color: #d8c8bb; 
+    justify-content: space-around
+}
+
+.groupe p {
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 100%;
+    text-transform: uppercase;
+    font-weight: bolder;
+
+    display:block;
+    text-align: center;
+    margin: 0.5rem;               /* Marges externes */
+    padding: 0.4rem 0;            /* Marges internes */
+    text-align: center;           /* Centrage du texte */
+}
+
+
+/* COULEURS DES MOTS*/
 .jaune {
     color: rgb(194, 194, 27);
 }
@@ -74,50 +107,9 @@ p, li, h2, h3{
     color: red;
 }
 
-.titre {
-    font-size: 140%;
-    font-weight: bolder;
-    color: black;
-    text-transform: uppercase;
-}
-
-.tableau1 td {
-    border: #2B262D 1px solid;
-}
-
-.tab {
-    display: flex;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    justify-content: center;
-}
-
-.tableau1 {
-    margin-right: 50px;
-    margin-left: 50px;
-}
-
-table {
-    border-collapse: collapse;
-    width: 100px;
-    height: 100px;
-    text-align: center;
-}
-
-.tableau2, .tableau3 {
-    border:  #2B262D 1px solid;
-}
-
-.tableau1 td, .tableau2 td, .tableau3 td {
-    width:100px;
-}
-
-.gauche {
-    text-align: left;
-}
-
+/* COULEURS DANS LES TABLEAUX*/
 .b {
-    background-color: blue;
+    background-color: rgb(42, 127, 255);
 }
 .o {
     background-color: orange;
@@ -133,15 +125,59 @@ table {
     background-color: red;
 }
 .v {
-    background-color: green;
+    background-color: rgb(18, 197, 18);
 }
 
-#groupe {
-    color: black;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 100%;
-    text-transform: uppercase;
-    font-weight: bolder;
+
+/* TABLEAUX*/
+table {
+    border-collapse: collapse;
+    width: 100px;
+    height: 100px;
     text-align: center;
-    margin-top: 50px;
 }
+.tab {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+.tableau1 {
+    margin-right: 50px;
+    margin-left: 50px;
+}
+.tableau1 td {
+    border: #2B262D 1px solid;
+}
+.tableau2, .tableau3 {
+    border:  #2B262D 1px solid;
+}
+.tableau1 td, .tableau2 td, .tableau3 td {
+    width:100px;
+}
+
+.gauche {
+    text-align: left;
+}
+
+
+/* FORMULAIRE */
+label {
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+}
+input {
+    font: 1em sans-serif;
+  
+    /* Pour que tous les champs texte aient la même dimension */
+    width: 120px;
+    box-sizing: border-box;
+  
+    border: 1px solid #999;
+    margin-bottom: 7px;
+}
+input:focus{
+    /* Pour souligner légèrement les éléments actifs */
+    border-color: #000;
+  }

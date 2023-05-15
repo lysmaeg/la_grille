@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grille</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <h1>La Grille</h1>
@@ -27,5 +27,29 @@
               </li>
         </ul>
         <br>
+
+        <p class="titre">Résolution d'une grille :</p>
+        <form action="page.php" method="POST">
+          <fieldset>
+            <legend>Saisie des données</legend>
+            <label for="taille">Taille de la grille : </label>
+            <input type="text" id="taille" size="3" maxlength="3"><br>
+
+            <label for="pena">Pénalité : </label>
+            <input type="text" id="pena" size="3" maxlength="3"><br>
+
+            <label for="validation"></label>
+            <input id="validation" type="submit" name="Valider" value="Valider"><br>
+          </fieldset><br>
+
+          <fieldset>
+            <legend>Saisie de la grille</legend>
+            <br>
+            <input type="reset" name="vider" value="Réinitialiser">
+            <input type="submit" name="Valider" value="Résoudre"><br>
+          </fieldset>
+        </form>
+
+        <p class="groupe">David DA SILVA et Maëlys GIROIRE - 2023</p>
 </body>
 </html>
