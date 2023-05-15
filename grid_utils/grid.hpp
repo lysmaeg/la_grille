@@ -8,6 +8,8 @@
 #include <thread>
 #include "grid_struct.hpp"
 
+#define SIZE_BETWEEN 16
+
 class GridLinkGuard;
 class GridLink;
 

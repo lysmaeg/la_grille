@@ -149,7 +149,7 @@ int Grid::write_numbers_into_file(std::string filename) const
             file << ' ';
         }
         file << this->numbers[i][this->size-1];
-        file << (char) 10;
+        file << (char) 012;
     }
     
     return 0;
