@@ -19,6 +19,7 @@ private:
     int supposed_score = 0;
     int score = 0;
     bool is_main_grid = false;
+    int **numbers;
 
     void brute_force_recur(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_placed, int *nb_tested);
     void brute_force_launcher(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_posed, int x, int y, char c, int *nb_tested);
@@ -27,7 +28,6 @@ private:
     void delete_scores_tab(int ***scores_tab) const;
 
 public:
-    int **numbers;
     char **colors;
 
     Grid(int size, int penalite);
@@ -40,7 +40,7 @@ public:
 
     void init_tables();
 
-    // grid_utils
+    /* grid_utils.hpp */
     int get_size() const;
     int get_penality() const;
     int get_supposed_score() const;
@@ -68,23 +68,24 @@ public:
 
     int get_nb_penality_blue();
 
-    /* --- */
-
-    // grid_files_manager.hpp
-    int read_file_for_numbers(std::string filename);
-    int read_file_for_colors(std::string filename);
-    int save_in_file(std::string filename) const;
-
-    /* --- */
-
-    std::string get_around_colors(int line, int col) const;
-    std::string *get_lines_cols(int line, int col, bool all) const; // grid_utils
-    int nb_colors_in_lines_cols(int line, int col, int all, char color) const;
-
     int get_cross_score(int line, int col) const;
     int nb_color_around_cell(int line, int col, char color) const;
     int nb_color_in_grid(char c) const;
     void nb_pos_neg_left_blue(int *neg, int *pos) const;
+
+    std::string get_around_colors(int line, int col) const;
+    std::string *get_lines_cols(int line, int col, bool all) const;
+    int nb_colors_in_lines_cols(int line, int col, int all, char color) const;
+
+    /* --- */
+
+    /* grid_files_manager.hpp */
+    int read_file_for_numbers(std::string filename);
+    int read_file_for_colors(std::string filename);
+    int save_in_file(std::string filename) const;
+    int write_numbers_into_file(std::string filename) const;
+
+    /* --- */
 
     /* score calculation */
 
@@ -99,26 +100,36 @@ public:
 
     /* --- */
 
-    void generate_random_grid();
-    void build_grid_points(bool *write_all, char *output_file);
+    /* unused */
+
     void fill_blank_recur(GridLinkGuard *glg, int pieces_left);
     void fill_blank();
-
-    void glouton(int value);
     void glouton_recur(GridLinkGuard *glg, int nb_red, int nb_black, int places_pieces, int limit_recur, coupleLink *cl);
+    void brute_force();
+
+    /*  */
+
+    void generate_random_grid();
+    void build_grid_points(bool *write_all, char *output_file);
+    void boucle_alea(int nb_placed_glouton, bool *exit);
+    void generate_random_grid_numbers(int minimun, int maximum);
+
+    int glouton(int value);
+    void glouton_stochastique(int max_pieces);
 
     void optimize_grid_full();
     void optimize_grid_recur(GridLinkGuard *glg, coupleLink *cl, int limit_recur);
-    void optimize_grid_clever();
-    void optimize_yellow();
+    void yellow_replace_blue_duo();
+
+    void fill_and_opti(int max_pieces);
 
     void orange_blue();
 
     void yellow_replace_blue();
 
-    void brute_force();
-
     void find_value(int value, bool *write_all, char *output_file);
+
+    void clear_colors();
 };
 
 #endif

@@ -17,8 +17,8 @@ private:
     int clear_at = 10000;
     GridLink *lastGridLink = nullptr;
     GridLink *firstGridLink = nullptr;
-public:
 
+public:
     GridLinkGuard();
     GridLinkGuard(Grid *g);
     ~GridLinkGuard();
@@ -27,8 +27,12 @@ public:
     const int get_size() const;
 
     void addGrid(Grid *g);
+    void addGridStart(Grid *g);
+    void addGridEnd(Grid *g);
+
     void pop_first(bool clear_grid);
     void clear(bool clear_grid);
+    void clear_following(GridLink *first, bool clear_grid);
     void extend(GridLinkGuard *glg);
     // void remove_same();
     bool contains_same_colors(const Grid *g) const;

@@ -33,6 +33,18 @@ const int GridLinkGuard::get_size() const
 
 void GridLinkGuard::addGrid(Grid *g)
 {
+
+    // this->addGridEnd(g);
+    this->addGridStart(g);
+    // clear Guard and get only the best of them
+    if (size >= this->clear_at)
+    {
+        this->convert_to_best_scores();
+    }
+}
+
+void GridLinkGuard::addGridStart(Grid *g)
+{
     GridLink *gl = new GridLink;
     g->set_score_from_calculation();
     gl->grid = g;
@@ -45,12 +57,26 @@ void GridLinkGuard::addGrid(Grid *g)
 
     this->firstGridLink = gl;
     this->size++;
+}
 
-    // clear Guard and get only the best of them
-    if (size >= this->clear_at)
+void GridLinkGuard::addGridEnd(Grid *g)
+{
+    GridLink *gl = new GridLink;
+    g->set_score_from_calculation();
+    gl->grid = g;
+
+    gl->next = nullptr;
+    if (this->lastGridLink == nullptr)
     {
-        this->convert_to_best_scores();
+        this->firstGridLink = gl;
     }
+    else
+    {
+        this->lastGridLink->next = gl;
+    }
+    this->lastGridLink = gl;
+
+    this->size++;
 }
 
 /// @brief remove the first item of the GridLinkGuard
@@ -80,11 +106,29 @@ void GridLinkGuard::pop_first(bool clear_grid)
 /// @param clear_grid if true, the grids that the GridLinkGuard contains are freed
 void GridLinkGuard::clear(bool clear_grid)
 {
-    while (this->size != 0)
+    // GridLink *first = this->firstGridLink;
+    while (this->firstGridLink != nullptr)
     {
-        pop_first(clear_grid);
+        this->pop_first(clear_grid);
     }
+
     this->init();
+    // this->clear_following(first, clear_grid);
+}
+
+void GridLinkGuard::clear_following(GridLink *first, bool clear_grid)
+{
+    GridLink *save;
+    while (first != nullptr)
+    {
+        save = first->next;
+        if (clear_grid)
+        {
+            delete first->grid;
+        }
+        delete first;
+        first = save;
+    }
 }
 
 /// @brief extend a GridLinkGuard with another one, consuming the given GridLinkGuard (ie, The GridLinkGuard will be deleted and freed)
@@ -92,19 +136,20 @@ void GridLinkGuard::clear(bool clear_grid)
 void GridLinkGuard::extend(GridLinkGuard *glg)
 {
     // add given GridLinkGuard to the start of the this GridLinkGuard
-    if (this->firstGridLink == nullptr) {
+    if (this->firstGridLink == nullptr)
+    {
         this->firstGridLink = glg->firstGridLink;
         this->lastGridLink = glg->lastGridLink;
-    }   
+    }
     else if (glg->lastGridLink != nullptr)
     {
         glg->lastGridLink->next = this->firstGridLink;
         this->firstGridLink = glg->firstGridLink;
     }
 
-
     this->size += glg->size;
-    if (this->size >= this->clear_at) {
+    if (this->size >= this->clear_at)
+    {
         this->convert_to_best_scores();
     }
 
@@ -143,52 +188,6 @@ void GridLinkGuard::switch_colors_with_first(Grid *g)
     g->switch_colors(this->firstGridLink->grid);
 }
 
-
-
-GridLinkGuard *GridLinkGuard::solve_all_grids()
-{
-    // this->pretty_print();
-    GridLinkGuard *storageGrids = new GridLinkGuard;
-
-    GridLinkGuard **storageGridsThread = new GridLinkGuard *[this->size];
-    for (int i = 0; i < this->size; i++)
-    {
-        storageGridsThread[i] = new GridLinkGuard;
-    }
-
-    std::thread *threadTab = new std::thread[this->size];
-
-    GridLink *glTemp = this->firstGridLink;
-    int i = 0;
-    while (glTemp != nullptr)
-    {
-        glTemp->grid->fill_blank();
-        // glTemp->grid->copy_grid_as_ptr(true)->optimize_grid_recur(storageGrids, nullptr, 2)
-        threadTab[i] = std::thread(&Grid::optimize_grid_recur, glTemp->grid->copy_grid_as_ptr(true), storageGridsThread[i], nullptr, 2);
-        printf("called\n");
-        glTemp = glTemp->next;
-        i++;
-    }
-
-    for (i = 0; i < this->size; i++)
-    {
-        if (threadTab[i].joinable())
-        {
-            printf("waiting for one\n");
-            threadTab[i].join();
-        }
-        printf("thread finished\n");
-        storageGrids->extend(storageGridsThread[i]);
-    }
-    delete[] storageGridsThread;
-    delete[] threadTab;
-
-    printf("finished\n");
-    GridLinkGuard *bestGlg = storageGrids->get_best_scores();
-    delete storageGrids;
-    return bestGlg;
-}
-
 void GridLinkGuard::save_all_in_files(char *output_file)
 {
     GridLink *gl = this->firstGridLink;
@@ -221,7 +220,6 @@ GridLinkGuard *GridLinkGuard::get_best_scores() const
 {
     if (this->firstGridLink == nullptr)
     {
-        std::cout << "The set of grids is empty !\n";
         return new GridLinkGuard;
     }
 
@@ -300,60 +298,13 @@ void GridLinkGuard::pretty_print() const
     if (gl != nullptr)
     {
         while (gl != nullptr)
-        {   
+        {
             std::cout << gl->grid->get_nb_penality_blue() << "\n";
             gl->grid->print_colors_with_score();
 
             gl = gl->next;
         }
     }
-}
-
-void GridLinkGuard::fill_blank_all()
-{
-    GridLink *gl = this->firstGridLink;
-
-    while (gl != nullptr)
-    {
-        gl->grid->set_score_from_calculation();
-        // gl->grid->print_colors_with_score();
-
-        gl->grid->orange_blue();
-        // gl->grid->print_colors();
-        gl->grid->optimize_grid_full();
-        gl->grid->optimize_grid_full();
-        gl->grid->optimize_grid_full();
-        gl->grid->optimize_grid_full();
-        gl->grid->optimize_grid_full();
-        gl->grid->optimize_grid_full();
-        gl->grid->set_score_from_calculation();
-        // gl->grid->print_colors_with_score();
-
-        // std::cout << gl->grid->get_nb_penality_blue() << '\n';
-
-        gl->grid->yellow_replace_blue();
-        gl->grid->set_score_from_calculation();
-        // gl->grid->print_colors_with_score();
-        gl->grid->fill_blank();
-
-        gl = gl->next;
-    }
-    // this->pretty_print();
-    
-}
-
-void GridLinkGuard::opti_recur(int model)
-{
-    GridLink *gl = this->firstGridLink;
-    GridLinkGuard *glg = new GridLinkGuard;
-    while (gl != nullptr) {
-        gl->grid->yellow_replace_blue();
-        gl->grid->copy_grid_as_ptr(true)->optimize_grid_recur(glg, nullptr, model);
-        gl = gl->next;
-    }
-    this->extend(glg);
-    this->convert_to_best_scores();
-    this->convert_to_best_scores();
 }
 
 void GridLinkGuard::print_all_scores()
@@ -363,5 +314,21 @@ void GridLinkGuard::print_all_scores()
     {
         std::cout << gl->grid->get_score() << '\n';
         gl = gl->next;
+    }
+}
+
+void clear_following(GridLink *first, bool clear_grid)
+{
+    GridLink *save;
+    while (first != nullptr)
+    {
+        printf("int while\n");
+        save = first->next;
+        if (clear_grid)
+        {
+            delete first->grid;
+        }
+        delete first;
+        first = save;
     }
 }
