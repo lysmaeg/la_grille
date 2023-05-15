@@ -205,3 +205,15 @@ bool are_equal_tab_char(const char *t, const char *u, int s)
     }
     return true;
 }
+
+bool contains_couple(couple *cl, int size, int line, int column)
+{
+    for (int i = 0; i < size; i++)
+    {
+        if (line == cl->line and column == cl->column) {
+            return true;
+        }
+    }
+    return false;
+    
+}

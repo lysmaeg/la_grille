@@ -122,9 +122,10 @@ void Grid::update_green_scores_tab(int ***scores_tab, int line, int column, int 
     {
         for (int j = -1; j < 2; j++)
         {
+            // printf("l+i = %d, c+j = %d\n", line + i, column + j);
             if (line + i >= 0 and line + i < size and column + j >= 0 and column + j < size)
             {
-                scores_tab[line][column][index] = this->calculate_green_piece(line, column);
+                scores_tab[line + i][column + j][index] = this->calculate_green_piece(line + i, column + j);
             }
         }
     }
@@ -138,7 +139,7 @@ void Grid::update_yellow_scores_tab(int ***scores_tab, int line, int column, int
         {
             if (line + i >= 0 and line + i < size and column + j >= 0 and column + j < size)
             {
-                scores_tab[line][column][index] = this->calculate_yellow_piece(line, column);
+                scores_tab[line + i][column + j][index] = this->calculate_yellow_piece(line + i, column + j);
             }
         }
     }
@@ -238,4 +239,119 @@ std::string *Grid::get_lines_cols(int line, int col, bool all) const
     }
 
     return s;
+}
+
+void Grid::clear_colors()
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            colors[i][j] = 'X';
+        }
+    }
+}
+
+/// @brief an helpful function for the yellow
+/// @param line
+/// @param col
+/// @return Return all the colors as a string around the given coordinates
+std::string Grid::get_around_colors(int line, int col) const
+{
+    std::string s = "";
+    char c;
+    for (int i = -1; i < 2; i++)
+    {
+        for (int j = -1; j < 2; j++)
+        {
+            if (i == 0 and j == 0)
+                continue;
+            c = get_color(line + i, col + j);
+            if (c != 0)
+            {
+                s += c;
+            }
+        }
+    }
+    return s;
+}
+
+/// @brief an helpful function for the orange
+/// @param line
+/// @param col
+/// @param all if all set to false only the four directions : SO, S, SW and W will be analysed
+/// @param color the color to be tested for counting
+/// @return the amount of the same color in the diagonals, columns and lines
+int Grid::nb_colors_in_lines_cols(int line, int col, int all, char color) const
+{
+    int nb = 0;
+    std::string *s = get_lines_cols(line, col, all);
+    for (int i = 0; i < 4; ++i)
+    {
+        for (long unsigned int j = 0; j < s[i].length(); ++j)
+            if (s[i][j] == color)
+            {
+                nb++;
+            }
+    }
+    delete[] s;
+    return nb;
+}
+
+/// @brief
+/// @param line
+/// @param col
+/// @param color color to be checked
+/// @return Return the amount of the same colors around the coordinates
+int Grid::nb_color_around_cell(int line, int col, char color) const
+{
+    std::string s = get_around_colors(line, col);
+    int nb = 0;
+    for (long unsigned int i = 0; i < s.length(); i++)
+    {
+        if (s[i] == color)
+        {
+            nb++;
+        }
+    }
+    return nb;
+}
+
+int Grid::nb_color_in_grid(char c) const
+{
+    int nb = 0;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (colors[i][j] == c)
+            {
+                nb++;
+            }
+        }
+    }
+    return nb;
+}
+
+void Grid::nb_pos_neg_left_blue(int *neg, int *pos) const
+{
+    *pos = 0;
+    *neg = 0;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (this->colors[i][j] == 'B')
+            {
+                if (numbers[i][j] > 0)
+                {
+                    *pos += 1;
+                }
+                else if (numbers[i][j] < 0)
+                {
+                    *neg += 1;
+                }
+            }
+        }
+    }
 }

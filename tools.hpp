@@ -41,4 +41,7 @@ bool are_equal_tab(const int *t, const int *u, int s);
 bool are_equal_ttab_char(const char **t, const char **u, int s1, int s2);
 bool are_equal_tab_char(const char *t, const char *u, int s);
 
+bool contains_couple(couple *cl, int size, int line, int column);
+
+
 #endif

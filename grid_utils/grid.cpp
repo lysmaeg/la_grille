@@ -120,110 +120,6 @@ void Grid::init_tables()
     }
 }
 
-/// @brief an helpful function for the yellow
-/// @param line
-/// @param col
-/// @return Return all the colors as a string around the given coordinates
-std::string Grid::get_around_colors(int line, int col) const
-{
-    std::string s = "";
-    char c;
-    for (int i = -1; i < 2; i++)
-    {
-        for (int j = -1; j < 2; j++)
-        {
-            if (i == 0 and j == 0)
-                continue;
-            c = get_color(line + i, col + j);
-            if (c != 0)
-            {
-                s += c;
-            }
-        }
-    }
-    return s;
-}
-
-/// @brief an helpful function for the orange
-/// @param line
-/// @param col
-/// @param all if all set to false only the four directions : SO, S, SW and W will be analysed
-/// @param color the color to be tested for counting
-/// @return the amount of the same color in the diagonals, columns and lines
-int Grid::nb_colors_in_lines_cols(int line, int col, int all, char color) const
-{
-    int nb = 0;
-    std::string *s = get_lines_cols(line, col, all);
-    for (int i = 0; i < 4; ++i)
-    {
-        for (long unsigned int j = 0; j < s[i].length(); ++j)
-            if (s[i][j] == color)
-            {
-                nb++;
-            }
-    }
-    delete[] s;
-    return nb;
-}
-
-/// @brief
-/// @param line
-/// @param col
-/// @param color color to be checked
-/// @return Return the amount of the same colors around the coordinates
-int Grid::nb_color_around_cell(int line, int col, char color) const
-{
-    std::string s = get_around_colors(line, col);
-    int nb = 0;
-    for (long unsigned int i = 0; i < s.length(); i++)
-    {
-        if (s[i] == color)
-        {
-            nb++;
-        }
-    }
-    return nb;
-}
-
-int Grid::nb_color_in_grid(char c) const
-{
-    int nb = 0;
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size; j++)
-        {
-            if (colors[i][j] == c)
-            {
-                nb++;
-            }
-        }
-    }
-    return nb;
-}
-
-void Grid::nb_pos_neg_left_blue(int *neg, int *pos) const
-{
-    *pos = 0;
-    *neg = 0;
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size; j++)
-        {
-            if (this->colors[i][j] == 'B')
-            {
-                if (numbers[i][j] > 0)
-                {
-                    *pos += 1;
-                }
-                else if (numbers[i][j] < 0)
-                {
-                    *neg += 1;
-                }
-            }
-        }
-    }
-}
-
 /// @brief
 /// @param line
 /// @param col
@@ -273,50 +169,7 @@ void Grid::delete_scores_tab(int ***scores_tab) const
     delete[] scores_tab;
 }
 
-void Grid::fill_blank_recur(GridLinkGuard *glg, int pieces_left)
-{
-    if (pieces_left == 0)
-    {
-        glg->addGrid(this->copy_grid_as_ptr(true));
-        return;
-    }
-
-    int x, y;
-    if (get_coordinates_empty_cell(&x, &y) == -1)
-    {
-        std::cerr << "An error occured...\n";
-        exit(EXIT_FAILURE);
-    }
-
-    colors[x][y] = 'B';
-    fill_blank_recur(glg, pieces_left - 1);
-    colors[x][y] = 'O';
-    fill_blank_recur(glg, pieces_left - 1);
-    colors[x][y] = 'X';
-}
-
-void Grid::fill_blank()
-{
-    // conditions depending of the amount of cells left
-    if (nb_empty_cells() <= 20)
-    {
-        std::cout << "1\n";
-        GridLinkGuard *glg = new GridLinkGuard;
-        fill_blank_recur(glg, this->nb_empty_cells());
-        // glg->convert_to_best_scores();
-        glg->get_best_scores()->switch_colors_with_first(this);
-        this->yellow_replace_blue();
-        this->optimize_grid_full();
-        delete glg;
-    }
-    else
-    {
-        std::cout << "2\n";
-        this->orange_blue();
-    }
-}
-
-void Grid::glouton(int value)
+int Grid::glouton(int value)
 {
     std::string s = "RVNJ";
     const int black = 2, green = 1, yellow = 3, red = 0;
@@ -325,18 +178,23 @@ void Grid::glouton(int value)
     couple coordinates_max;
     const int max_pieces = size * size;
     int nb_black = nb_color_in_grid('N'), placed_pieces = max_pieces - nb_empty_cells(), nb_red = nb_color_in_grid('R');
-    std::cout << "nb red = " << nb_red << '\n';
+    // std::cout << "nb red = " << nb_red << '\n';
 
     do
     {
         max_cur = value;
         color_cur = -1;
         coordinates_max = couple{0, 0};
+        // print_tttab((const int ***) scores_tab, size, size, 4);
+        // std::cout << '\n';
+        // print_colors();
+        // std::cout << '\n';
         // iterate through all table to find the max value, green should be more considered
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
             {
+                // printf("j = %d\n", j);
                 // cell already taken
                 if (colors[i][j] != 'X')
                 {
@@ -355,8 +213,10 @@ void Grid::glouton(int value)
                     else if (scores_tab[i][j][k] > max_cur)
                     {
                         max_cur = scores_tab[i][j][k];
+                        // printf("max cur = %d\n",  max_cur);
                         color_cur = k;
                         coordinates_max = couple{i, j};
+                        // printf("coor = %d, %d\n", i, j);
                     }
                     else
                     {
@@ -386,6 +246,7 @@ void Grid::glouton(int value)
             case red:
                 nb_red++;
             case green:
+                // printf("update green\n");
                 // substract penality for each cell around it
                 this->update_green_scores_tab(scores_tab, coordinates_max.line, coordinates_max.column, green);
 
@@ -398,314 +259,190 @@ void Grid::glouton(int value)
     // printf("placed_pieces = %d, max_cur %d\n", placed_pieces, max_cur);
     // this->print_colors();
     delete_scores_tab(scores_tab);
+    return placed_pieces;
 }
 
-void Grid::glouton_recur(GridLinkGuard *glg, int nb_red, int nb_black, int placed_pieces, int limit_recur, coupleLink *cl)
+void Grid::glouton_stochastique(int max_pos)
 {
-    if (limit_recur == 0)
-    {
-        return;
-    }
     std::string s = "RVNJ";
     const int black = 2, green = 1, yellow = 3, red = 0;
-    int max_cur, color_cur;
+    int max_cur = 0, color_cur;
     int ***scores_tab = build_scores_tab(black, green, yellow, red, true);
     couple coordinates_max;
     const int max_pieces = size * size;
+    int nb_black = nb_color_in_grid('N'), placed_pieces = max_pieces - nb_empty_cells(), nb_red = nb_color_in_grid('R');
+    // std::cout << "nb red = " << nb_red << '\n';
+
+    const int current_max_pieces = max_pos /*  - generate_random_number(0, 4) */;
+
+    int chosen_place;
+
+    const int size_choice = size + 2;
+    int chosen_pieces_size = 0;
+    couple *cl = new couple[size_choice];
+    char *co = new char[size_choice];
 
     do
     {
-        max_cur = 0;
-        color_cur = -1;
-        coordinates_max = couple{0, 0};
-        // iterate through all table to find the max value, green should be more considered
-        for (int i = 0; i < size; i++)
+        chosen_pieces_size = 0;
+        for (int x = 0; x < size_choice; x++)
         {
-            for (int j = 0; j < size; j++)
-            {
-                // cell already taken
-                if (colors[i][j] != 'X')
-                {
-                    continue;
-                }
+            // printf("x = %d\n", x);
 
-                // iterate through each color to find the best color at this place
-                for (int k = 0; k < 4; k++)
+            max_cur = 0;
+            color_cur = -1;
+            coordinates_max = couple{0, 0};
+            // iterate through all table to find the max value, green should be more considered
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
                 {
-                    // handle priorities between colors
-                    if (scores_tab[i][j][k] < max_cur or (k == black and nb_black == size) or (k == red and nb_red == 1))
+                    // cell already taken
+                    if (colors[i][j] != 'X' or contains_couple(cl, chosen_pieces_size, i, j))
                     {
-                        // there is this condition to optimize the code (instead of checking two there is only on checked which coule be more true)
                         continue;
                     }
-                    else if (scores_tab[i][j][k] > max_cur)
+
+                    // iterate through each color to find the best color at this place
+                    for (int k = 0; k < 4; k++)
                     {
-                        max_cur = scores_tab[i][j][k];
-                        color_cur = k;
-                        coordinates_max = couple{i, j};
-                    }
-                    else
-                    {
-                        // are equal
-                        // do something
+                        // handle priorities between colors
+                        if (scores_tab[i][j][k] < max_cur or (k == black and nb_black >= size) or (k == red and nb_red >= 1))
+                        {
+                            // there is this condition to optimize the code (instead of checking two there is only on checked which coule be more true)
+                            continue;
+                        }
+                        else if (scores_tab[i][j][k] > max_cur)
+                        {
+                            max_cur = scores_tab[i][j][k];
+                            color_cur = k;
+                            coordinates_max = couple{i, j};
+                        }
+                        else
+                        {
+                            // are equal
+                            // do something
+                        }
                     }
                 }
             }
+            // printf("here2\n");
+            if (max_cur != 0)
+            {
+
+                // colors[coordinates_max.line][coordinates_max.column] = s[color_cur];
+                // placed_pieces++;
+
+                cl[x] = coordinates_max;
+                co[x] = s[color_cur];
+                chosen_pieces_size++;
+
+                // manage colors that impact the same color
+                switch (color_cur)
+                {
+                case black:
+                    nb_black++;
+                    break;
+
+                case yellow:
+                    // add penality for each cell around it
+                    this->update_yellow_scores_tab(scores_tab, coordinates_max.line, coordinates_max.column, yellow);
+
+                    break;
+                case red:
+                    nb_red++;
+                case green:
+                    // substract penality for each cell around it
+                    this->update_green_scores_tab(scores_tab, coordinates_max.line, coordinates_max.column, green);
+
+                default:
+                    break;
+                }
+            }
+            else
+            {
+                if (x != 0)
+                {
+                    max_cur = 1;
+                }
+                // no more places for pieces
+                break;
+            }
         }
-        if (max_cur != 0)
+
+        if (chosen_pieces_size != 0)
         {
-
-            colors[coordinates_max.line][coordinates_max.column] = s[color_cur];
+            // printf("before crash value = %d\n", chosen_pieces_size);
+            if (chosen_pieces_size == 1)
+            {
+                chosen_place = 0;
+            }
+            else
+            {
+                chosen_place = generate_random_number(0, chosen_pieces_size - 1);
+            }
+            // printf("after crash\n");
+            colors[cl[chosen_place].line][cl[chosen_place].column] = co[chosen_place];
             placed_pieces++;
-            // manage colors that impact the same color
-            switch (color_cur)
-            {
-            case black:
-                nb_black++;
-                break;
-
-            case yellow:
-                // add penality for each cell around it
-                this->update_yellow_scores_tab(scores_tab, coordinates_max.line, coordinates_max.column, yellow);
-
-                break;
-            case red:
-                nb_red++;
-            case green:
-                // substract penality for each cell around it
-                this->update_green_scores_tab(scores_tab, coordinates_max.line, coordinates_max.column, green);
-
-            default:
-                break;
-            }
-            if (limit_recur >= 2 /* and color_cur == green */ and numbers[coordinates_max.line][coordinates_max.column] > 0)
-            {
-                Grid *g = this->copy_grid_as_ptr(true);
-                // g->colors[coordinates_max.line][coordinates_max.column] = 'B';
-                g->glouton_recur(glg, nb_red, nb_black, placed_pieces, limit_recur - 1, add_first_CL(cl, coordinates_max.line, coordinates_max.column));
-            }
         }
 
-    } while (placed_pieces <= max_pieces and max_cur != 0);
-    // printf("placed_pieces = %d, max_cur %d\n", placed_pieces, max_cur);
-    // this->print_colors();
-    delete cl;
+    } while (placed_pieces <= current_max_pieces and max_cur != 0);
+    delete[] cl;
+    delete[] co;
     delete_scores_tab(scores_tab);
-    glg->addGrid(this);
 }
 
 // this function does not generate the best grid, the around of green is not really taken in mind
 void Grid::build_grid_points(bool *write_all, char *output_file)
 {
 
-    GridLinkGuard *gloutonGlg = new GridLinkGuard;
-    Grid *gridCopy = this->copy_grid_as_ptr(true);
-    gridCopy->glouton_recur(gloutonGlg, nb_color_in_grid('R'), nb_color_in_grid('N'), size * size - nb_empty_cells(), 4, nullptr);
-    // gloutonGlg->pretty_print();
-    // std::cout << "printingalfd------------------\n";
-    // gloutonGlg->pretty_print();
-    gloutonGlg->fill_blank_all();
-    // gloutonGlg->pretty_print();
-    std::cout << "printingall\n";
-    gloutonGlg->pretty_print();
+    int nb_placed_glouton = this->glouton(0);
+    print_colors();
+    printf("%d\n", nb_placed_glouton);
 
-    std::cout << "here are the bests : \n";
-    gloutonGlg->convert_to_best_scores();
-    gloutonGlg->pretty_print();
+    this->fill_and_opti(nb_placed_glouton);
+    set_score_from_calculation();
+    print_colors_with_score();
+    bool exit = false;
 
-    gloutonGlg->opti_recur(2);
-    gloutonGlg->pretty_print();
-
-    gloutonGlg->opti_recur(2);
-    gloutonGlg->pretty_print();
-
-    std::cout << "fkdsjfkds\n";
-
-    gloutonGlg->opti_recur(2);
-    std::cout << "fkdsjfkds---\n";
-    gloutonGlg->pretty_print();
-
-    gloutonGlg->opti_recur(2);
-    std::cout << "fkdsjfkds-----\n";
-    gloutonGlg->pretty_print();
-
-    /* GridLinkGuard *bestGrids = gloutonGlg->solve_all_grids();
-    std::cout << "first solved ; \n";
-    bestGrids->pretty_print();
-
-    GridLinkGuard *bestGrids2 = bestGrids->solve_all_grids();
-    std::cout << "second solved\n";
-    bestGrids2->pretty_print();
-    bestGrids2->switch_colors_with_first(this);
-
-    // printf("%p\n", output_file);
-
-    if (output_file != nullptr)
+    /* for (int i = 0; i < 1000; i++)
     {
-        if (!*write_all or bestGrids2->get_size() == 1)
-        {
-            this->save_in_file(output_file);
-        }
-        else
-        {
-            bestGrids2->save_all_in_files(output_file);
-        }
+        boucle_alea(nb_placed_glouton, &exit);
     }
-
-
-    delete gloutonGlg;
-    delete bestGrids; */
-
-    // delete bestGrids2;
-    // delete bestGrids3;
-
-    /* GridLinkGuard *q = new GridLinkGuard;
-    this->glouton(q, 0, 0, 0, 1);
-    q->pretty_print();
-    GridLinkGuard *a = q->solve_all_grids();
-    a->pretty_print();
-    delete a;
-    delete q; */
-
-    /* GridLinkGuard *glg = new GridLinkGuard;
-    fill_blank_recur(glg, nb_empty_cells());
-
-    printf("printing best scores\n");
-    GridLinkGuard *bestScores = glg->get_best_scores();
-    bestScores->print_all_scores();
-    bestScores->pretty_print();
-
-    Grid *gfdf = bestScores->get_first_grid()->copy_grid_as_ptr(true);
-    GridLinkGuard *q = new GridLinkGuard;
-
-    // //std::cout << "\n\n\n";
-    // // gfdf->optimize_grid_full();
-    // // gfdf->set_score_from_calculation();
-    // // gfdf->print_colors_with_score();
-    gfdf->optimize_grid_recur(true, q, nullptr, 2);
-
-    GridLinkGuard *m = q->get_best_scores();
-    m->pretty_print();
-    m->get_first_grid()->save_in_file("solution_4_bb.txt");
-
-    // //gfdf->print_colors();
-    // //std::cout << "score = " << gfdf->calcul_score() << "\n";
-
-    delete m;
-    printf("1\n");
-    delete q;
-    printf("2\n");
-    // delete gfdf;
-    printf("3\n");
-    delete bestScores;
-    printf("4\n");
-    delete glg;
-    printf("5\n"); */
+    this->set_score_from_calculation();
+    this->print_colors_with_score(); */
 }
 
-void Grid::brute_force_recur(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_posed, int *nb_tested)
+void Grid::boucle_alea(int nb_placed_glouton, bool *exit)
 {
-    if (*nb_tested == 1000000000)
+    Grid *tmpGrid = this->copy_grid_as_ptr(true);
+    int count = 1;
+    while (!*exit)
     {
-        std::cout << "1 000 000 000 tested\n";
-        *nb_tested = 0;
-    }
-    if (pieces_left == 0)
-    {
-        *nb_tested += 1;
-        glg->addGrid(this->copy_grid_as_ptr(true));
-        return;
-    }
-
-    std::thread *threadIdTab;
-    int x, y;
-    if (this->get_coordinates_empty_cell(&x, &y) == -1)
-    {
-        std::cerr << "An error occured...\n";
-        exit(EXIT_FAILURE);
-    }
-
-    // printf("here x = %d, y = %d, nbth = %d\n", x, y, *nb_thread);
-    // this->print_colors();
-
-    if (!red_posed)
-    {
-        this->colors[x][y] = 'R';
-        brute_force_recur(glg, pieces_left - 1, nb_thread, true, nb_tested);
-        this->colors[x][y] = 'X';
-    }
-
-    std::string s = "BVNJO";
-    if (pieces_left >= 4)
-    {
-
-        for (int i = 0; i < (int)s.length(); i++)
+        printf("%d ième testé\n", count++);
+        tmpGrid->fill_and_opti(nb_placed_glouton);
+        tmpGrid->set_score_from_calculation();
+        // tmpGrid->print_colors_with_score();
+        if (tmpGrid->get_score() > this->score)
         {
-            if (*nb_thread < NB_MAX_THREAD)
-            {
-                threadIdTab = new std::thread[s.length()];
-                (*nb_thread)++;
-                threadIdTab[i] = std::thread(&Grid::brute_force_launcher, this->copy_grid_as_ptr(true), glg, pieces_left, nb_thread, red_posed, x, y, s[i], nb_tested);
-
-                // wait all thread to be finished
-                for (int i = 0; i < (int)s.length(); i++)
-                {
-                    threadIdTab[i].join();
-                    (*nb_thread)--;
-                }
-                delete[] threadIdTab;
-            }
-            else
-            {
-                this->colors[x][y] = s[i];
-                brute_force_recur(glg, pieces_left - 1, nb_thread, red_posed, nb_tested);
-                this->colors[x][y] = 'X';
-            }
+            this->switch_colors(tmpGrid);
+            this->score = tmpGrid->get_score();
+            this->print_colors_with_score();
         }
+        tmpGrid->clear_colors();
     }
-    else
-    {
-        for (int i = 0; i < (int)s.length(); i++)
-        {
-            this->colors[x][y] = s[i];
-            brute_force_recur(glg, pieces_left - 1, nb_thread, red_posed, nb_tested);
-            this->colors[x][y] = 'X';
-        }
-    }
+    delete tmpGrid;
 }
 
-void Grid::brute_force_launcher(GridLinkGuard *glg, int pieces_left, int *nb_thread, bool red_posed, int x, int y, char c, int *nb_tested)
+void Grid::generate_random_grid_numbers(int minimun, int maximum)
 {
-    // printf("thread started x = %d, y = %d, c = %c\n", x, y, c);
-    GridLinkGuard *glgThread = new GridLinkGuard;
-
-    this->colors[x][y] = c;
-    brute_force_recur(glgThread, pieces_left - 1, nb_thread, red_posed, nb_tested);
-    this->colors[x][y] = 'X';
-    printf("thread finished\n");
-
-    GridLinkGuard *bestScoresThread = glgThread->get_best_scores();
-    printf("before extending\n");
-    glg->extend(bestScoresThread);
-    printf("after extend\n");
-
-    delete glgThread;
-}
-
-/// @brief brute force the grid, printing the best grid found, the grid is not modified
-void Grid::brute_force()
-{
-    GridLinkGuard *glg = new GridLinkGuard;
-    int nb_thread = 0;
-    int nb_tested = 0;
-    this->brute_force_recur(glg, nb_empty_cells(), &nb_thread, false, &nb_tested);
-    while (nb_thread >= 1)
+    for (int i = 0; i < this->size; i++)
     {
+        for (int j = 0; j < this->size; j++)
+        {
+            this->numbers[i][j] = generate_random_number(minimun, maximum);
+        }
     }
-    printf("finished\n");
-    GridLinkGuard *bestGlg = glg->get_best_scores();
-    bestGlg->pretty_print();
-    delete bestGlg;
 }
 
 void Grid::find_value(int value, bool *write_all, char *output_file)
@@ -1051,17 +788,11 @@ void Grid::optimize_grid_recur(GridLinkGuard *glg, coupleLink *cl, int limit_rec
     glg->addGrid(this);
 }
 
-void Grid::optimize_grid_clever()
-{
-    int nb_pena_blue = this->get_nb_penality_blue();
-}
-
 void Grid::orange_blue()
 {
     char **p = colors;
     int **c = numbers;
     // int nb_blue = 0;
-    int lig, col;
 
     // placement des bleu sur les positifs
     for (int i = 0; i < size; ++i)
@@ -1178,90 +909,419 @@ void Grid::yellow_replace_blue()
 
     int neg;
     int pos;
-    bool changed = false;
     nb_pos_neg_left_blue(&neg, &pos);
-    printf("neg = %d, pos = %d\n", neg, pos);
+    // printf("neg = %d, pos = %d\n", neg, pos);
 
-    // if (neg > pos)
-    // {
+    if (neg > pos)
+    {
         for (int i = 0; i < size; ++i)
         {
             for (int j = 0; j < size; ++j)
             {
                 nb_pos_neg_left_blue(&neg, &pos);
-                changed = false;
 
-                if (p[i][j] == 'B' and numbers[i][j] < 0)
+                if (p[i][j] == 'B')
                 {
-
                     // two blue next to each other
                     // if (pos < neg)
                     // {
 
-                        b = nb_color_around_cell(i, j, 'B');
-                        printf("bleu  = %d\n", b);
-                        if (b >= 1)
+                    b = nb_color_around_cell(i, j, 'B');
+
+                    if (b >= 1)
+                    {
+                        if (get_color(i, j + 1) == 'B')
                         {
-                            if (get_color(i, j + 1) == 'B')
+                            if ((c[i][j] + c[i][j + 1]) > -penality)
                             {
-                                if ((c[i][j] + c[i][j + 1]) > -penality)
-                                {
-                                    p[i][j] = 'J';
-                                    p[i][j + 1] = 'J';
-                                    changed = true;
-                                    b--;
-                                }
+                                p[i][j] = 'J';
+                                p[i][j + 1] = 'J';
                             }
-
-                            if (get_color(i + 1, j - 1) == 'B' and b >= 1)
-                            {
-                                if ((c[i][j] + c[i + 1][j - 1]) > -penality)
-                                {
-                                    p[i][j] = 'J';
-                                    p[i + 1][j - 1] = 'J';
-                                    changed = true;
-                                    b--;
-                                }
-                            }
-
-                            if (get_color(i + 1, j) == 'B' and b >= 1)
-                            {
-                                if ((c[i][j] + c[i + 1][j]) > -penality)
-                                {
-                                    p[i][j] = 'J';
-                                    p[i + 1][j] = 'J';
-                                    changed = true;
-                                    b--;
-                                }
-                            }
-
-                            if (get_color(i + 1, j + 1) == 'B' and b >= 1)
-                            {
-                                if ((c[i][j] + c[i + 1][j + 1]) > -penality)
-                                {
-                                    p[i][j] = 'J';
-                                    p[i + 1][j + 1] = 'J';
-                                    changed = true;
-                                }
-                            }
+                            b--;
                         }
-                    // }
 
-                    /* if (not changed and b >= 1) {
-                        int w = numbers[i][j], tmp = w;
-                        if (get_color(i, j+1) == 'B' and tmp + numbers[i][j+1] > -penality)
+                        if (get_color(i + 1, j - 1) == 'B' and b >= 1)
+                        {
+                            if ((c[i][j] + c[i + 1][j - 1]) > -penality)
+                            {
+                                p[i][j] = 'J';
+                                p[i + 1][j - 1] = 'J';
+                            }
+                            b--;
+                        }
+
+                        if (get_color(i + 1, j) == 'B' and b >= 1)
+                        {
+                            if ((c[i][j] + c[i + 1][j]) > -penality)
+                            {
+                                p[i][j] = 'J';
+                                p[i + 1][j] = 'J';
+                            }
+                            b--;
+                        }
+
+                        if (get_color(i + 1, j + 1) == 'B' and b >= 1)
+                        {
+                            if ((c[i][j] + c[i + 1][j + 1]) > -penality)
+                            {
+                                p[i][j] = 'J';
+                                p[i + 1][j + 1] = 'J';
+                            }
+                            b--;
+                        }
+                    }
+                    // }
+                }
+            }
+        }
+    }
+}
+
+/// @brief replace blue by yellow
+void Grid::yellow_replace_blue_duo()
+{
+    char **p = colors;
+    int **c = numbers;
+
+    int b, d;
+
+    bool changed = false;
+
+    for (int i = 0; i < size; ++i)
+    {
+        for (int j = 0; j < size; ++j)
+        {
+            if (p[i][j] == 'B' and numbers[i][j] < 0)
+            {
+                b = nb_color_around_cell(i, j, 'B');
+                changed = false;
+                if (b >= 1)
+                {
+                    if (get_color(i, j + 1) == 'B' and numbers[i][j + 1] < 0)
+                    {
                         for (int r = 0; r < size; r++)
                         {
                             for (int s = 0; s < size; s++)
                             {
-                                
+
+                                if (p[r][s] == 'B' and numbers[r][s] > 0)
+                                {
+
+                                    d = nb_color_around_cell(r, s, 'B');
+                                    if (d >= 1)
+                                    {
+                                        if (get_color(r, s + 1) == 'B' and numbers[r][s + 1] > 0)
+                                        {
+                                            if ((c[r][s] + c[r][s + 1] + c[i][j] + c[i][j + 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r][s + 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i][j + 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s - 1) == 'B' and numbers[r + 1][s - 1] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s - 1] + c[i][j] + c[i][j + 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s - 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i][j + 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s) == 'B' and numbers[r + 1][s] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s] + c[i][j] + c[i][j + 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i][j + 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s + 1) == 'B' and numbers[r + 1][s + 1] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s + 1] + c[i][j] + c[i][j + 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s + 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i][j + 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            
                         }
-                        
-                    } */
+                        b--;
+                    }
+
+                    if (get_color(i + 1, j - 1) == 'B' and numbers[i + 1][j - 1] < 0 and b >= 1)
+                    {
+                        changed = false;
+                        for (int r = 0; r < size; r++)
+                        {
+                            for (int s = 0; s < size; s++)
+                            {
+
+                                if (p[r][s] == 'B' and numbers[r][s] > 0)
+                                {
+
+                                    d = nb_color_around_cell(r, s, 'B');
+                                    if (d >= 1)
+                                    {
+                                        if (get_color(r, s + 1) == 'B' and numbers[r][s + 1] > 0)
+                                        {
+                                            if ((c[r][s] + c[r][s + 1] + c[i][j] + c[i + 1][j - 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r][s + 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j - 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s - 1) == 'B' and numbers[r + 1][s - 1] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s - 1] + c[i][j] + c[i + 1][j - 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s - 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j - 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s) == 'B' and numbers[r + 1][s] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s] + c[i][j] + c[i + 1][j - 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j - 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s + 1) == 'B' and numbers[r + 1][s + 1] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s + 1] + c[i][j] + c[i + 1][j - 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s + 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j - 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if ((c[i][j] + c[i + 1][j - 1]) > -penality)
+                        {
+                            p[i][j] = 'J';
+                            p[i + 1][j - 1] = 'J';
+                        }
+                        b--;
+                    }
+
+                    if (get_color(i + 1, j) == 'B' and numbers[i + 1][j] < 0 and b >= 1)
+                    {
+                        changed = false;
+                        for (int r = 0; r < size; r++)
+                        {
+                            for (int s = 0; s < size; s++)
+                            {
+
+                                if (p[r][s] == 'B' and numbers[r][s] > 0)
+                                {
+
+                                    d = nb_color_around_cell(r, s, 'B');
+                                    if (d >= 1)
+                                    {
+                                        if (get_color(r, s + 1) == 'B' and numbers[r][s + 1] > 0)
+                                        {
+                                            if ((c[r][s] + c[r][s + 1] + c[i][j] + c[i + 1][j]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r][s + 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s - 1) == 'B' and numbers[r + 1][s - 1] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s - 1] + c[i][j] + c[i + 1][j]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s - 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s) == 'B' and numbers[r + 1][s] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s] + c[i][j] + c[i + 1][j]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s + 1) == 'B' and numbers[r + 1][s + 1] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s + 1] + c[i][j] + c[i + 1][j]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s + 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        b--;
+                    }
+
+                    if (get_color(i + 1, j + 1) == 'B' and numbers[i + 1][j + 1] < 0 and b >= 1)
+                    {
+                        changed = false;
+                        for (int r = 0; r < size; r++)
+                        {
+                            for (int s = 0; s < size; s++)
+                            {
+
+                                if (p[r][s] == 'B' and numbers[r][s] > 0)
+                                {
+
+                                    d = nb_color_around_cell(r, s, 'B');
+                                    if (d >= 1)
+                                    {
+                                        if (get_color(r, s + 1) == 'B' and numbers[r][s + 1] > 0)
+                                        {
+                                            if ((c[r][s] + c[r][s + 1] + c[i][j] + c[i + 1][j + 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r][s + 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j + 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s - 1) == 'B' and numbers[r + 1][s - 1] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s - 1] + c[i][j] + c[i + 1][j + 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s - 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j + 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s) == 'B' and numbers[r + 1][s] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s] + c[i][j] + c[i + 1][j + 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j + 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+
+                                        if (get_color(r + 1, s + 1) == 'B' and numbers[r + 1][s + 1] > 0 and d >= 1 and not changed)
+                                        {
+                                            if ((c[r][s] + c[r + 1][s + 1] + c[i][j] + c[i + 1][j + 1]) > 0)
+                                            {
+                                                p[r][s] = 'J';
+                                                p[r + 1][s + 1] = 'J';
+                                                p[i][j] = 'J';
+                                                p[i + 1][j + 1] = 'J';
+                                                changed = true;
+                                                d--;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        b--;
+                    }
                 }
             }
         }
-    // }
+    }
+}
+
+void Grid::fill_and_opti(int max_pieces)
+{
+    this->glouton_stochastique(max_pieces);
+    this->orange_blue();
+    this->set_score_from_calculation();
+    int old_score;
+    std::cout << "Grille initiale = \n";
+    print_colors_with_score();
+    GridLinkGuard *glg = new GridLinkGuard;
+    do
+    {
+        // printf("optimized\n");
+        old_score = this->get_score();
+        // optimize_grid_full();            // moyen
+        this->yellow_replace_blue_duo(); // important
+        std::cout << "after yellow duo = \n";
+        set_score_from_calculation();
+        print_colors_with_score();
+        // yellow_replace_blue();           // meilleur score sans lui plombe les scores
+        copy_grid_as_ptr(true)->optimize_grid_recur(glg, nullptr, 2);
+        glg->convert_to_best_scores();
+        printf("all grids int\n");
+        glg->pretty_print();
+        glg->switch_colors_with_first(this);
+        glg->clear(true);
+        set_score_from_calculation();
+    } while (old_score != this->score);
+    yellow_replace_blue();
+    delete glg;
 }

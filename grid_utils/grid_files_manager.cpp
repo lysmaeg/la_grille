@@ -1,4 +1,5 @@
 #include "grid_files_manager.hpp"
+#include "grid.hpp"
 
 /// @brief read the numbers of a grid from a file
 /// @param filename the file's name
@@ -78,6 +79,7 @@ int Grid::read_file_for_colors(std::string filename)
         for (int j = 0; j < size; j++)
         {
             colors[i][j] = (char)file.get();
+            // file.get();
         }
         file.get();
     }
@@ -121,6 +123,34 @@ int Grid::save_in_file(std::string filename) const
         std::cerr << "An error occured while writing the score into the file\n";
         return -1;
     }
-    //std::cout <<  "kldfkdf\n";
+    // std::cout <<  "kldfkdf\n";
+
+    return 0;
+}
+
+int Grid::write_numbers_into_file(std::string filename) const
+{
+    std::ofstream file(filename);
+    if (! file) {
+        std::cerr << "Cannot create file\n";
+        return -1;
+    }
+
+    file << this->size;
+    file << ' ';
+    file << this->penality;
+    file << (char) 012;
+
+    for (int i = 0; i < this->size; i++)
+    {
+        for (int j = 0; j < this->size-1; j++)
+        {
+            file << this->numbers[i][j];
+            file << ' ';
+        }
+        file << this->numbers[i][this->size-1];
+        file << (char) 10;
+    }
+    
     return 0;
 }
