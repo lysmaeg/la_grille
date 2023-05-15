@@ -1,6 +1,9 @@
 body {
     font-family: "Trebuchet MS";
     background-color: #F2EBE5;
+    margin-left: 30px;
+    margin-right: 40px;
+    text-align: justify;
 }
 .menu {
     display: flex;                /* Transformation en flexbox */
@@ -40,7 +43,7 @@ body {
 }
 
 h1 {
-    color: #2B262D;
+    /*color: #2B262D;*/
     font-family: Arial, Helvetica, sans-serif;
     font-size: 300%;
     text-transform: uppercase;
@@ -48,7 +51,7 @@ h1 {
     text-align: center;
 }
 
-p, li {
+p, li, h2, h3{
     color: #2B262D;
 }
 
@@ -74,11 +77,24 @@ p, li {
 .titre {
     font-size: 140%;
     font-weight: bolder;
+    color: black;
+    text-transform: uppercase;
 }
 
 .tableau1 td {
     border: #2B262D 1px solid;
-    
+}
+
+.tab {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.tableau1 {
+    margin-right: 50px;
+    margin-left: 50px;
 }
 
 table {
@@ -92,11 +108,40 @@ table {
     border:  #2B262D 1px solid;
 }
 
-.tableau3 {
-    width: 50px;
-    height: 100px;
+.tableau1 td, .tableau2 td, .tableau3 td {
+    width:100px;
 }
 
 .gauche {
     text-align: left;
+}
+
+.b {
+    background-color: blue;
+}
+.o {
+    background-color: orange;
+}
+.j {
+    background-color: yellow;
+}
+.n {
+    background-color: black;
+    color:#F2EBE5;
+}
+.r {
+    background-color: red;
+}
+.v {
+    background-color: green;
+}
+
+#groupe {
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 100%;
+    text-transform: uppercase;
+    font-weight: bolder;
+    text-align: center;
+    margin-top: 50px;
 }

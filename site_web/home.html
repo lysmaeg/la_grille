@@ -35,47 +35,8 @@
                 <li>Une grille, définie par une matrice carrée de valeurs positives et négatives.
                     La taille de la grille (t) est égale à son nombre de lignes (et donc de colonnes).
                     Voici un exemple de grille de taille t = 4 :</li>
-
-                <table class="tableau1">
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>A</td>
-                            <td>V</td>
-                            <td>J</td>
-                            <td>O</td>
-                            <td>N</td>
-                        </tr>
-                        <tr>
-                            <td>B</td>
-                            <td>J</td>
-                            <td>V</td>
-                            <td>B</td>
-                            <td>O</td>
-                        </tr>
-                        <tr>
-                            <td>C</td>
-                            <td>R</td>
-                            <td>J</td>
-                            <td>O</td>
-                            <td>J</td>
-                        </tr>
-                        <tr>
-                            <td>D</td>
-                            <td>J</td>
-                            <td>N</td>
-                            <td>O</td>
-                            <td>B</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br>
+                
+                <div class="tab">
                 <table class="tableau1">
                     <tbody>
                         <tr>
@@ -115,6 +76,7 @@
                         </tr>
                     </tbody>
                 </table>
+                </div>
 
                 <li>Une valeur de pénalité (p). Par exemple : p = 10.</li>
             </ol>
@@ -137,13 +99,94 @@
                 <li>Pion <span class="rouge">rouge</span>. Il n’y a qu’un seul pion rouge à disposition, et il est requis de l’utiliser. Le nombre de
                     points correspond à l’opposé de la valeur inscrite sur la case.</li>
             </ol>
-            <p>A l’exception de l’unique pion rouge, le nombre de pions de chaque autre couleur n’est pas limité</p>
+            <p>A l’exception de l’unique pion rouge, le nombre de pions de chaque autre couleur n’est pas limité</p><br>
             <p>Ci-dessous à gauche figure un exemple de placement de jetons (pas optimal en termes de score) sur une
                 grille de taille t = 4 :
                 </p>
+            
+                <div class="tab">
+                    <table class="tableau1">
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td class="v">V</td>
+                                <td class="j">J</td>
+                                <td class="o">O</td>
+                                <td class="n">N</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td class="j">J</td>
+                                <td class="v">V</td>
+                                <td class="b">B</td>
+                                <td class="o">O</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td class="r">R</td>
+                                <td class="j">J</td>
+                                <td class="o">O</td>
+                                <td class="j">J</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td class="j">J</td>
+                                <td class="n">N</td>
+                                <td class="o">O</td>
+                                <td class="b">B</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <table class="tableau1">
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>-6</td>
+                                <td>9</td>
+                                <td>-2</td>
+                                <td>5</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>8</td>
+                                <td>2</td>
+                                <td>-7</td>
+                                <td>-6</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>-8</td>
+                                <td>2</td>
+                                <td>-4</td>
+                                <td>-3</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>-3</td>
+                                <td>3</td>
+                                <td>-4</td>
+                                <td>7</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
 
-
-            <p>Le score obtenu par ce placement de jetons sur la grille exemple précédente (rappelée ci-dessus `a droite)
+            <p>Le score obtenu par ce placement de jetons sur la grille exemple précédente (rappelée ci-dessus à droite)
                 se calcule comme suit :</p>
             <ul>
                 <li> Score des pions jaunes : SJ = 9 + 8 + 2 − 3 − 3 = 13.</li>
@@ -175,7 +218,7 @@
                 orange. Elles diffèrent uniquement par la permutation d’un pion orange et d’un pion bleu. Ces configurations
                 n’entraînent aucune pénalité.</p>
             
-            
+            <div class="tab">
             <table class="tableau1">
                 <tbody>
                     <tr>
@@ -187,31 +230,31 @@
                     </tr>
                     <tr>
                         <td>A</td>
-                        <td>V</td>
-                        <td>N</td>
-                        <td>V</td>
-                        <td>N</td>
+                        <td class="v">V</td>
+                        <td class="n">N</td>
+                        <td class="v">V</td>
+                        <td class="n">N</td>
                     </tr>
                     <tr>
                         <td>B</td>
-                        <td>N</td>
-                        <td>B</td>
-                        <td>B</td>
-                        <td>O</td>
+                        <td class="n">N</td>
+                        <td class="b">B</td>
+                        <td class="b">B</td>
+                        <td class="o">O</td>
                     </tr>
                     <tr>
                         <td>C</td>
-                        <td>R</td>
-                        <td>B</td>
-                        <td>B</td>
-                        <td>B</td>
+                        <td class="r">R</td>
+                        <td class="b">B</td>
+                        <td class="b">B</td>
+                        <td class="b">B</td>
                     </tr>
                     <tr>
                         <td>D</td>
-                        <td>O</td>
-                        <td>B</td>
-                        <td>V</td>
-                        <td>N</td>
+                        <td class="o">O</td>
+                        <td class="b">B</td>
+                        <td class="v">V</td>
+                        <td class="n">N</td>
                     </tr>
                 </tbody>
             </table>
@@ -227,35 +270,36 @@
                     </tr>
                     <tr>
                         <td>A</td>
-                        <td>V</td>
-                        <td>J</td>
-                        <td>O</td>
-                        <td>N</td>
+                        <td class="v">V</td>
+                        <td class="j">J</td>
+                        <td class="o">O</td>
+                        <td class="o">N</td>
                     </tr>
                     <tr>
                         <td>B</td>
-                        <td>J</td>
-                        <td>V</td>
-                        <td>B</td>
-                        <td>O</td>
+                        <td class="j">J</td>
+                        <td class="v">V</td>
+                        <td class="b">B</td>
+                        <td class="o">O</td>
                     </tr>
                     <tr>
                         <td>C</td>
-                        <td>R</td>
-                        <td>J</td>
-                        <td>O</td>
-                        <td>J</td>
+                        <td class="r">R</td>
+                        <td class="j">J</td>
+                        <td class="o">O</td>
+                        <td class="j">J</td>
                     </tr>
                     <tr>
                         <td>D</td>
-                        <td>J</td>
-                        <td>N</td>
-                        <td>O</td>
-                        <td>B</td>
+                        <td class="j">J</td>
+                        <td class="n">N</td>
+                        <td class="o">O</td>
+                        <td class="b">B</td>
                     </tr>
                 </tbody>
             </table>
-            
+            </div>
+
             <h3>Syntaxe des fichiers d'entrée (instances)</h3>
             <p>Une instance de problème à résoudre est donnée par un fichier texte comportant, sur la première ligne,
                 la taille t de la grille (c’est-à-dire son nombre de lignes, égal à son nombre de colonnes) et la valeur p d’une
@@ -265,6 +309,7 @@
             <p>Le fichier représenté ci-dessous correspond à la grille de taille t = 4 de l’exemple précédent, avec une valeur
                 de pénalité fixée à p = 10 points.</p>
 
+            <div class="tab">
             <table class="tableau2">
                 <tr>
                     <td>4</td>
@@ -295,6 +340,7 @@
                     <td>7</td>
                 </tr>
             </table>
+            </div>
 
             <h3>Syntaxe des fichiers de sortie (solutions)</h3>
             <p>Un fichier de solution pour une grille de taille t doit comporter, sur les t premières lignes, la suite de t
@@ -302,6 +348,7 @@
                 la (t + 1)-ième et dernière ligne le score de la solution.</p>
             <p>Le fichier suivant correspond à la première solution optimale de l’exemple.</p>
             
+            <div class="tab">
             <table class="tableau3">
                 <tr>
                     <td>V</td>
@@ -331,10 +378,11 @@
                     <td>76</td>
                 </tr>
             </table>
+            </div>
             <br>
 
             <li class="titre">Projet</li>
-            <p>Il est demandé d’´ecrire un programme C++ permettant de résoudre le problème de La Grille, c’est-à-dire
+            <p>Il est demandé d’écrire un programme C++ permettant de résoudre le problème de La Grille, c’est-à-dire
                 lire un fichier d’entrée représentant une instance de problème, calculer une solution, et l’écrire (ainsi que son
                 score) dans un fichier de sortie. L’objectif est de concevoir un algorithme permettant de trouver une solution
                 de plus grand score total à une instance quelconque en moins d’une minute de calcul. La solution trouvée ne
@@ -383,8 +431,8 @@
             <p>Le classements de équipes sera établi à partir des points (score maximum : 50). Le cas échéant, les équipes à égalité seront départagées sur une instance mystère supplémentaire.</p>
         </ol>
 
-
-    <p>cf PDF du sujet</p>
+    
+    <p id="groupe">David DA SILVA et Maëlys GIROIRE</p>
 
     </body>
 </html>
