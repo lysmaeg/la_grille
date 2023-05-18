@@ -38,18 +38,34 @@
             <label for="pena">Pénalité : </label>
             <input type="text" id="pena" size="3" maxlength="3"><br>
 
+            <label for="tmp">Temps d'exécution : </label>
+            <input type="text" id="tmp" size="3" maxlength="3">
+            <p>OU</p>
+            <label for="tmp">Temps d'exécution : </label>
+            <input type="range" id="tmp" min="1" max="60" step="1" value="5">
+            <label for="tmp">(de 1 à 60 secondes)</label>
+            <output clas="tmp-output" for="tmp"></output><br>
+
             <label for="validation"></label>
             <input id="validation" type="submit" name="Valider" value="Valider"><br>
+            
           </fieldset><br>
 
           <fieldset>
-            <legend>Saisie de la grille</legend>
-            <br>
+            <legend>Saisie de la grille</legend><br>
             <input type="reset" name="vider" value="Réinitialiser">
             <input type="submit" name="Valider" value="Résoudre"><br>
+          </fieldset><br>
+
+          <fieldset>
+            <legend>Affichage de la ou des grille(s)</legend>
+            <p>Le temps d'execution a été de : </p>
           </fieldset>
+
         </form>
 
-        <p class="groupe">David DA SILVA et Maëlys GIROIRE - 2023</p>
+        <div class="groupe">
+          <p>David DA SILVA et Maëlys GIROIRE - 2023</p>
+      </div>
 </body>
 </html>

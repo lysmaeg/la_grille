@@ -135,6 +135,7 @@ table {
     width: 100px;
     height: 100px;
     text-align: center;
+    font-size: 115%;
 }
 .tab {
     display: flex;
