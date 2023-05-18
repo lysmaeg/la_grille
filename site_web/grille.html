@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grille</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="scrips/grid_numbers_builder.js" defer></script>
 </head>
 <body>
     <h1>La Grille</h1>
@@ -27,16 +28,16 @@
               </li>
         </ul>
         <br>
-
+        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
         <p class="titre">Résolution d'une grille :</p>
-        <form action="page.php" method="POST">
+        <form method="POST" action="https://leria-etud.univ-angers.fr/~ddasilva/grille/solve_grid.php" target="dummyframe"> <!-- target="dummyframe" -->
           <fieldset>
             <legend>Saisie des données</legend>
-            <label for="taille">Taille de la grille : </label>
-            <input type="text" id="taille" size="3" maxlength="3"><br>
+            <label for="size">Taille de la grille : </label>
+            <input type="number" name="size" id="size" size="3" maxlength="3"><br>
 
             <label for="pena">Pénalité : </label>
-            <input type="text" id="pena" size="3" maxlength="3"><br>
+            <input type="text" name="penality" id="penality" size="3" maxlength="3"><br>
 
             <label for="tmp">Temps d'exécution : </label>
             <input type="text" id="tmp" size="3" maxlength="3">
@@ -47,14 +48,15 @@
             <output clas="tmp-output" for="tmp"></output><br>
 
             <label for="validation"></label>
-            <input id="validation" type="submit" name="Valider" value="Valider"><br>
-            
+            <input id="validateData" type="button" name="Valider" value="Valider"><br>
           </fieldset><br>
 
           <fieldset>
-            <legend>Saisie de la grille</legend><br>
+            <legend>Saisie de la grille</legend>
+            <div id="cells_container"></div>
+            <br>
             <input type="reset" name="vider" value="Réinitialiser">
-            <input type="submit" name="Valider" value="Résoudre"><br>
+            <input id="solveButton" type="submit" value="Résoudre"><br>
           </fieldset><br>
 
           <fieldset>
@@ -64,8 +66,6 @@
 
         </form>
 
-        <div class="groupe">
-          <p>David DA SILVA et Maëlys GIROIRE - 2023</p>
-      </div>
+        <p class="groupe">David DA SILVA et Maëlys GIROIRE - 2023</p>
 </body>
 </html>

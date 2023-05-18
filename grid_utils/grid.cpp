@@ -404,13 +404,14 @@ void Grid::build_grid_points(bool *write_all, char *output_file)
     set_score_from_calculation();
     print_colors_with_score();
     bool exit = false;
+    printf("finished\n");
 
-    /* for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 1000; i++)
     {
         boucle_alea(nb_placed_glouton, &exit);
     }
     this->set_score_from_calculation();
-    this->print_colors_with_score(); */
+    this->print_colors_with_score();
 }
 
 void Grid::boucle_alea(int nb_placed_glouton, bool *exit)
@@ -1301,25 +1302,22 @@ void Grid::fill_and_opti(int max_pieces)
     this->orange_blue();
     this->set_score_from_calculation();
     int old_score;
-    std::cout << "Grille initiale = \n";
-    print_colors_with_score();
     GridLinkGuard *glg = new GridLinkGuard;
     do
     {
-        // printf("optimized\n");
         old_score = this->get_score();
-        // optimize_grid_full();            // moyen
+        if (this->size > SIZE_BETWEEN)
+        {
+            optimize_grid_full(); // moyen
+        }
         this->yellow_replace_blue_duo(); // important
-        std::cout << "after yellow duo = \n";
-        set_score_from_calculation();
-        print_colors_with_score();
-        // yellow_replace_blue();           // meilleur score sans lui plombe les scores
-        copy_grid_as_ptr(true)->optimize_grid_recur(glg, nullptr, 2);
-        glg->convert_to_best_scores();
-        printf("all grids int\n");
-        glg->pretty_print();
-        glg->switch_colors_with_first(this);
-        glg->clear(true);
+        if (this->size <= SIZE_BETWEEN)
+        {
+            copy_grid_as_ptr(true)->optimize_grid_recur(glg, nullptr, 2);
+            glg->convert_to_best_scores();
+            glg->switch_colors_with_first(this);
+            glg->clear(true);
+        }
         set_score_from_calculation();
     } while (old_score != this->score);
     yellow_replace_blue();
