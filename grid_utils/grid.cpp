@@ -179,22 +179,18 @@ int Grid::glouton(int value)
     const int max_pieces = size * size;
     int nb_black = nb_color_in_grid('N'), placed_pieces = max_pieces - nb_empty_cells(), nb_red = nb_color_in_grid('R');
     // std::cout << "nb red = " << nb_red << '\n';
+    // int black_neg = 0;
 
     do
     {
         max_cur = value;
         color_cur = -1;
         coordinates_max = couple{0, 0};
-        // print_tttab((const int ***) scores_tab, size, size, 4);
-        // std::cout << '\n';
-        // print_colors();
-        // std::cout << '\n';
         // iterate through all table to find the max value, green should be more considered
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
             {
-                // printf("j = %d\n", j);
                 // cell already taken
                 if (colors[i][j] != 'X')
                 {
@@ -205,7 +201,7 @@ int Grid::glouton(int value)
                 for (int k = 0; k < 4; k++)
                 {
                     // handle priorities between colors
-                    if (scores_tab[i][j][k] < max_cur or (k == black and nb_black >= size) or (k == red and nb_red >= 1))
+                    if (scores_tab[i][j][k] < max_cur or (k == red and nb_red >= 1))
                     {
                         // there is this condition to optimize the code (instead of checking two there is only on checked which coule be more true)
                         continue;
@@ -236,6 +232,10 @@ int Grid::glouton(int value)
             {
             case black:
                 nb_black++;
+                /* if (nb_black <= size) {
+                    black_neg += numbers[coordinates_max.line][coordinates_max.column];
+                }  */
+
                 break;
 
             case yellow:
@@ -397,8 +397,6 @@ void Grid::build_grid_points(bool *write_all, char *output_file, int secs)
 {
 
     int nb_placed_glouton = this->glouton(0);
-    print_colors();
-    printf("%d\n", nb_placed_glouton);
     bool exit = false;
     clock_t start = clock();
 
@@ -412,6 +410,7 @@ void Grid::build_grid_points(bool *write_all, char *output_file, int secs)
     }
     this->set_score_from_calculation();
     this->print_colors_with_score();
+    this->save_in_file(output_file);
 }
 
 void Grid::boucle_alea(int nb_placed_glouton, clock_t *start, int secs, bool *exit)
@@ -455,6 +454,36 @@ void Grid::find_value(int value, bool *write_all, char *output_file)
         std::cout << "The given value is higher than the best value that we can compute\n";
         exit(0);
     }
+}
+
+void Grid::put_red_if_absent()
+{
+    int nb_red = this->nb_color_in_grid('R');
+    if (nb_red == 1) {
+        return;
+    }
+    int best_score = INT32_MIN;
+    int tmp;
+    couple best = {-1, -1};
+    char backup;
+    for (int i = 0; i < size; i++)
+    {
+        for (int k = 0; k < size; k++)
+        {
+            backup = colors[i][k];
+
+            tmp = this->calcul_score();
+            if (tmp > best_score) {
+                best = {i, k};
+            }
+            
+            colors[i][k] = backup;
+        }
+        
+    }
+    colors[best.line][best.column] = 'R';
+    this->set_score_from_calculation();
+    
 }
 
 /// @brief generate a random grid of colors for this Grid
@@ -1300,7 +1329,7 @@ void Grid::fill_and_opti(int max_pieces, clock_t *start, int secs, bool *exit)
 {
     this->glouton_stochastique(max_pieces);
     this->orange_blue();
-    this->set_score_from_calculation();
+    this->put_red_if_absent();
     int old_score;
     GridLinkGuard *glg = new GridLinkGuard;
     do
@@ -1308,20 +1337,23 @@ void Grid::fill_and_opti(int max_pieces, clock_t *start, int secs, bool *exit)
         old_score = this->get_score();
         if (this->size > SIZE_BETWEEN)
         {
-            optimize_grid_full(); // moyen
+            copy_grid_as_ptr(true)->optimize_grid_recur(glg, nullptr, 1);
+            glg->convert_to_best_scores();
+            glg->switch_colors_with_first(this);
+            glg->clear(true);
         }
         else
         {
-
+            this->yellow_replace_blue_duo(); // important
             copy_grid_as_ptr(true)->optimize_grid_recur(glg, nullptr, 2);
             glg->convert_to_best_scores();
             glg->switch_colors_with_first(this);
             glg->clear(true);
         }
-        this->yellow_replace_blue_duo(); // important
+        
 
         set_score_from_calculation();
-        if (((0.0 + *start - clock()) / CLOCKS_PER_SEC) >= secs - 1)
+        if (((0.0 - *start + clock()) / CLOCKS_PER_SEC) >= secs - 1)
         {
             *exit = true;
         }

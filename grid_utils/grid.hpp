@@ -130,6 +130,7 @@ public:
     void yellow_replace_blue();
 
     void find_value(int value, bool *write_all, char *output_file);
+    void put_red_if_absent();
 
     void clear_colors();
 };
