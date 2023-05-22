@@ -112,8 +112,8 @@ public:
     /*  */
 
     void generate_random_grid();
-    void build_grid_points(bool *write_all, char *output_file);
-    void boucle_alea(int nb_placed_glouton, bool *exit);
+    void build_grid_points(bool *write_all, char *output_file, int secs);
+    void boucle_alea(int nb_placed_glouton, clock_t *start, int secs, bool *exit);
     void generate_random_grid_numbers(int minimun, int maximum);
 
     int glouton(int value);
@@ -123,7 +123,7 @@ public:
     void optimize_grid_recur(GridLinkGuard *glg, coupleLink *cl, int limit_recur);
     void yellow_replace_blue_duo();
 
-    void fill_and_opti(int max_pieces);
+    void fill_and_opti(int max_pieces, clock_t *start, int secs, bool *exit);
 
     void orange_blue();
 

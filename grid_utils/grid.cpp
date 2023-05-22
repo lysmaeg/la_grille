@@ -393,35 +393,35 @@ void Grid::glouton_stochastique(int max_pos)
 }
 
 // this function does not generate the best grid, the around of green is not really taken in mind
-void Grid::build_grid_points(bool *write_all, char *output_file)
+void Grid::build_grid_points(bool *write_all, char *output_file, int secs)
 {
 
     int nb_placed_glouton = this->glouton(0);
     print_colors();
     printf("%d\n", nb_placed_glouton);
+    bool exit = false;
+    clock_t start = clock();
 
-    this->fill_and_opti(nb_placed_glouton);
+    this->fill_and_opti(nb_placed_glouton, &start, secs, &exit);
     set_score_from_calculation();
     print_colors_with_score();
-    bool exit = false;
-    printf("finished\n");
 
     for (int i = 0; i < 1000; i++)
     {
-        boucle_alea(nb_placed_glouton, &exit);
+        boucle_alea(nb_placed_glouton, &start, secs, &exit);
     }
     this->set_score_from_calculation();
     this->print_colors_with_score();
 }
 
-void Grid::boucle_alea(int nb_placed_glouton, bool *exit)
+void Grid::boucle_alea(int nb_placed_glouton, clock_t *start, int secs, bool *exit)
 {
     Grid *tmpGrid = this->copy_grid_as_ptr(true);
     int count = 1;
     while (!*exit)
     {
         printf("%d ième testé\n", count++);
-        tmpGrid->fill_and_opti(nb_placed_glouton);
+        tmpGrid->fill_and_opti(nb_placed_glouton, start, secs, exit);
         tmpGrid->set_score_from_calculation();
         // tmpGrid->print_colors_with_score();
         if (tmpGrid->get_score() > this->score)
@@ -449,7 +449,7 @@ void Grid::generate_random_grid_numbers(int minimun, int maximum)
 void Grid::find_value(int value, bool *write_all, char *output_file)
 {
     Grid *bestGrid = this->copy_grid_as_ptr(true);
-    bestGrid->build_grid_points(write_all, output_file);
+    bestGrid->build_grid_points(write_all, output_file, 10);
     if (bestGrid->get_score() < value)
     {
         std::cout << "The given value is higher than the best value that we can compute\n";
@@ -1296,7 +1296,7 @@ void Grid::yellow_replace_blue_duo()
     }
 }
 
-void Grid::fill_and_opti(int max_pieces)
+void Grid::fill_and_opti(int max_pieces, clock_t *start, int secs, bool *exit)
 {
     this->glouton_stochastique(max_pieces);
     this->orange_blue();
@@ -1310,16 +1310,22 @@ void Grid::fill_and_opti(int max_pieces)
         {
             optimize_grid_full(); // moyen
         }
-        this->yellow_replace_blue_duo(); // important
-        if (this->size <= SIZE_BETWEEN)
+        else
         {
+
             copy_grid_as_ptr(true)->optimize_grid_recur(glg, nullptr, 2);
             glg->convert_to_best_scores();
             glg->switch_colors_with_first(this);
             glg->clear(true);
         }
+        this->yellow_replace_blue_duo(); // important
+
         set_score_from_calculation();
-    } while (old_score != this->score);
+        if (((0.0 + *start - clock()) / CLOCKS_PER_SEC) >= secs - 1)
+        {
+            *exit = true;
+        }
+    } while (old_score != this->score and not *exit);
     yellow_replace_blue();
     delete glg;
 }

@@ -17,7 +17,7 @@ void print_help_message()
     std::cout << "=> -m / --minmax : specify the minmum and the maximum of the values in the grid\n";
 }
 
-Grid *manage_arguments(int argc, char **args, char *&output_file, bool *write_all, bool *solve_grid)
+Grid *manage_arguments(int argc, char **args, char *&output_file, bool *write_all, bool *solve_grid, int *secs)
 {
     bool write_all_given = false;
     *write_all = false;
@@ -54,6 +54,17 @@ Grid *manage_arguments(int argc, char **args, char *&output_file, bool *write_al
             if (++i < argc)
             {
                 size = std::stoi(args[i]);
+            }
+            else
+            {
+                std::cerr << "Please specify a parameters after the option " << t << '\n';
+            }
+        }
+        else if (strcmp("-t", t) == 0)
+        {
+            if (++i < argc)
+            {
+                *secs = std::stoi(args[i]);
             }
             else
             {
@@ -152,12 +163,12 @@ int main(int argc, char **args)
     char *output_file = nullptr;
     bool write_all = false;
     bool solve_grid;
-    Grid *g = manage_arguments(argc, args, output_file, &write_all, &solve_grid);
+    int secs = 60;
+    Grid *g = manage_arguments(argc, args, output_file, &write_all, &solve_grid, &secs);
     if (solve_grid)
     {
-
         g->print_numbers();
-        g->build_grid_points(&write_all, output_file);
+        g->build_grid_points(&write_all, output_file, secs);
     }
 
     return 0;
