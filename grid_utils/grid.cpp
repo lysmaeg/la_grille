@@ -1359,5 +1359,6 @@ void Grid::fill_and_opti(int max_pieces, clock_t *start, int secs, bool *exit)
         }
     } while (old_score != this->score and not *exit);
     yellow_replace_blue();
+    this->put_red_if_absent();
     delete glg;
 }
