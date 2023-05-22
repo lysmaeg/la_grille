@@ -6,6 +6,10 @@ if (!isset($_POST["size"]) or !isset($_POST["penality"]) or !isset($_POST["1"]))
 
 $size = intval($_POST["size"]);
 $penality = intval($_POST["penality"]);
+$time = 60;
+if (isset($_POST["time"]) && ($_POST["time"]) != "") {
+    $time = intval(($_POST["time"]));
+}
 $gridToBeWriten = "";
 // $gridStr = $grid["grid"];.
 
@@ -26,7 +30,6 @@ while (true) {
     }
     $i += 1;
 }
-echo $i;
 
 $filename = "grid" . strval($i);
 
@@ -36,10 +39,14 @@ fwrite($file, $size . ' ');
 fwrite($file, $penality . "\n");
 fwrite($file, $gridToBeWriten);
 fclose($file);
+$output_file = "gridS" . $i;
 
-// exec("./theGrid -o gridS" . $i . " " . $filename);
+exec("./theGrid -t " . $time . " -o " . $output_file . " " . $filename);
 
-// unlink($filename);
+unlink($filename);
+
+echo file_get_contents($output_file);
+unlink($output_file);
 
 
 
