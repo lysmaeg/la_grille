@@ -1,0 +1,35 @@
+.menu {
+    display: flex;                /* Transformation en flexbox */
+    padding:0;                    /* Suppression des marges internes */
+    background-color: #d8c8bb;       /* Ajout de la couleur d'arrière-plan */
+    justify-content: space-around;/* Alignements des liens dans le menu */
+}
+.menu li {
+    list-style-type: none ;       /* Suppression des puces */
+  
+}
+.menu a {
+    display:block;                /* Transformation en block */
+    min-width: 175px;             /* Largeur minimale des liens */   
+    
+    margin: 0.5rem;               /* Marges externes */
+    padding: 0.4rem 0;            /* Marges internes */
+    text-align: center;           /* Centrage du texte */   
+    background-color: #647295;    /* Arrière-plan */
+    color: #fff;                  /* Couleur du texte */
+    text-decoration: none;        /* Suppression du soulignement */
+    border: 1px solid #F2EBE5;       /* Ajout d'une bordure */
+    border-radius: 4px;           /* Arrondis des bordures */
+    
+    transition: all 1s ;          /* Ajout des effets de transition */
+}
+.menu a.actif {    
+    background-color: #2B262D ; 
+    color: #fff ;
+    border-color:  #F2EBE5 ;
+}
+.menu a:hover, .menu a:hover.actif{
+    background-color: #9F496E;
+    color: #fff;
+    border-color: #F2EBE5;
+}
