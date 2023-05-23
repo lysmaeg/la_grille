@@ -5,7 +5,7 @@
 ### LINUX
 
 Paquets nécéssaires : 
-cmake - apt install cmake
+cmake, make - apt install cmake  make
 
 Deux solutions possibles : 
 
@@ -13,9 +13,9 @@ Deux solutions possibles :
 
 2- Exécuter les commandes suivantes une par une :
 
-mkdir build
-cd build
-cmake ..
+mkdir build \
+cd build\
+cmake ..\
 make
 
 
@@ -26,7 +26,36 @@ make
 
 2- Exécuter les commandes une par une :
 
-mkdir build
-cd build
-cmake ..
+mkdir build\
+cd build\
+cmake ..\
 make
+
+## UTILISATION
+
+Il existe deux utilisations du fichier exécutable : Résoudre des grilles ou la génération de grilles
+
+
+
+Options communes : 
+
+-o : Spécifie le fichier de sortie dans lequelle la grille doit être écrite, si n'est pas fourni la sortie ne sera que dans le terminal\
+-t : Spécifie le temps durant lequel le programme s'exécutera\
+-h / --help : Affiche ce message
+
+### SOLVEUR DE GRILLES
+
+./theGrid \[-h | o | t | w] FICHIER_ENTRER
+
+-w / --write-all : Écrit toutes les grilles trouvées dans des fichiers différents
+
+### GÉNÉRATEUR DE GRILLES
+
+./theGrid __-g / --generate-numbers__ \[-h | p | s | m ] FICHIER_DE_SORTIE
+
+-s / --size : Spécifie la taille de la grille\
+-p / --penality : Spécifie la pénalité de la grille\
+-m / --minmax : Spécifie le minimum et le maximum des valeurs de la grille (-m MIN MAX)
+
+
+
