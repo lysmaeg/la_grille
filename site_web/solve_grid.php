@@ -48,17 +48,3 @@ unlink($filename);
 echo file_get_contents($output_file);
 unlink($output_file);
 
-
-
-/* 
-
-file_put_contents($filename, $size, FILE_APPEND);
-file_put_contents($filename, $penality, FILE_APPEND);
-file_put_contents($filename, $gridStr, FILE_APPEND); */
-
-/* $grid = array_fill(0, $size, array_fill(0, $size, 0));
-
-
-for ($i = 0; $i < $size; $i++) {
-    $grid[$i / $size][$i % $size] = $gridStr[$i];
-} */
