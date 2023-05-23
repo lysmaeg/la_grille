@@ -165,21 +165,24 @@ table {
 /* FORMULAIRE */
 label {
     display: inline-block;
-    width: 150px;
+    width: 250px;
     text-align: right;
 }
 input {
     font: 1em sans-serif;
-  
-    /* Pour que tous les champs texte aient la même dimension */
-    width: 120px;
+    width: 110px;
     box-sizing: border-box;
-  
     border: 1px solid #999;
     margin-bottom: 7px;
+    text-align: center;
 }
+
+
+#size #penality #tmp {
+    width:200px;
+}
+
 input:focus{
-    /* Pour souligner légèrement les éléments actifs */
     border-color: #000;
   }
 
@@ -188,4 +191,22 @@ input:focus{
     height: 50px;
     border: black 1px solid;
     display: none;
+}
+
+
+.grid {
+    display: flex;
+    /*grid-template-columns: 30% 10% 30% 10% 20%;*/
+    justify-content: space-around;
+    
+}
+
+
+a {
+    color:#647295;
+}
+
+.D1, .D3, .D5 {
+    background-color:#d8c8bb;
+    padding: 0px 10px 0px 10px;
 }
