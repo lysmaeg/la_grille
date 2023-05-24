@@ -13,6 +13,16 @@
 class GridLinkGuard;
 class GridLink;
 
+struct options {
+    int secs = 60;
+    char* output_file = nullptr;
+    bool write_all = false;
+    bool solve_grid = true;
+    bool verbose = false;
+    clock_t start = clock();
+    bool exit = false;
+};
+
 class Grid
 {
 private:
@@ -112,8 +122,8 @@ public:
     /*  */
 
     void generate_random_grid();
-    void build_grid_points(bool *write_all, char *output_file, int secs);
-    void boucle_alea(int nb_placed_glouton, clock_t *start, int secs, bool *exit);
+    void build_grid_points(options *opts);
+    void boucle_alea(int nb_placed_glouton, options *opts);
     void generate_random_grid_numbers(int minimun, int maximum);
 
     int glouton(int value);
@@ -123,13 +133,13 @@ public:
     void optimize_grid_recur(GridLinkGuard *glg, coupleLink *cl, int limit_recur);
     void yellow_replace_blue_duo();
 
-    void fill_and_opti(int max_pieces, clock_t *start, int secs, bool *exit);
+    void fill_and_opti(int max_pieces, options *opts);
 
     void orange_blue();
 
     void yellow_replace_blue();
 
-    void find_value(int value, bool *write_all, char *output_file);
+    void find_value(int value, options *opts);
     void put_red_if_absent();
 
     void clear_colors();
