@@ -40,8 +40,9 @@ Il existe deux utilisations du fichier exécutable : Résoudre des grilles ou la
 Options communes : 
 
 -o : Spécifie le fichier de sortie dans lequelle la grille doit être écrite, si n'est pas fourni la sortie ne sera que dans le terminal\
--t : Spécifie le temps durant lequel le programme s'exécutera\
--h / --help : Affiche ce message
+-t : Spécifie le temps durant lequel le programme s'exécutera (défaut : 60 secondes)\
+-h / --help : Affiche ce message\
+-v / --verbose : Mode verbose affiche plus de choses que le mode normal
 
 ### SOLVEUR DE GRILLES
 

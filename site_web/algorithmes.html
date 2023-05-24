@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,57 +10,119 @@
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/header.css">
 </head>
+
 <body>
     <h1>La Grille</h1>
-        <ul class="menu">
-              <li>
-                <a href="home.html">Accueil</a>
-              </li>
-              <li>
-                <a href="algorithmes.html" class="actif">Algorithmes</a>
-              </li>
-              <li>
-                <a href="explication.html">Explication</a>
-              </li>
-              <li>
-                <a href="solutions.html">Solutions</a>
-              </li>
-              <li>
-                <a href="grille.html">Grille</a>
-              </li>
-        </ul>
-        <br>
+    <ul class="menu">
+        <li>
+            <a href="home.html">Accueil</a>
+        </li>
+        <li>
+            <a href="algorithmes.html" class="actif">Algorithmes</a>
+        </li>
+        <li>
+            <a href="explication.html">Explication</a>
+        </li>
+        <li>
+            <a href="solutions.html">Solutions</a>
+        </li>
+        <li>
+            <a href="grille.html">Grille</a>
+        </li>
+    </ul>
+    <br>
 
-        <p class="titre">Les différents algorithmes que nous avons utilisés pour essayer de résoudre le problème :</p>
-        <ul>
-          <li>Glouton stochastique</li>
-          <li>Optimisation</li>
-          <ol>
-            <li>...</li>
-            <li>...</li>
-            <li>...</li>
-          </ol>
-        </ul>
+    <p class="titre">Les différents algorithmes que nous avons utilisés pour essayer de résoudre le problème :</p>
+    <ul>
+        <li>
+            <h2>Explication de la résolution d'une grille</h2>
+            <p>Une optimisateur simple qui itère toute la grille et qui va modifier 2 couples de deux pions jaunes
+                et bleues. Cet algorithme permet de diminuer le nombre de pénalité des bleus, ainsi les jaunes
+                apportent des pionts négatifs mais ils sont toujours inférieurs à la pénalité</p>
+            <ol>
 
-        <br><br>
-        <div class="footer-dark">
-          <footer>
-              <div class="container">
-                  <div class="row">
-                      
-                      <div class="item text">
-                          <h3>Notre groupe / Présentation</h3>
-                          <p>Nous sommes deux étudiants de L1 en double licence Mathématiques / Informatique à l'université d'Angers. Nous avons eu à réaliser ce projet dans le cadre du module de Conrétisation de L1.</p>
-                      </div>
-                      <div class="col item social">
-                          <a href="https://github.com/lysmaeg/la_grille"><i class="icon"><img class="image" src="images/github.png"></i></a>
-                          <a href="https://www.univ-angers.fr/fr/index.html"><i class="icon"><img class="image2" src="images/ua.png"></i></a>
-                      </div>
-                  </div>
-                  <p class="copyright">David DA SILVA et Maëlys GIROIRE - 2023</p>
-              </div>
-          </footer>
-      </div>
+                <li>Résolution de la grille avec un glouton total :
+                    <ol>
+                        <li>Exécution d'un glouton sans aléatoire</li>
+                        <li>Exécution de l'algorithme fill_and_opti()</li>
+
+                    </ol>
+
+                <li>
+            </ol>
+        </li>
+        <li>
+            <h2>Nos algorithmes : </h2>
+            <ul>
+                <li>
+                    <h3>orange_blue :</h3>
+                    <p> Une algorithme qui place tous les bleus sur les nombre négatifs afin d'éviter les pénalités,
+                        ensuite qui place les oranges en évitant les pénalités, ensuite l'appel d'un glouton qui va
+                        placer des
+                        pions
+                        supérieur à la pénalité mais qui peuvent avoir des valeurs négatives. Et pour finir les cases
+                        restantes
+                        sont
+                        remplies de bleus.</p>
+                </li>
+                <li>
+                    <h3>fill_and_opti : </h3>
+                    <p>Un algorithme qui appelle un glouton stochastique, ensuite qui appelle orange_blue(), défini
+                        plus haut. Par la suite une boucle s'exécute tant que le score est meilleur que l'ancienne
+                        grille, en
+                        appelant</p>
+                </li>
+                <li>
+                    <h3>Glouton total</h3>
+                    <p>C'est un glouton qui mets le maximum de points dans la grille, en commançant par les meilleurs
+                    pions. <br>
+                        Pendant cette phase nous ne mettons que le rouge, les verts, les noirs et les jaunes avec cet
+                        ordre de priorité mais pas forcément dans cette ordre.
+                    </p>
+                </li>
+                <li>
+                    <h3>Glouton stochastique :</h3>
+                    <p>
+                        C'est un glouton avec des performances limitées, c'est à dire que nous stockons un certain
+                        nombres de
+                        placements qui sont les meilleurs, ensuite nous sélectionnons aléatoirement un placement parmi
+                        ces
+                        différents placements.<br>
+                        Comme le glouton total seulement le rouge, les noirs, les verts et les jaunes sont posés.
+                    </p>
+                </li>
+                <li>
+                    <h3>optimize_grid_recur : </h3>
+                <li>Une optimisateur récursif qui va modifier par couple (taille de la grille inférieure 16 sinon
+                    simple) la grille. Ainsi pour une même grille, taille⁴*25 grilles sont analisées</li>
+            </ul>
+        </li>
+    </ul>
+
+    <br><br>
+    <div class="footer-dark">
+        <footer>
+            <div class="container">
+                <div class="row">
+
+                    <div class="item text">
+                        <h3>Notre groupe / Présentation</h3>
+                        <p>Nous sommes deux étudiants de L1 en double licence Mathématiques / Informatique à
+                            l'université d'Angers. Nous avons eu à réaliser ce projet dans le cadre du module de
+                            Conrétisation de L1.</p>
+                    </div>
+                    <div class="col item social">
+                        <a href="https://github.com/lysmaeg/la_grille"><i class="icon"><img class="image"
+                                    src="images/github.png"></i></a>
+                        <a href="https://www.univ-angers.fr/fr/index.html"><i class="icon"><img class="image2"
+                                    src="images/ua.png"></i></a>
+                    </div>
+                </div>
+                <p class="copyright">David DA SILVA et Maëlys GIROIRE - 2023</p>
+            </div>
+        </footer>
+    </div>
 
 </body>
+
 </html>

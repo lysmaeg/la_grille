@@ -1,6 +1,6 @@
 #ifndef __GRID_STRUCTS__
 #define __GRID_STRUCTS__
-#include "grid.hpp"
+#include <string>
 
 class Grid;
 

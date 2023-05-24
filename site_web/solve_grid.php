@@ -11,7 +11,6 @@ if (isset($_POST["time"]) && ($_POST["time"]) != "") {
     $time = intval(($_POST["time"]));
 }
 $gridToBeWriten = "";
-// $gridStr = $grid["grid"];.
 
 for ($i = 1; $i <= $size * $size; $i++) {
     if (!isset($_POST[strval($i)]) or $_POST[strval($i)] == "") {
@@ -47,4 +46,3 @@ unlink($filename);
 
 echo file_get_contents($output_file);
 unlink($output_file);
-

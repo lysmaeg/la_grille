@@ -7,11 +7,11 @@
 #include "../tools.hpp"
 #include <thread>
 #include "grid_struct.hpp"
+#include <filesystem>
 
 #define SIZE_BETWEEN 16
 
 class GridLinkGuard;
-class GridLink;
 
 struct options {
     int secs = 60;
@@ -134,6 +134,7 @@ public:
     void yellow_replace_blue_duo();
 
     void fill_and_opti(int max_pieces, options *opts);
+    void solve_directory(std::string dirname); 
 
     void orange_blue();
 

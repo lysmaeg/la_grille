@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,45 +9,61 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/header.css">
+    <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@2/dist/zero-md.min.js" defer></script>
 </head>
+
 <body>
     <h1>La Grille</h1>
-        <ul class="menu">
-              <li>
-                <a href="home.html">Accueil</a>
-              </li>
-              <li>
-                <a href="algorithmes.html">Algorithmes</a>
-              </li>
-              <li>
-                <a href="explication.html" class="actif">Explication</a>
-              </li>
-              <li>
-                <a href="solutions.html">Solutions</a>
-              </li>
-              <li>
-                <a href="grille.html">Grille</a>
-              </li>
-        </ul>
-        
-        <br><br>
-        <div class="footer-dark">
-          <footer>
-              <div class="container">
-                  <div class="row">
-                      
-                      <div class="item text">
-                          <h3>Notre groupe / Présentation</h3>
-                          <p>Nous sommes deux étudiants de L1 en double licence Mathématiques / Informatique à l'université d'Angers. Nous avons eu à réaliser ce projet dans le cadre du module de Conrétisation de L1.</p>
-                      </div>
-                      <div class="col item social">
-                          <a href="https://github.com/lysmaeg/la_grille"><i class="icon"><img class="image" src="images/github.png"></i></a>
-                          <a href="https://www.univ-angers.fr/fr/index.html"><i class="icon"><img class="image2" src="images/ua.png"></i></a>
-                      </div>
-                  </div>
-                  <p class="copyright">David DA SILVA et Maëlys GIROIRE - 2023</p>
-              </div>
-          </footer>
-      </div>
+    <ul class="menu">
+        <li>
+            <a href="home.html">Accueil</a>
+        </li>
+        <li>
+            <a href="algorithmes.html">Algorithmes</a>
+        </li>
+        <li>
+            <a href="explication.html" class="actif">Explication</a>
+        </li>
+        <li>
+            <a href="solutions.html">Solutions</a>
+        </li>
+        <li>
+            <a href="grille.html">Grille</a>
+        </li>
+    </ul>
+
+    <div>
+         <zero-md src="https://raw.githubusercontent.com/lysmaeg/la_grille/main/README.md">
+             <template>
+                 <link rel="stylesheet" href="css/code.css">
+                 <link rel="stylesheet" href="css/markdown.css">
+             </template>
+         </zero-md>
+    </div>
+
+    <br><br>
+    <div class="footer-dark">
+        <footer>
+            <div class="container">
+                <div class="row">
+
+                    <div class="item text">
+                        <h3>Notre groupe / Présentation</h3>
+                        <p>Nous sommes deux étudiants de L1 en double licence Mathématiques / Informatique à
+                            l'université d'Angers. Nous avons eu à réaliser ce projet dans le cadre du module de
+                            Conrétisation de L1.</p>
+                    </div>
+                    <div class="col item social">
+                        <a href="https://github.com/lysmaeg/la_grille"><i class="icon"><img class="image"
+                                    src="images/github.png"></i></a>
+                        <a href="https://www.univ-angers.fr/fr/index.html"><i class="icon"><img class="image2"
+                                    src="images/ua.png"></i></a>
+                    </div>
+                </div>
+                <p class="copyright">David DA SILVA et Maëlys GIROIRE - 2023</p>
+            </div>
+        </footer>
+    </div>
 </body>
+
 </html>

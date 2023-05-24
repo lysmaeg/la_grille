@@ -2,7 +2,7 @@
 const buttonValidateData = document.querySelector("#validateData");
 const solveButton = document.querySelector("#solveButton");
 const form = document.querySelector("form");
-const solution_container = document.querySelectorAll("solution_container");
+const solution_container = document.querySelector("solution_container");
 const scoreP = document.querySelector("#score");
 
 
@@ -13,6 +13,7 @@ template_cell.required = true;
 
 // let time = 60 + 5
 let time = 1;
+
 
 let size = 0;
 const sizeInput = document.querySelector("#size");
@@ -37,7 +38,9 @@ buttonValidateData.addEventListener("click", event => {
 
     for (let i = 0; i < size * size; i++) {
         let new_cell = template_cell.cloneNode(true);
-        new_cell.name = i + 1;
+        let n = i+1;
+        new_cell.name = n;
+        new_cell.id = n;
         d.appendChild(new_cell);
         if (i % size == size - 1) {
             cells_container.appendChild(d);
@@ -58,45 +61,41 @@ solveButton.addEventListener("click", event => {
     const FD = new FormData(form);
     XHR.addEventListener("load", (event) => {
         let gridWithScore =  event.target.responseText;
+        alert(gridWithScore);
         let eofEscaped = 0;
         for (let x = 0; x < size ; x++) {
             let spanContainer = document.createElement("div");
             for (let i = 0; i < size; i++) {
                 let span = document.createElement("span");
-                switch gridWithScore[x*size + i + eofEscaped] {
+                let n = x*size +i +1;
+                switch (gridWithScore[x*size + i + eofEscaped]) {
                     case 'R':
-                        span.classList.add("red");
-                        span.innerHTML = 'R';
+                        document.getElementById(n).style.background = 'red';
                         break; 
 
                     case 'N':
-                        span.classList.add("black");
-                        span.innerHTML = 'N';
+                        document.getElementById(n).style.background = 'black';
                         break; 
                     case 'B':
-                        span.classList.add("blue");
-                        span.innerHTML = 'B';
+                        document.getElementById(n).style.background = 'blue';
                         break; 
                     case 'O':
-                        span.classList.add("orange");
-                        span.innerHTML = 'O';
+                        document.getElementById(n).style.background = 'orange';
                         break; 
                     case 'J':
-                        span.classList.add("yellow");
-                        span.innerHTML = 'J';
+                        document.getElementById(n).style.background = 'yellow';
                         break; 
                     case 'V':
-                        span.classList.add("green");
-                        span.innerHTML = 'V';
+                        document.getElementById(n).style.background = 'green';
                         break; 
                   }        
-                spanContainer.appendChild(span);
+                //spanContainer.appendChild(span);
             }
-            solution_container.appendChild(spanContainer);
+            //solution_container.appendChild(spanContainer);
             eofEscaped++;
         }
         let score = Number(gridWithScore.substring(size * (size + 1)))
-        scoreP.innerHTML += score;
+        scoreP.innerHTML = "Score : "+ score;
     });
 
     // On définit ce qui se produit en cas

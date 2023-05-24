@@ -1133,3 +1133,9 @@ void Grid::fill_and_opti(int max_pieces, options *opts) {
   this->put_red_if_absent();
   delete glg;
 }
+
+/*
+void solve_directory(std::string dirname) {
+    std::filesystem::directory_iterator dir(dirname);
+    printf(dir);
+}*/ 

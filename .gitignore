@@ -37,3 +37,4 @@
 *.log
 
 cpWebsite.sh
+.cache
