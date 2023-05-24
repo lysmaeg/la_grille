@@ -358,6 +358,7 @@ void Grid::boucle_alea(int nb_placed_glouton, options *opts) {
   Grid *tmpGrid = this->copy_grid_as_ptr(true);
   int count = 1;
   while (!opts->exit) {
+    tmpGrid->clear_colors();
     if (opts->verbose) {
       printf("%d ième testé\n", count++);
     }
@@ -368,7 +369,6 @@ void Grid::boucle_alea(int nb_placed_glouton, options *opts) {
       this->score = tmpGrid->get_score();
       this->print_colors_with_score();
     }
-    tmpGrid->clear_colors();
   }
   delete tmpGrid;
 }
