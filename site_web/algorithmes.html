@@ -36,19 +36,24 @@
     <ul>
         <li>
             <h2>Explication de la résolution d'une grille</h2>
-            <p>Une optimisateur simple qui itère toute la grille et qui va modifier 2 couples de deux pions jaunes
-                et bleues. Cet algorithme permet de diminuer le nombre de pénalité des bleus, ainsi les jaunes
-                apportent des pionts négatifs mais ils sont toujours inférieurs à la pénalité</p>
             <ol>
 
-                <li>Résolution de la grille avec un glouton total :
+                <li>Résolution de la grille avec un glouton total (appliquée une seule fois car déterministe) :
                     <ol>
                         <li>Exécution d'un glouton sans aléatoire</li>
                         <li>Exécution de l'algorithme fill_and_opti()</li>
-
+                        <li>Nous vérifions qu'un seul rouge est présent avec la fonction put_red_if_absent()</li>
                     </ol>
 
-                <li>
+                <li>Résolution de la grille avec un glouton stochastique
+                    <ol>
+                        <li>Exécution d'un glouton stochastique sur une copie de la grille</li>
+                        <li>Exécution de l'algorithme fill_and_opti()</li>
+                        <li>Nous vérifions qu'un seul rouge est présent avec la fonction put_red_if_absent()</li>
+                        <li>Si le score de la nouvelle grille est meilleur, nous remplaçon la grille actuelle par
+                            celle-ci en faisant un échange de pointeur.</li>
+                    </ol>
+                </li>
             </ol>
         </li>
         <li>
@@ -75,7 +80,7 @@
                 <li>
                     <h3>Glouton total</h3>
                     <p>C'est un glouton qui mets le maximum de points dans la grille, en commançant par les meilleurs
-                    pions. <br>
+                        pions. <br>
                         Pendant cette phase nous ne mettons que le rouge, les verts, les noirs et les jaunes avec cet
                         ordre de priorité mais pas forcément dans cette ordre.
                     </p>
@@ -93,8 +98,17 @@
                 </li>
                 <li>
                     <h3>optimize_grid_recur : </h3>
-                <li>Une optimisateur récursif qui va modifier par couple (taille de la grille inférieure 16 sinon
-                    simple) la grille. Ainsi pour une même grille, taille⁴*25 grilles sont analisées</li>
+                    <p>Une optimisateur récursif qui va modifier par couple (taille de la grille inférieure 16 sinon
+                        simple) la grille. Ainsi pour une même grille, taille⁴*25 grilles sont analisées</p>
+                </li>
+                <li>
+                    <h3>yellow_replace_blue_duo</h3>
+                    <p>Une optimisateur simple qui itère toute la grille et qui va modifier 2 couples de deux pions
+                        jaunes
+                        et bleues. Cet algorithme permet de diminuer le nombre de pénalité des bleus, ainsi les jaunes
+                        apportent des pionts négatifs mais ils sont toujours inférieurs à la pénalité que les bleus
+                        apportaient</p>
+                </li>
             </ul>
         </li>
     </ul>
