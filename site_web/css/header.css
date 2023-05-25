@@ -3,6 +3,7 @@
     padding:0;                    /* Suppression des marges internes */
     background-color: #d8c8bb;       /* Ajout de la couleur d'arrière-plan */
     justify-content: space-around;/* Alignements des liens dans le menu */
+    border-radius: 7px;
 }
 .menu li {
     list-style-type: none ;       /* Suppression des puces */
