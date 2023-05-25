@@ -2,16 +2,14 @@
 const buttonValidateData = document.querySelector("#validateData");
 const solveButton = document.querySelector("#solveButton");
 const form = document.querySelector("form");
-const solution_container = document.querySelector("solution_container");
 const scoreP = document.querySelector("#score");
 
 
 let template_cell = document.createElement("input");
 template_cell.classList.add("cell");
-template_cell.type = "number";
+// template_cell.type = "number";
 template_cell.required = true;
 
-// let time = 60 + 5
 let time = 1;
 
 
@@ -57,16 +55,17 @@ const handleReset = (event) => {
 
 solveButton.addEventListener("click", event => {
     event.preventDefault();
+    if (cells_container.childElementCount == 0) {
+        alert("Veuillez générer une grille pour une résoudre une.");
+        return;
+    }
     const XHR = new XMLHttpRequest();
     const FD = new FormData(form);
     XHR.addEventListener("load", (event) => {
         let gridWithScore =  event.target.responseText;
-        alert(gridWithScore);
         let eofEscaped = 0;
         for (let x = 0; x < size ; x++) {
-            let spanContainer = document.createElement("div");
             for (let i = 0; i < size; i++) {
-                let span = document.createElement("span");
                 let n = x*size +i +1;
                 switch (gridWithScore[x*size + i + eofEscaped]) {
                     case 'R':
@@ -89,19 +88,17 @@ solveButton.addEventListener("click", event => {
                         document.getElementById(n).style.background = 'green';
                         break; 
                   }        
-                //spanContainer.appendChild(span);
             }
-            //solution_container.appendChild(spanContainer);
             eofEscaped++;
         }
         let score = Number(gridWithScore.substring(size * (size + 1)))
-        scoreP.innerHTML = "Score : "+ score;
+        scoreP.innerHTML = "Score : "+ "<b>"+score+"</b>";
     });
 
     // On définit ce qui se produit en cas
     // d'erreur
     XHR.addEventListener("error", (event) => {
-        alert('Une erreur est survenue.');
+        alert('Un erreur est survenur, le problème peut provenir du fait que vous exécuter le site en local, pour pouvoir exécuter une grille, veuillez aller sur le site suivant : https://leria-etud.univ-angers.fr/~ddasilva/grille/grille.html');
     });
 
     // On prépare la requête
