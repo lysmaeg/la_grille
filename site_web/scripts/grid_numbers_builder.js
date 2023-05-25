@@ -7,7 +7,9 @@ const scoreP = document.querySelector("#score");
 
 let template_cell = document.createElement("input");
 template_cell.classList.add("cell");
-// template_cell.type = "number";
+template_cell.type = "text";
+template_cell.inputmode = "numeric";
+template_cell.pattern = "\d*";
 template_cell.required = true;
 
 let time = 1;
@@ -56,7 +58,7 @@ const handleReset = (event) => {
 solveButton.addEventListener("click", event => {
     event.preventDefault();
     if (cells_container.childElementCount == 0) {
-        alert("Veuillez générer une grille pour une résoudre une.");
+        alert("Veuillez générer une grille pour en résoudre une.");
         return;
     }
     const XHR = new XMLHttpRequest();
@@ -74,9 +76,10 @@ solveButton.addEventListener("click", event => {
 
                     case 'N':
                         document.getElementById(n).style.background = 'black';
+                        document.getElementById(n).style.color = 'white';
                         break; 
                     case 'B':
-                        document.getElementById(n).style.background = 'blue';
+                        document.getElementById(n).style.background = 'rgb(42, 127, 255)';
                         break; 
                     case 'O':
                         document.getElementById(n).style.background = 'orange';
@@ -85,7 +88,7 @@ solveButton.addEventListener("click", event => {
                         document.getElementById(n).style.background = 'yellow';
                         break; 
                     case 'V':
-                        document.getElementById(n).style.background = 'green';
+                        document.getElementById(n).style.background = 'rgb(18, 197, 18)';
                         break; 
                   }        
             }

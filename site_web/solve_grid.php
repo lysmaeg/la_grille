@@ -29,8 +29,8 @@ while (true) {
     }
     $i += 1;
 }
-
-$filename = "grid" . strval($i);
+$dirname = "var/";
+$filename = $dirname . "grid" . strval($i);
 
 $file = fopen($filename, "w");
 
@@ -38,7 +38,7 @@ fwrite($file, $size . ' ');
 fwrite($file, $penality . "\n");
 fwrite($file, $gridToBeWriten);
 fclose($file);
-$output_file = "gridS" . $i;
+$output_file = $dirname . "gridS" . $i;
 
 exec("./theGrid -t " . $time . " -o " . $output_file . " " . $filename);
 
