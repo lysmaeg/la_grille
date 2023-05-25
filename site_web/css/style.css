@@ -26,6 +26,10 @@ p, li, h2, h3{
     text-transform: uppercase;
 }
 
+.romain {
+    list-style-type: upper-roman;
+}
+
 
 /* COULEURS DES MOTS*/
 .jaune {
@@ -118,9 +122,6 @@ input {
 }
 
 
-#size #penality #tmp {
-    width:200px;
-}
 
 input:focus{
     border-color: #000;
@@ -132,6 +133,39 @@ input:focus{
     border: black 1px solid;
     display: none;
 }
+
+.a {
+    display: flex;
+    justify-content: center;
+}
+
+.bb {
+    text-align: center;
+}
+
+.cell {
+    width: 35px;
+    height: 35px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-color: #647295;
+    border-radius: 7px;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+}
+
+#size, #tmp, #penality {
+    border-color: #647295;
+    border-radius: 7px;
+}
+
+#validateData, #solveButton, #rei {
+    background-color:#d8c8bb;
+    border: none;
+    border-radius: 3px;
+}
+
+
 
 /* AFFICHAGE DES SOLUTIONS */
 .grid {

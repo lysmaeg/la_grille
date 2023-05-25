@@ -31,87 +31,74 @@
         </li>
     </ul>
     <br>
+        <p class="titre">Explication de la résolution d'une grille :</p>
+        <ul class="romain">
 
-    <p class="titre">Les différents algorithmes que nous avons utilisés pour essayer de résoudre le problème :</p>
-    <ul>
-        <li>
-            <h2>Explication de la résolution d'une grille</h2>
-            <ol>
+            <li>Résolution de la grille avec un <a href="algorithmes.html#gt">glouton total</a> (appliquée une seule fois car déterministe) :
+                <ol><br>
+                    <li>Exécution d'un glouton sans aléatoire</li>
+                    <li>Exécution de l'algorithme <a href="algorithmes.html#fao">fill_and_opti()</a></li>
+                    <li>Nous vérifions qu'un seul rouge est présent avec la fonction put_red_if_absent()</li>
+                </ol><br>
 
-                <li>Résolution de la grille avec un glouton total (appliquée une seule fois car déterministe) :
-                    <ol>
-                        <li>Exécution d'un glouton sans aléatoire</li>
-                        <li>Exécution de l'algorithme fill_and_opti()</li>
-                        <li>Nous vérifions qu'un seul rouge est présent avec la fonction put_red_if_absent()</li>
-                    </ol>
-
-                <li>Résolution de la grille avec un glouton stochastique
-                    <ol>
-                        <li>Exécution d'un glouton stochastique sur une copie de la grille</li>
-                        <li>Exécution de l'algorithme fill_and_opti()</li>
-                        <li>Nous vérifions qu'un seul rouge est présent avec la fonction put_red_if_absent()</li>
-                        <li>Si le score de la nouvelle grille est meilleur, nous remplaçon la grille actuelle par
-                            celle-ci en faisant un échange de pointeur.</li>
-                    </ol>
-                </li>
-            </ol>
-        </li>
-        <li>
-            <h2>Nos algorithmes : </h2>
-            <ul>
-                <li>
-                    <h3>orange_blue :</h3>
-                    <p> Une algorithme qui place tous les bleus sur les nombre négatifs afin d'éviter les pénalités,
-                        ensuite qui place les oranges en évitant les pénalités, ensuite l'appel d'un glouton qui va
-                        placer des
-                        pions
-                        supérieur à la pénalité mais qui peuvent avoir des valeurs négatives. Et pour finir les cases
-                        restantes
-                        sont
-                        remplies de bleus.</p>
-                </li>
-                <li>
-                    <h3>fill_and_opti : </h3>
-                    <p>Un algorithme qui appelle un glouton stochastique, ensuite qui appelle orange_blue(), défini
-                        plus haut. Par la suite une boucle s'exécute tant que le score est meilleur que l'ancienne
-                        grille, en
-                        appelant</p>
-                </li>
-                <li>
-                    <h3>Glouton total</h3>
-                    <p>C'est un glouton qui mets le maximum de points dans la grille, en commançant par les meilleurs
-                        pions. <br>
-                        Pendant cette phase nous ne mettons que le rouge, les verts, les noirs et les jaunes avec cet
-                        ordre de priorité mais pas forcément dans cette ordre.
-                    </p>
-                </li>
-                <li>
-                    <h3>Glouton stochastique :</h3>
-                    <p>
-                        C'est un glouton avec des performances limitées, c'est à dire que nous stockons un certain
-                        nombres de
-                        placements qui sont les meilleurs, ensuite nous sélectionnons aléatoirement un placement parmi
-                        ces
-                        différents placements.<br>
-                        Comme le glouton total seulement le rouge, les noirs, les verts et les jaunes sont posés.
-                    </p>
-                </li>
-                <li>
-                    <h3>optimize_grid_recur : </h3>
-                    <p>Une optimisateur récursif qui va modifier par couple (taille de la grille inférieure 16 sinon
-                        simple) la grille. Ainsi pour une même grille, taille⁴*25 grilles sont analisées</p>
-                </li>
-                <li>
-                    <h3>yellow_replace_blue_duo</h3>
-                    <p>Une optimisateur simple qui itère toute la grille et qui va modifier 2 couples de deux pions
-                        jaunes
-                        et bleues. Cet algorithme permet de diminuer le nombre de pénalité des bleus, ainsi les jaunes
-                        apportent des pionts négatifs mais ils sont toujours inférieurs à la pénalité que les bleus
-                        apportaient</p>
-                </li>
-            </ul>
-        </li>
-    </ul>
+            <li>Résolution de la grille avec un <a href="algorithmes.html#gs">glouton stochastique :</a> 
+                <ol><br>
+                    <li>Exécution d'un glouton stochastique sur une copie de la grille</li>
+                    <li>Exécution de l'algorithme <a href="algorithmes.html#fao">fill_and_opti()</a></li>
+                    <li>Nous vérifions qu'un seul rouge est présent avec la fonction put_red_if_absent()</li>
+                    <li>Si le score de la nouvelle grille est meilleur, nous remplaçons la grille actuelle par
+                        celle-ci en faisant un échange de pointeur.</li>
+                </ol>
+            </li>
+        </ul><br>
+        <p class="titre">Nos algorithmes : </p>
+        <ul class="romain">              
+            <li>
+                <h3 id="gt">Glouton total : </h3>
+                <p>C'est un glouton qui mets le maximum de points dans la grille, en commançant par les meilleurs
+                    pions. <br>
+                    Pendant cette phase nous ne mettons que le rouge, les verts, les noirs et les jaunes avec cet
+                    ordre de priorité mais pas forcément dans cette ordre.
+                </p>
+            </li>
+            <li>
+                <h3 id="gs">Glouton stochastique :</h3>
+                <p>
+                    C'est un glouton avec des performances limitées, c'est à dire que nous stockons un certain
+                    nombres de
+                    placements qui sont les meilleurs, ensuite nous sélectionnons aléatoirement un placement parmi
+                    ces
+                    différents placements.<br>
+                    Comme le glouton total seulement le rouge, les noirs, les verts et les jaunes sont posés.
+                </p>
+            </li>
+        </ul><br>
+            
+        <h3 id="fao">fill_and_opti : </h3>
+        <p>Un algorithme qui appelle un glouton stochastique, ensuite qui appelle <a href="algorithmes.html#ob">orange_blue</a>. Par la suite une boucle s'exécute tant que le score est meilleur que l'ancienne
+            grille, en
+            appelant <a href="algorithmes.html#ogr">optimize_grid_recur</a> et <a href="algorithmes.html#yrbd">yellow_replace_blue_duo</a>.</p>
+    
+        <h3 id="ob">orange_blue :</h3>
+        <p> Un algorithme qui place tous les bleus sur les nombre négatifs afin d'éviter les pénalités,
+            ensuite qui place les oranges en évitant les pénalités, ensuite l'appel d'un glouton qui va
+            placer des
+            pions
+            supérieur à la pénalité mais qui peuvent avoir des valeurs négatives. Et pour finir les cases
+            restantes
+            sont
+            remplies de bleus.</p>
+    
+        <h3 id="ogr">optimize_grid_recur : </h3>
+        <p>Un optimisateur récursif qui va modifier par couple (taille de la grille inférieure à 16 sinon modification
+            simple) la grille. Ainsi pour une même grille, 25*taille⁴ grilles sont analisées.</p>
+    
+        <h3 id="yrbd">yellow_replace_blue_duo</h3>
+        <p>Un optimisateur simple qui itère toute la grille et qui va modifier 2 couples de deux pions
+            jaunes
+            et bleus. Cet algorithme permet de diminuer le nombre de pénalité des bleus, ainsi les jaunes
+            apportent des points négatifs mais ils sont toujours inférieurs à la pénalité que les bleus
+            apportaient.</p>
 
     <br><br>
     <div class="footer-dark">
@@ -120,7 +107,7 @@
                 <div class="row">
 
                     <div class="item text">
-                        <h3>Notre groupe / Présentation</h3>
+                        <h3>A propos de nous</h3>
                         <p>Nous sommes deux étudiants de L1 en double licence Mathématiques / Informatique à
                             l'université d'Angers. Nous avons eu à réaliser ce projet dans le cadre du module de
                             Conrétisation de L1.</p>

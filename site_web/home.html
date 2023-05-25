@@ -82,15 +82,15 @@
 
                 <li>Une valeur de pénalité (p). Par exemple : p = 10.</li>
             </ol>
-            <p>Sur chacune des t<sup>2</sup> cases de la grille, il faut placer un pion. Le score total correspond à la somme du score de tous les pions, moins les points de pénalité. Chaque pénalité retranche p points au score total</p>
+            <p>Sur chacune des t<sup>2</sup> cases de la grille, il faut placer un pion. Le score total correspond à la somme du score de tous les pions, moins les points de pénalité. Chaque pénalité retranche p points au score total.</p>
             <p>Il existe 6 couleurs de pion, les règles de placement et la manière de marquer des points ou d’engendrer des pénalités sont propres à chaque couleur :</p>
             <ol>
-                <li> Pions <span class="jaune">jaunes</span> : Le score d’un pion jaune correspond `a la valeur de sa case. Tout pion jaune isolé,
+                <li> Pions <span class="jaune">jaunes</span> : Le score d’un pion jaune correspond à la valeur de sa case. Tout pion jaune isolé,
                     c’est-à-dire n’ayant aucun pion jaune parmi les pions adjacents (y compris en diagonale), entraîne une
-                    pénalité</li>
-                <li>Pions <span class="vert">verts</span> : Le score d’un pion résulte de la somme des valeurs de sa case et des cases adjacentes orthogonalement (donc pas en diagonale). Chaque paire de pions verts adjacents (y compris en diagonale)
+                    pénalité.</li>
+                <li>Pions <span class="vert">verts</span> : Le score d’un pion vert résulte de la somme des valeurs de sa case et des cases adjacentes orthogonalement (donc pas en diagonale). Chaque paire de pions verts adjacents (y compris en diagonale)
                     entraîne une pénalité.</li>
-                <li>Pions <span class="noir">noirs</span> : Le score d’un pion noir est la valeur de sa case, moins 1. Si au plus n pions noirs sont
+                <li>Pions <span class="noir">noirs</span> : Le score d’un pion noir est la valeur de sa case moins 1. Si au plus n pions noirs sont
                     utilisés, le score de chaque pion noir est doublé.
                     </li>
                 <li>Pions <span class="bleu">bleus</span> : Le score d’un pion bleu est 0. Soit d la différence entre le nombre de pions bleus placés
@@ -147,6 +147,7 @@
                         </tbody>
                     </table>
                     <br>
+                    
                     <table class="tableau1">
                         <tbody>
                             <tr>
@@ -273,30 +274,30 @@
                     <tr>
                         <td>A</td>
                         <td class="v">V</td>
-                        <td class="j">J</td>
-                        <td class="o">O</td>
-                        <td class="o">N</td>
+                        <td class="n">N</td>
+                        <td class="v">V</td>
+                        <td class="n">N</td>
                     </tr>
                     <tr>
                         <td>B</td>
-                        <td class="j">J</td>
-                        <td class="v">V</td>
+                        <td class="n">N</td>
                         <td class="b">B</td>
-                        <td class="o">O</td>
+                        <td class="b">B</td>
+                        <td class="b">B</td>
                     </tr>
                     <tr>
                         <td>C</td>
                         <td class="r">R</td>
-                        <td class="j">J</td>
+                        <td class="b">B</td>
                         <td class="o">O</td>
-                        <td class="j">J</td>
+                        <td class="b">B</td>
                     </tr>
                     <tr>
                         <td>D</td>
-                        <td class="j">J</td>
-                        <td class="n">N</td>
                         <td class="o">O</td>
                         <td class="b">B</td>
+                        <td class="v">V</td>
+                        <td class="n">N</td>
                     </tr>
                 </tbody>
             </table>
@@ -427,10 +428,9 @@
                     → Pour chaque instance, l’équipe (ou les équipes) obtenant le meilleur score marque 2 points (1 point
                     pour la deuxi`eme place s’il n’y a pas d’égalité pour la première). L’équipe (ou les équipes) obtenant le
                     plus de meilleurs scores sur cette épreuve marque 4 points supplémentaires ; l’équipe (ou les équipes)
-                    obtenant le meilleur score moyen (moyenne des 10 scores) marque 6 points supplémentaires
-                    .</li>
+                    obtenant le meilleur score moyen (moyenne des 10 scores) marque 6 points supplémentaires.</li>
             </ol>
-            <p>Le classements de équipes sera établi à partir des points (score maximum : 50). Le cas échéant, les équipes à égalité seront départagées sur une instance mystère supplémentaire.</p>
+            <p>Le classements des équipes sera établi à partir des points (score maximum : 50). Le cas échéant, les équipes à égalité seront départagées sur une instance mystère supplémentaire.</p>
         </ol><br>
 
     <!--<div class="groupe">

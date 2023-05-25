@@ -36,13 +36,13 @@
           <fieldset>
             <legend>Saisie des données</legend>
             <label for="size">Taille de la grille : </label>
-            <input type="number" name="size" id="size" size="3" maxlength="3" placeholder="4" value="4"><br>
+            <input type="text" name="size" id="size" size="3" maxlength="3" value="4" min="2" max="32"><br>
 
             <label for="pena">Pénalité : </label>
-            <input type="text" name="penality" id="penality" size="3" maxlength="3" placeholder="-10" value="-10"><br>
+            <input type="text" name="penality" id="penality" size="3" maxlength="3" value="-10" required><br>
 
             <label for="tmp">Temps d'exécution (en secondes) : </label>
-            <input type="text" name="time" id="tmp" size="3" maxlength="3" placeholder="3" value="3"><br>
+            <input inputmode="numeric" pattern="\d*" type="text" name="time" id="tmp" size="3" maxlength="3" value="60" min="1" required><br>
             
             <label for="validation"></label>
             <input id="validateData" type="button" name="Valider" value="Valider"><br>
@@ -50,20 +50,17 @@
 
           <fieldset>
             <legend>Saisie de la grille</legend>
-            <div id="cells_container"></div>
+            <div class="a">
+            <div id="cells_container"></div></div>
             <br>
-            <input type="reset" name="vider" value="Réinitialiser">
+            <div class="bb">
+            <input type="reset" id="rei" name="vider" value="Réinitialiser">
             <input id="solveButton" type="submit" value="Résoudre"><br>
+            <p id="score">Score : </p></div>
           </fieldset><br>
 
-          <fieldset>
-            <legend>Affichage de la grille</legend>
-            <div id="solution_container"></div>
-            <p id="score">Score : </p>
-          </fieldset>
-
         </form>
-        
+        <p>Si vous voulez résoudre vos grilles, vous pouvez également accéder au code source via ce <a target="_blank" href="https://github.com/lysmaeg/la_grille">lien</a>. </p>
         <br><br>
         <div class="footer-dark">
           <footer>
@@ -71,7 +68,7 @@
                   <div class="row">
                       
                       <div class="item text">
-                          <h3>Notre groupe / Présentation</h3>
+                          <h3>A propos de nous</h3>
                           <p>Nous sommes deux étudiants de L1 en double licence Mathématiques / Informatique à l'université d'Angers. Nous avons eu à réaliser ce projet dans le cadre du module de Conrétisation de L1.</p>
                       </div>
                       <div class="col item social">
