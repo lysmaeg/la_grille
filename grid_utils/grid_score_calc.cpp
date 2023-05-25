@@ -96,7 +96,6 @@ int Grid::calcul_score() const
             if (p[l][col] == 'J')
             {
                 score_yellow += c[l][col];
-                // if ((get_color(l - 1, col - 1) != 'J') and (get_color(l - 1, col) != 'J') and (get_color(l - 1, col + 1) != 'J') and (get_color(l, col - 1) != 'J') and (get_color(l + 1, col - 1) != 'J') and (get_color(l + 1, col) != 'J') and (get_color(l + 1, col + 1) != 'J') and (get_color(l + 1, col) != 'J'))
                 if (nb_color_around_cell(l, col, 'J') == 0)
                 {
                     score_yellow -= pena;
@@ -107,14 +106,6 @@ int Grid::calcul_score() const
             {
                 score_green += c[l][col] + get_number(l - 1, col) + get_number(l + 1, col) + get_number(l, col - 1) + get_number(l, col + 1);
                 score_green -= pena * ((get_color(l + 1, col) == 'V') + (get_color(l + 1, col + 1) == 'V') + (get_color(l, col + 1) == 'V') + (get_color(l + 1, col - 1) == 'V'));
-                /* if (get_color(i + 1, j) == 'V')
-                    score_green -= pena;
-                if (get_color(i + 1, j + 1) == 'V')
-                    score_green -= pena;
-                if (get_color(i + 1, j + 1) == 'V')
-                    score_green -= pena;
-                if (get_color(i + 1, j - 1) == 'V')
-                    score_green -= pena; */
             }
 
             else if (p[l][col] == 'N')
@@ -133,27 +124,8 @@ int Grid::calcul_score() const
 
             else if (p[l][col] == 'O')
             {
-                int a = l, b = col, c = l, d = col;
+                score_orange -= this->penality * nb_colors_in_lines_cols(l, col, false, 'O');
 
-                for (int k = l + 1; k < t; ++k)
-                {
-                    if (p[k][col] == 'O')
-                        score_orange -= pena;
-                    c--;
-                    d++;
-                    if (get_color(c, d) == 'O')
-                        score_orange -= pena;
-                }
-
-                for (int k = col + 1; k < t; ++k)
-                {
-                    if (p[l][k] == 'O')
-                        score_orange -= pena;
-                    a++;
-                    b++;
-                    if (get_color(a, b) == 'O')
-                        score_orange -= pena;
-                }
             }
 
             else if (p[l][col] == 'R')
@@ -169,7 +141,7 @@ int Grid::calcul_score() const
     if (d_negatif > d_positif)
         score_blue -= (d_negatif - d_positif) * pena;
 
-    // std::cout << "Yellow : " << score_yellow << ", Green : " << score_green << ", Black : " << score_black << ", Blue : " << score_blue << ", Orange : " << score_orange << ", Red : " << score_red << std::endl;
+    /* std::cout << "Yellow : " << score_yellow << ", Green : " << score_green << ", Black : " << score_black << ", Blue : " << score_blue << ", Orange : " << score_orange << ", Red : " << score_red << std::endl; */
 
     score += score_yellow + score_green + score_black + score_blue + score_orange + score_red;
 

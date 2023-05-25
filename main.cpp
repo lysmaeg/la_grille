@@ -9,16 +9,18 @@ void print_help_message() {
                "only be in the terminal\n";
   std::cout << "=> -t : specify the time that the program requires\n";
   std::cout << "=> -h / --help : print this help message\n";
-  std::cout << "=> -v / --verbose : Print informations on the succes of the executable\n";
+  std::cout << "=> -v / --verbose : Print informations on the succes of the "
+               "executable\n";
 
   std::cout << "1) GRID SOLVER\n\n";
   std::cout << "./theGrid [-h | o | t | w] INPUT_FILE\n\n";
   std::cout << "=> -w / --write-all : Write all best solutions found into "
                "several files\n";
   std::cout << "\n2) GRID GENERATOR\n\n";
-  
-  std::cout << "./theGrid -g / --generate-numbers [-h | p | s | m ] OUTPUT_FILE , "
-               "the following options are mandatory\n\n";
+
+  std::cout
+      << "./theGrid -g / --generate-numbers [-h | p | s | m ] OUTPUT_FILE , "
+         "the following options are mandatory\n\n";
   std::cout << "=> -g / --generate-numbers : mandatory for the generation of "
                "the random numbers of a grid\n";
   std::cout
@@ -131,6 +133,11 @@ Grid *manage_arguments(int argc, char **args, options *opts) {
 }
 
 int main(int argc, char **args) {
+  /*Grid *g1 = new Grid("../site_web/results/01", "", true);
+  g1->print_numbers();
+  g1->set_score_from_calculation();
+  g1->put_red_if_absent();*/
+  /* return 0; */
   srand(time(NULL));
 
   options opts;
