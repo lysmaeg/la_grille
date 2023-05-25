@@ -1,5 +1,7 @@
 # LA GRILLE
 
+Vous pouvez accéder au site en ligne lié à ce projet via ce [lien](https://leria-etud.univ-angers.fr/~ddasilva/grille/)
+
 ## INSTALLATION
 
 ### LINUX
