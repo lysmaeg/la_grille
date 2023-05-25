@@ -339,7 +339,7 @@ void Grid::build_grid_points(options *opts) {
   int nb_placed_glouton = this->glouton(0);
   opts->start = clock();
 
-  this->fill_and_opti(nb_placed_glouton, opts);
+  this->fill_and_opti(nb_placed_glouton, opts, this);
   set_score_from_calculation();
   print_colors_with_score();
 
@@ -362,7 +362,7 @@ void Grid::boucle_alea(int nb_placed_glouton, options *opts) {
     if (opts->verbose) {
       printf("%d ième testé\n", count++);
     }
-    tmpGrid->fill_and_opti(nb_placed_glouton, opts);
+    tmpGrid->fill_and_opti(nb_placed_glouton, opts, this);
     tmpGrid->set_score_from_calculation();
     if (tmpGrid->get_score() > this->score) {
       this->switch_colors(tmpGrid);
@@ -1103,22 +1103,25 @@ void Grid::yellow_replace_blue_duo() {
   }
 }
 
-void Grid::fill_and_opti(int max_pieces, options *opts) {
+void Grid::fill_and_opti(int max_pieces, options *opts, Grid *initial_grid) {
   this->glouton_stochastique(max_pieces);
   this->orange_blue();
   this->put_red_if_absent();
-  int old_score;
+  int old_score=0, old_old_score;
   GridLinkGuard *glg = new GridLinkGuard;
   do {
+      old_old_score  = old_score;
     old_score = this->get_score();
     if (this->size > SIZE_BETWEEN) {
       copy_grid_as_ptr(true)->optimize_grid_recur(glg, nullptr, 1);
+      glg->convert_to_best_scores();
       glg->convert_to_best_scores();
       glg->switch_colors_with_first(this);
       glg->clear(true);
     } else {
 
       copy_grid_as_ptr(true)->optimize_grid_recur(glg, nullptr, 2);
+      glg->convert_to_best_scores();
       glg->convert_to_best_scores();
       glg->switch_colors_with_first(this);
       glg->clear(true);
@@ -1128,7 +1131,7 @@ void Grid::fill_and_opti(int max_pieces, options *opts) {
     if (((0.0 - opts->start + clock()) / CLOCKS_PER_SEC) >= opts->secs - 1) {
       opts->exit = true;
     }
-  } while (old_score != this->score and not opts->exit);
+  } while (old_score != this->score and not opts->exit and old_old_score != this->score);
   yellow_replace_blue();
   this->put_red_if_absent();
   delete glg;
@@ -1138,4 +1141,4 @@ void Grid::fill_and_opti(int max_pieces, options *opts) {
 void solve_directory(std::string dirname) {
     std::filesystem::directory_iterator dir(dirname);
     printf(dir);
-}*/ 
+}*/

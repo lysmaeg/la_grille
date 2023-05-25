@@ -9,7 +9,7 @@
 #include <string>
 #include <thread>
 
-#define SIZE_BETWEEN 16
+#define SIZE_BETWEEN 12
 
 class GridLinkGuard;
 
@@ -82,6 +82,7 @@ public:
   bool is_valid_score();
 
   void switch_colors(Grid *g);
+  void delete_colors();
 
   int get_nb_penality_blue();
 
@@ -139,7 +140,7 @@ public:
   void optimize_grid_recur(GridLinkGuard *glg, coupleLink *cl, int limit_recur);
   void yellow_replace_blue_duo();
 
-  void fill_and_opti(int max_pieces, options *opts);
+  void fill_and_opti(int max_pieces, options *opts, Grid* initial_grid);
   void solve_directory(std::string dirname);
 
   void orange_blue();
