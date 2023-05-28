@@ -13,7 +13,7 @@ template_cell.pattern = "\d*";
 template_cell.required = true;
 
 let time = 1;
-
+let sent = false;
 
 let size = 0;
 const sizeInput = document.querySelector("#size");
@@ -57,14 +57,20 @@ const handleReset = (event) => {
 
 solveButton.addEventListener("click", event => {
     event.preventDefault();
+    if (sent) {
+        alert("Vous venez déjà de demander la résolution d'une grille, veuillez attendre.");
+        return;
+    }
     if (cells_container.childElementCount == 0) {
         alert("Veuillez générer une grille pour en résoudre une.");
         return;
     }
+    sent = true;
     const XHR = new XMLHttpRequest();
     const FD = new FormData(form);
     XHR.addEventListener("load", (event) => {
         let gridWithScore =  event.target.responseText;
+        sent = false;
         let eofEscaped = 0;
         for (let x = 0; x < size ; x++) {
             for (let i = 0; i < size; i++) {
@@ -72,6 +78,7 @@ solveButton.addEventListener("click", event => {
                 switch (gridWithScore[x*size + i + eofEscaped]) {
                     case 'R':
                         document.getElementById(n).style.background = 'red';
+                        document.getElementById(n).style.color = 'black';
                         break; 
 
                     case 'N':
@@ -80,15 +87,19 @@ solveButton.addEventListener("click", event => {
                         break; 
                     case 'B':
                         document.getElementById(n).style.background = 'rgb(42, 127, 255)';
+                        document.getElementById(n).style.color = 'black';
                         break; 
                     case 'O':
                         document.getElementById(n).style.background = 'orange';
+                        document.getElementById(n).style.color = 'black';
                         break; 
                     case 'J':
                         document.getElementById(n).style.background = 'yellow';
+                        document.getElementById(n).style.color = 'black';
                         break; 
                     case 'V':
                         document.getElementById(n).style.background = 'rgb(18, 197, 18)';
+                        document.getElementById(n).style.color = 'black';
                         break; 
                   }        
             }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,75 +11,86 @@
     <link rel="stylesheet" href="css/header.css">
     <script src="scripts/grid_numbers_builder.js" defer></script>
 </head>
+
 <body>
     <h1>La Grille</h1>
-        <ul class="menu">
-              <li>
-                <a href="home.html">Accueil</a>
-              </li>
-              <li>
-                <a href="algorithmes.html">Algorithmes</a>
-              </li>
-              <li>
-                <a href="explication.html">Explication</a>
-              </li>
-              <li>
-                <a href="solutions.html">Solutions</a>
-              </li>
-              <li>
-                <a href="grille.html" class="actif">Grille</a>
-              </li>
-        </ul>
-        <br>
-        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
-        <p class="titre">Résolution d'une grille :</p>
-        <form> <!-- target="dummyframe" -->
-          <fieldset>
+    <ul class="menu">
+        <li>
+            <a href="home.html">Accueil</a>
+        </li>
+        <li>
+            <a href="algorithmes.html">Algorithmes</a>
+        </li>
+        <li>
+            <a href="explication.html">Explication</a>
+        </li>
+        <li>
+            <a href="solutions.html">Solutions</a>
+        </li>
+        <li>
+            <a href="grille.html" class="actif">Grille</a>
+        </li>
+    </ul>
+    <br>
+    <p class="titre">Résolution d'une grille :</p>
+    <form> <!-- target="dummyframe" -->
+        <fieldset>
             <legend>Saisie des données</legend>
             <label for="size">Taille de la grille : </label>
             <input type="text" name="size" id="size" size="3" maxlength="3" value="4" min="2" max="32"><br>
 
-            <label for="pena">Pénalité : </label>
-            <input type="text" name="penality" id="penality" size="3" maxlength="3" value="-10" required><br>
+            <label
+                title="Une valeur positive pour la pénatité forcera la grille à posséder le moins possible de pénalités."
+                for="penality">Pénalité : </label>
+            <input type="text" name="penality" id="penality" size="3" maxlength="3" value="10" required><br>
 
             <label for="tmp">Temps d'exécution (en secondes) : </label>
-            <input inputmode="numeric" pattern="\d*" type="text" name="time" id="tmp" size="3" maxlength="3" value="60" min="1" required><br>
-            
-            <label for="validation"></label>
-            <input id="validateData" type="button" name="Valider" value="Valider"><br>
-          </fieldset><br>
+            <input inputmode="numeric" pattern="\d*" type="text" name="time" id="tmp" size="3" maxlength="3" value="60"
+                min="1" required><br>
 
-          <fieldset>
+            <label for="validation"></label>
+            <input id="validateData" class="btn" type="button" name="Valider" value="Valider"><br>
+        </fieldset><br>
+
+        <fieldset>
             <legend>Saisie de la grille</legend>
             <div class="a">
-            <div id="cells_container"></div></div>
+                <div id="cells_container"></div>
+            </div>
             <br>
             <div class="bb">
-            <input type="reset" id="rei" name="vider" value="Réinitialiser">
-            <input id="solveButton" type="submit" value="Résoudre"><br>
-            <p id="score">Score : </p></div>
-          </fieldset><br>
+                <input class="btn" type="reset" id="rei" name="vider" value="Réinitialiser">
+                <input class="btn" id="solveButton" type="submit" value="Résoudre"><br>
+                <p id="score">Score : </p>
+            </div>
+        </fieldset><br>
 
-        </form>
-        <p>Si vous voulez résoudre vos grilles, vous pouvez également accéder au code source via ce <a target="_blank" href="https://github.com/lysmaeg/la_grille">lien</a>. </p>
-        <br><br>
-        <div class="footer-dark">
-          <footer>
-              <div class="container">
-                  <div class="row">
-                      
-                      <div class="item text">
-                          <h3>A propos de nous</h3>
-                          <p>Nous sommes deux étudiants de L1 en double licence Mathématiques / Informatique à l'université d'Angers. Nous avons eu à réaliser ce projet dans le cadre du module de Conrétisation de L1.</p>
-                      </div>
-                      <div class="col item social">
-                          <a href="https://github.com/lysmaeg/la_grille"><i class="icon"><img class="image" src="images/github.png"></i></a>
-                          <a href="https://www.univ-angers.fr/fr/index.html"><i class="icon"><img class="image2" src="images/ua.png"></i></a>
-                      </div>
-                  </div>
-                  <p class="copyright">David DA SILVA et Maëlys GIROIRE - 2023</p>
-              </div>
-          </footer>
-      </div>
+    </form>
+    <p>Si vous voulez résoudre vos grilles, vous pouvez également accéder au code source via ce <a target="_blank"
+            href="https://github.com/lysmaeg/la_grille">lien</a>. </p>
+    <br><br>
+    <div class="footer-dark">
+        <footer>
+            <div class="container">
+                <div class="row">
+
+                    <div class="item text">
+                        <h3>A propos de nous</h3>
+                        <p>Nous sommes deux étudiants de L1 en double licence Mathématiques / Informatique à
+                            l'université d'Angers. Nous avons eu à réaliser ce projet dans le cadre du module de
+                            Conrétisation de L1.</p>
+                    </div>
+                    <div class="col item social">
+                        <a target="_blank" href="https://github.com/lysmaeg/la_grille"><i class="icon"><img
+                                    class="image" src="images/github.png"></i></a>
+                        <a target="_blank" href="https://www.univ-angers.fr/fr/index.html"><i class="icon"><img
+                                    class="image2" src="images/ua.png"></i></a>
+                    </div>
+                </div>
+                <p class="copyright">David DA SILVA et Maëlys GIROIRE - 2023</p>
+            </div>
+        </footer>
+    </div>
 </body>
+
 </html>

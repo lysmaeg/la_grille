@@ -150,6 +150,7 @@ input:focus{
     margin-right: 5px;
     border-color: #647295;
     border-radius: 7px;
+    appearance: unset;
     -webkit-appearance: none;
     -moz-appearance: textfield;
 }
@@ -182,4 +183,13 @@ a {
     background-color:#d8c8bb;
     padding: 0px 10px 0px 10px;
     border-radius: 20px 20px 80px 20px;
+}
+
+
+.btn:hover {
+    color: #fff;
+}
+
+.btn:focus {
+    color: red;
 }
