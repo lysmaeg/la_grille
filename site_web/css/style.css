@@ -15,6 +15,10 @@ h1 {
     text-align: center;
 }
 
+.latin {
+    list-style-type: upper-roman;
+}
+
 p, li, h2, h3{
     color: #2B262D;
 }

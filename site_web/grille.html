@@ -37,7 +37,7 @@
         <fieldset>
             <legend>Saisie des données</legend>
             <label for="size">Taille de la grille : </label>
-            <input type="text" name="size" id="size" size="3" maxlength="3" value="4" min="2" max="32"><br>
+            <input type="text" name="size" id="size" size="3" maxlength="3" value="4"><br>
 
             <label
                 title="Une valeur positive pour la pénatité forcera la grille à posséder le moins possible de pénalités."
@@ -45,11 +45,10 @@
             <input type="text" name="penality" id="penality" size="3" maxlength="3" value="10" required><br>
 
             <label for="tmp">Temps d'exécution (en secondes) : </label>
-            <input inputmode="numeric" pattern="\d*" type="text" name="time" id="tmp" size="3" maxlength="3" value="60"
-                min="1" required><br>
+            <input pattern="\d*" type="text" name="time" id="tmp" size="3" maxlength="3" value="60" required><br>
 
-            <label for="validation"></label>
-            <input id="validateData" class="btn" type="button" name="Valider" value="Valider"><br>
+            <label for="validationData"></label>
+            <input id="validationData" class="btn" type="button" name="Valider" value="Valider"><br>
         </fieldset><br>
 
         <fieldset>
@@ -81,10 +80,10 @@
                             Conrétisation de L1.</p>
                     </div>
                     <div class="col item social">
-                        <a target="_blank" href="https://github.com/lysmaeg/la_grille"><i class="icon"><img
+                        <a target="_blank" href="https://github.com/lysmaeg/la_grille"><i class="icon"><img alt="github"
                                     class="image" src="images/github.png"></i></a>
                         <a target="_blank" href="https://www.univ-angers.fr/fr/index.html"><i class="icon"><img
-                                    class="image2" src="images/ua.png"></i></a>
+                                    alt="université Angers" class="image2" src="images/ua.png"></i></a>
                     </div>
                 </div>
                 <p class="copyright">David DA SILVA et Maëlys GIROIRE - 2023</p>
